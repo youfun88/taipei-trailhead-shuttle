@@ -15,6 +15,7 @@
     $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
     document.title = document.title.replace('山行接駁', SITE.brand);
   }
+  if (SITE.owner) $$('[data-owner]').forEach(function (el) { el.textContent = SITE.owner; });
   if (SITE.tagline) {
     $$('[data-tagline]').forEach(function (el) { el.textContent = SITE.tagline; });
   }
@@ -30,58 +31,67 @@
     return node;
   };
 
-  // 起價 = 所有路線裡最低的單程價
-  var lowest = PRICES.reduce(function (min, r) {
-    return Object.keys(ORIGINS).reduce(function (m, o) {
-      var v = r[o] && r[o].oneWay;
-      return v != null && (m == null || v < m) ? v : m;
-    }, min);
-  }, null);
+  var CARS = { five: '五人座', nine: '九人座' };
+
+  // 起價 = 所有路線、車型裡最低的單程價
+  var lowest = null;
+  PRICES.forEach(function (r) {
+    Object.keys(ORIGINS).forEach(function (o) {
+      Object.keys(CARS).forEach(function (c) {
+        var p = r[o][c];
+        if (p && (lowest == null || p[0] < lowest)) lowest = p[0];
+      });
+    });
+  });
   if (lowest != null) {
     $$('[data-price]').forEach(function (node) { node.textContent = Number(lowest).toLocaleString('en-US'); });
   }
 
-  // 路線卡片上的價格
+  // 路線卡片上的價格（單程）
   $$('[data-price-key]').forEach(function (box) {
     var route = PRICES.filter(function (r) { return r.key === box.dataset.priceKey; })[0];
     if (!route) return;
     Object.keys(ORIGINS).forEach(function (o) {
       var row = document.createElement('div');
       row.appendChild(el('span', ORIGINS[o]));
-      if (route[o].oneWay == null) {
-        row.appendChild(el('b', '歡迎詢價'));
-      } else {
-        row.appendChild(el('b', '單程 ' + money(route[o].oneWay)));
-        row.appendChild(el('b', '來回 ' + money(route[o].round)));
-      }
+      Object.keys(CARS).forEach(function (c) {
+        if (route[o][c]) row.appendChild(el('b', CARS[c] + ' ' + money(route[o][c][0])));
+      });
+      if (row.children.length === 1) row.appendChild(el('b', '歡迎詢價'));
       box.appendChild(row);
     });
   });
 
-  // 收費表
+  // 收費表：出發地、車型各一組切換
   var priceBody = $('#priceBody');
   var priceTabs = $$('.price__tab');
-  function renderPrices(origin) {
+  var priceState = { origin: 'taipei', car: 'nine' };
+  function renderPrices() {
     priceBody.textContent = '';
     PRICES.forEach(function (r) {
+      var p = r[priceState.origin][priceState.car];
       var tr = document.createElement('tr');
       var th = el('th', r.name);
       th.scope = 'row';
       tr.appendChild(th);
-      tr.appendChild(el('td', money(r[origin].oneWay)));
-      tr.appendChild(el('td', money(r[origin].round)));
+      tr.appendChild(el('td', money(p ? p[0] : null)));
+      tr.appendChild(el('td', money(p ? p[1] : null)));
       priceBody.appendChild(tr);
     });
     priceTabs.forEach(function (t) {
-      var on = t.dataset.origin === origin;
+      var on = (t.dataset.origin || t.dataset.car) === (t.dataset.origin ? priceState.origin : priceState.car);
       t.classList.toggle('is-active', on);
       t.setAttribute('aria-pressed', String(on));
     });
   }
   priceTabs.forEach(function (t) {
-    t.addEventListener('click', function () { renderPrices(t.dataset.origin); });
+    t.addEventListener('click', function () {
+      if (t.dataset.origin) priceState.origin = t.dataset.origin;
+      if (t.dataset.car) priceState.car = t.dataset.car;
+      renderPrices();
+    });
   });
-  renderPrices('taipei');
+  renderPrices();
 
   if (lineUrl) {
     $$('a[data-line-link], a[data-line-direct]').forEach(function (el) {
@@ -194,6 +204,7 @@
       '出發日期：' + f.date.value.replace(/-/g, '/') + '（' + week + '）',
       '行程天數：' + f.days.value,
       '人數：' + f.people.value,
+      '車型：' + f.car.value,
       '上車地點：' + f.pickup.value,
       f.note.value.trim() ? '備註：' + f.note.value.trim() : '',
     ];

@@ -4,6 +4,9 @@ window.SITE = {
   brand: '山行接駁',
   tagline: '登山口專車',
 
+  // 聯絡人姓名（顯示在名片、詢價區和頁尾）
+  owner: '汪鑫',
+
   // LINE 加好友連結（LINE 行動條碼掃出來的網址）。對應的條碼圖片是 images/line-qr.png。
   // 留空時，LINE 按鈕會帶客人到詢價表單，由客人自行選擇傳送對象。
   lineUrl: 'https://line.me/ti/p/1fAToCMY_h',

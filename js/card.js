@@ -12,6 +12,7 @@
     $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
     document.title = document.title.replace('山行接駁', SITE.brand);
   }
+  if (SITE.owner) $$('[data-owner]').forEach(function (el) { el.textContent = SITE.owner; });
   if (SITE.tagline) $$('[data-tagline]').forEach(function (el) { el.textContent = SITE.tagline; });
 
   function show(rowSel, linkSel, href, textSel, text) {
