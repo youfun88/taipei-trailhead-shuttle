@@ -210,12 +210,13 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .price__table thead th { padding-top: 6px; font-size: .82rem; letter-spacing: .12em; color: var(--moss); }
 .price__table tbody th { font-weight: 700; }
 .price__table tbody td { font-family: var(--serif); font-weight: 900; font-size: 1.25rem; color: var(--forest); white-space: nowrap; }
-.price__table tbody td:last-child { color: var(--accent-dark); }
+.price__table tbody td:nth-child(3) { color: var(--accent-dark); }
+.price__table tbody td:nth-child(4) { color: var(--ink); }
 .price__table tbody tr:last-child th, .price__table tbody tr:last-child td { border-bottom: 0; }
 .price__table tbody[hidden] { display: none; }
 .price__table tbody tr:hover { background: #faf7f0; }
 .price__notes { display: grid; gap: 10px; margin-top: 28px; color: var(--muted); font-size: .96rem; }
-.price__notes li { display: grid; grid-template-columns: 3.4em 1fr; gap: 12px; }
+.price__notes li { display: grid; grid-template-columns: 4.6em 1fr; gap: 12px; }
 .price__notes b { color: var(--ink); }
 
 /* ---------- 為什麼 ---------- */
@@ -424,9 +425,11 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .chip { flex: none; }
   .routes { grid-template-columns: 1fr; gap: 20px; }
   .price { margin-inline: -8px; }
-  .price__table th, .price__table td { padding: 13px 6px; }
-  .price__table tbody th { font-size: .95rem; }
-  .price__table tbody td { font-size: 1.08rem; }
+  .price { padding-inline: 12px; }
+  .price__table th, .price__table td { padding: 13px 4px; }
+  .price__table thead th { letter-spacing: .04em; }
+  .price__table tbody th { font-size: .9rem; }
+  .price__table tbody td { font-size: .98rem; }
   .seg { grid-template-columns: repeat(2, 1fr); }
   .perks { grid-template-columns: 1fr; gap: 14px; }
   .perks li { display: grid; grid-template-columns: 38px 1fr; column-gap: 16px; padding: 22px 20px; }

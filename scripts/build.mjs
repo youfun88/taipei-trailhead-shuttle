@@ -21,13 +21,14 @@ const URL = 'https://gohike.tw/';
 const ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
 const CARS = { five: '五人座', nine: '九人座' };
 const SEATS = { five: 4, nine: 8 };
+const TRIPS = ['單程', '來回', '一天來回'];
 const money = (n) => '$' + Number(n).toLocaleString('en-US');
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const intlPhone = SITE.phone.replace(/\D/g, '').replace(/^0/, '+886');
 
 const priced = PRICES.filter((r) => Object.keys(ORIGINS).some((o) => Object.keys(CARS).some((c) => r[o][c])));
 const allOneWay = priced.flatMap((r) => Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).map((c) => r[o][c]?.[0]))).filter(Boolean);
-const allPrices = priced.flatMap((r) => Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => r[o][c] || [])));
+const allPrices = priced.flatMap((r) => Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => r[o][c] || []))).filter(Boolean);
 const lowest = Math.min(...allOneWay);
 const lowestText = lowest.toLocaleString('en-US');
 const routeNames = priced.map((r) => r.name.replace(/（.*?）/, '')).join('、');
@@ -41,7 +42,7 @@ function cardPrice(route) {
   return Object.keys(ORIGINS)
     .map((o) => {
       const cells = Object.keys(CARS)
-        .filter((c) => route[o][c])
+        .filter((c) => route[o][c]?.[0])
         .map((c) => `<b>${CARS[c]} ${money(route[o][c][0])}</b>`);
       return `<div><span>${ORIGINS[o]}</span>${cells.length ? cells.join('') : '<b>歡迎詢價</b>'}</div>`;
     })
@@ -54,8 +55,11 @@ function priceTable() {
     for (const c of Object.keys(CARS)) {
       const isDefault = o === 'taipei' && c === 'nine';
       const rows = PRICES.map((r) => {
-        const p = r[o][c];
-        return `              <tr><th scope="row">${esc(r.name)}</th><td>${p ? money(p[0]) : '詢價'}</td><td>${p ? money(p[1]) : '詢價'}</td></tr>`;
+        const p = r[o][c] || [];
+        // 整條路線都沒有價格顯示「詢價」；只是沒有這種走法則顯示「—」
+        const blank = priced.includes(r) ? '—' : '詢價';
+        const cells = TRIPS.map((_, i) => `<td>${p[i] ? money(p[i]) : blank}</td>`).join('');
+        return `              <tr><th scope="row">${esc(r.name)}</th>${cells}</tr>`;
       }).join('\n');
       bodies.push(
         `            <tbody data-origin="${o}" data-car="${c}" aria-label="${ORIGINS[o]}・${CARS[c]}"${isDefault ? '' : ' hidden'}>\n${rows}\n            </tbody>`,
@@ -70,10 +74,10 @@ function priceAnswer(r) {
     .map((o) => {
       const parts = Object.keys(CARS)
         .filter((c) => r[o][c])
-        .map((c) => `${CARS[c]}單程 ${money(r[o][c][0])}、來回 ${money(r[o][c][1])}`);
+        .map((c) => CARS[c] + TRIPS.map((t, i) => (r[o][c][i] ? `${t} ${money(r[o][c][i])}` : '')).filter(Boolean).join('、'));
       return `${ORIGINS[o]}：${parts.join('；')}。`;
     })
-    .join('') + '以上為整車價格，來回是去程、回程各一趟。';
+    .join('') + '以上為整車價格；來回是去程、回程各一趟，一天來回是當天送上山、等下山再載回。';
 }
 const priceFaq = priced.map((r) => ({ q: `${r.name}登山接駁多少錢？`, a: priceAnswer(r) }));
 
@@ -102,7 +106,9 @@ function jsonLd(html) {
     for (const o of Object.keys(ORIGINS)) {
       for (const c of Object.keys(CARS)) {
         if (!r[o][c]) continue;
-        [['單程', r[o][c][0]], ['來回', r[o][c][1]]].forEach(([trip, price]) => {
+        TRIPS.forEach((trip, i) => {
+          const price = r[o][c][i];
+          if (!price) return;
           offers.push({
             '@type': 'Offer',
             name: `${ORIGINS[o]}・${r.name}登山接駁・${CARS[c]}${trip}`,
@@ -188,7 +194,7 @@ write(
 
 // ---- llms.txt（給 AI 助理讀的摘要）----
 const priceRows = priced
-  .map((r) => `| ${r.name} | ${['taipei', 'taichung'].flatMap((o) => ['five', 'nine'].map((c) => (r[o][c] ? `${money(r[o][c][0])} / ${money(r[o][c][1])}` : '詢價'))).join(' | ')} |`)
+  .map((r) => `| ${r.name} | ${['taipei', 'taichung'].flatMap((o) => ['five', 'nine'].map((c) => (r[o][c] ? r[o][c].map((v) => (v ? money(v) : '—')).join(' / ') : '—'))).join(' | ')} |`)
   .join('\n');
 write(
   'llms.txt',
@@ -201,16 +207,16 @@ write(
 - 登山接駁包車：從台北車站、板橋車站、台中或指定地址出發，專車直達登山口；下山時在登山口接回市區。
 - 行程：當日來回、兩天、三天以上都可以預約。
 - 車型：五人座（最多 4 位乘客）、九人座（Volkswagen Caravelle 或同級，最多 8 位乘客）。
-- 計價：整車計價，不是按人頭。單程是一趟車；來回是去程、回程各一趟。
+- 計價：整車計價，不是按人頭。單程是一趟車；來回是去程、回程各一趟；一天來回是當天送上山、等下山再載回。
 - 入園入山申請、山屋、保險與裝備由乘客自行準備。
 
-## 價格（新台幣，整車，單程 / 來回）
+## 價格（新台幣，整車，單程 / 來回 / 一天來回，— 表示沒有這種走法或請詢價）
 
 | 路線 | 台北出發 五人座 | 台北出發 九人座 | 台中出發 五人座 | 台中出發 九人座 |
 | --- | --- | --- | --- | --- |
 ${priceRows}
 
-當日來回、A 進 B 出的縱走、表上沒有的登山口請直接詢價。
+A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 ## 預約與聯絡
 
