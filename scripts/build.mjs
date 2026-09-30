@@ -31,7 +31,7 @@ const allOneWay = priced.flatMap((r) => Object.keys(ORIGINS).flatMap((o) => Obje
 const allPrices = priced.flatMap((r) => Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => r[o][c] || []))).filter(Boolean);
 const lowest = Math.min(...allOneWay);
 const lowestText = lowest.toLocaleString('en-US');
-const routeNames = priced.map((r) => r.name.replace(/（.*?）/, '')).join('、');
+const routeNames = [...new Set(priced.map((r) => r.name.replace(/（.*?）/, '')))].join('、');
 
 const description =
   `${SITE.brand}提供台北、台中出發的登山接駁包車，專車直達${priced.slice(0, 5).map((r) => r.name.replace(/（.*?）/, '')).join('、')}等高山登山口，下山再接你回家。` +
