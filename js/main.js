@@ -196,11 +196,12 @@
 
   // 把詢價寄到車主信箱（Web3Forms）。寄不出去時回傳 false，由呼叫端改請客人用 LINE 或電話。
   function sendEmail(f, msg) {
+    // 隱藏欄位只有機器人會填；填了就不寄，但照樣回報成功，不讓機器人知道被擋下
+    if (f._honey && f._honey.value) return Promise.resolve(true);
     var body = {
       access_key: formKey,
       subject: '登山接駁詢價：' + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
       from_name: 'gohike.tw 詢價表單',
-      botcheck: f._honey ? f._honey.value : '',
       '稱呼': f.name.value.trim(),
       '電話': f.phone.value.trim(),
       '目的地': f.dest.value,
