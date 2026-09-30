@@ -19,4 +19,9 @@ window.SITE = {
 
   // 聯絡信箱。留空則不顯示。
   email: 'taipei.cars@gmail.com',
+
+  // 詢價表單的寄信服務（FormSubmit）。表單送出後會把內容寄到上面的信箱。
+  // 第一次有人送出表單時，信箱會收到一封「Activate Form」確認信，點一下才會開始收信。
+  // 留空則不寄信，表單只會整理成訊息讓客人用 LINE 傳送。
+  formEndpoint: 'https://formsubmit.co/ajax/taipei.cars@gmail.com',
 };

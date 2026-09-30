@@ -10,6 +10,7 @@
   var lineId = (SITE.lineId || '').trim();
   var phone = (SITE.phone || '').trim();
   var email = (SITE.email || '').trim();
+  var formEndpoint = (SITE.formEndpoint || '').trim();
 
   if (SITE.brand) {
     $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
@@ -128,6 +129,9 @@
   var sendLineLabel = $('#sendLineLabel');
   var resultTitle = $('#resultTitle');
   var copyBtn = $('#copyBtn');
+  var submitBtn = $('#submitBtn');
+  var submitLabel = formEndpoint ? '送出詢價' : '整理成詢價訊息';
+  submitBtn.textContent = submitLabel;
 
   // 出發日期不能選過去
   var today = new Date();
@@ -149,7 +153,7 @@
     var lines = [
       '【登山接駁詢價】',
       '稱呼：' + f.name.value.trim(),
-      f.phone.value.trim() ? '電話：' + f.phone.value.trim() : '',
+      '電話：' + f.phone.value.trim(),
       '目的地：' + f.dest.value,
       '出發日期：' + f.date.value.replace(/-/g, '/') + '（' + week + '）',
       '行程天數：' + f.days.value,
@@ -161,18 +165,60 @@
     return lines.filter(Boolean).join('\n');
   }
 
+  // 送出後顯示結果：訊息內容 + 用 LINE 傳同一則訊息的按鈕
+  function showResult(title, warn) {
+    resultTitle.textContent = title;
+    result.classList.toggle('result--warn', !!warn);
+    copyBtn.textContent = '複製訊息';
+    // 個人 LINE 帳號無法預先帶入訊息：按鈕會先複製訊息再開啟聊天，客人貼上即可。
+    sendLine.href = lineUrl || 'https://line.me/R/share?text=' + encodeURIComponent(resultText.textContent);
+    sendLineLabel.textContent = lineUrl ? '複製訊息並開啟 LINE' : '用 LINE 傳送';
+    result.hidden = false;
+    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  // 把詢價寄到車主信箱（FormSubmit）。寄不出去時回傳 false，由呼叫端改請客人用 LINE 或電話。
+  function sendEmail(f, msg) {
+    var body = {
+      _subject: '登山接駁詢價：' + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
+      _template: 'table',
+      _captcha: 'false',
+      _honey: f._honey.value,
+      '稱呼': f.name.value.trim(),
+      '電話': f.phone.value.trim(),
+      '目的地': f.dest.value,
+      '出發日期': f.date.value.replace(/-/g, '/'),
+      '行程天數': f.days.value,
+      '人數': f.people.value,
+      '車型': f.car.value,
+      '上車地點': f.pickup.value,
+      '備註': f.note.value.trim() || '（無）',
+      '完整訊息': msg,
+    };
+    return fetch(formEndpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify(body),
+    })
+      .then(function (res) { return res.json().catch(function () { return {}; }).then(function (data) { return res.ok && String(data.success) === 'true'; }); })
+      .catch(function () { return false; });
+  }
+
+  var sending = false;
   form.addEventListener('submit', function (e) {
     e.preventDefault();
+    if (sending) return;
     var f = form.elements;
     var missing = [];
     if (!f.name.value.trim()) missing.push(f.name);
+    if (!f.phone.value.trim()) missing.push(f.phone);
     if (!f.dest.value) missing.push(f.dest);
     if (!f.date.value) missing.push(f.date);
 
     $$('.is-invalid', form).forEach(function (el) { el.classList.remove('is-invalid'); });
     if (missing.length) {
       missing.forEach(function (el) { el.classList.add('is-invalid'); });
-      errorBox.textContent = '還有必填欄位沒填：稱呼、目的地、出發日期。';
+      errorBox.textContent = '還有必填欄位沒填：稱呼、聯絡電話、目的地、出發日期。';
       errorBox.hidden = false;
       result.hidden = true;
       missing[0].focus();
@@ -182,16 +228,28 @@
 
     var msg = buildMessage();
     resultText.textContent = msg;
-    // 個人 LINE 帳號無法預先帶入訊息：有設定連結時，按鈕會先複製訊息再開啟聊天，客人貼上即可。
-    // 沒設定連結則開啟 LINE 分享，讓客人自己選對象。
-    sendLine.href = lineUrl || 'https://line.me/R/share?text=' + encodeURIComponent(msg);
-    copyBtn.textContent = '複製訊息';
-    sendLineLabel.textContent = lineUrl ? '複製訊息並開啟 LINE' : '用 LINE 傳送';
-    resultTitle.textContent = lineUrl
-      ? '訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：'
-      : '訊息整理好了，傳給我就完成詢價：';
-    result.hidden = false;
-    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+    if (!formEndpoint) {
+      showResult(lineUrl
+        ? '訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：'
+        : '訊息整理好了，傳給我就完成詢價：');
+      return;
+    }
+
+    sending = true;
+    submitBtn.disabled = true;
+    submitBtn.textContent = '寄送中…';
+    result.hidden = true;
+    sendEmail(f, msg).then(function (ok) {
+      sending = false;
+      submitBtn.disabled = false;
+      submitBtn.textContent = submitLabel;
+      if (ok) {
+        showResult('詢價已送出，我看到就會打電話或傳訊息回覆你。想更快，也可以把同一則訊息用 LINE 傳給我：');
+      } else {
+        showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我' + (phone ? '，或直接打 ' + phone : '') + '：', true);
+      }
+    });
   });
 
   sendLine.addEventListener('click', function () {

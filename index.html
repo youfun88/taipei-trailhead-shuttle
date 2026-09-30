@@ -367,10 +367,10 @@
         <div class="book__intro">
           <p class="eyebrow">免費詢價</p>
           <h2>告訴我你要去哪座山</h2>
-          <p class="section__lead">填好右邊的表單，會自動整理成一則訊息。用 LINE 傳給我，我看到就回覆報價。也可以直接打電話預約。</p>
+          <p class="section__lead">填好右邊的表單送出，詢價會直接寄到我的信箱，我看到就回覆報價。也可以用 LINE 或電話直接找我。</p>
           <ol class="book__steps">
             <li><b>1</b>填寫行程</li>
-            <li><b>2</b>用 LINE 傳送訊息</li>
+            <li><b>2</b>送出詢價</li>
             <li><b>3</b>收到報價，確認時間</li>
           </ol>
           <div class="contact" id="contactBox" hidden>
@@ -394,8 +394,8 @@
               <input type="text" name="name" autocomplete="name" required placeholder="例如：陳先生">
             </label>
             <label class="field">
-              <span>聯絡電話</span>
-              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" placeholder="例如：0912-345-678">
+              <span>聯絡電話 <i>必填</i></span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" required placeholder="例如：0912-345-678">
             </label>
             <label class="field field--full">
               <span>要去哪裡 <i>必填</i></span>
@@ -462,10 +462,11 @@
               <textarea name="note" rows="3" placeholder="到府地址、預計下山時間、大背包數量、其他登山口…"></textarea>
             </label>
           </div>
+          <input class="form__trap" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
           <p class="form__error" id="formError" role="alert" hidden></p>
-          <button class="btn btn--accent btn--lg btn--block" type="submit">整理成詢價訊息</button>
+          <button class="btn btn--accent btn--lg btn--block" type="submit" id="submitBtn">送出詢價</button>
 
-          <div class="result" id="result" hidden>
+          <div class="result" id="result" role="status" hidden>
             <p class="result__title" id="resultTitle">訊息整理好了，傳給我就完成詢價：</p>
             <pre id="resultText"></pre>
             <div class="result__actions">
