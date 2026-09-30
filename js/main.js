@@ -6,8 +6,10 @@
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
 
   // ---- 套用 config.js 的設定 ----
+  var lineUrl = (SITE.lineUrl || '').trim();
   var lineId = (SITE.lineId || '').trim();
   var phone = (SITE.phone || '').trim();
+  var email = (SITE.email || '').trim();
 
   if (SITE.brand) {
     $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
@@ -21,15 +23,14 @@
     $$('[data-price]').forEach(function (el) { el.textContent = price; });
   }
 
-  if (lineId) {
-    var addUrl = 'https://line.me/R/ti/p/' + encodeURIComponent(lineId);
-    $$('[data-line-link], [data-line-direct]').forEach(function (el) {
-      el.href = addUrl;
+  if (lineUrl) {
+    $$('a[data-line-link], a[data-line-direct]').forEach(function (el) {
+      el.href = lineUrl;
       el.target = '_blank';
       el.rel = 'noopener';
-      el.hidden = false;
     });
-    $$('[data-line-id]').forEach(function (el) { el.textContent = lineId; });
+    $$('[data-line-direct]').forEach(function (el) { el.hidden = false; });
+    if (lineId) $$('[data-line-id]').forEach(function (el) { el.textContent = lineId; });
   }
   if (phone) {
     $$('[data-phone-link]').forEach(function (el) {
@@ -37,8 +38,8 @@
       el.hidden = false;
     });
     $$('[data-phone]').forEach(function (el) { el.textContent = phone; });
-    // 還沒設定 LINE ID 時，頁首按鈕改成直接撥電話
-    if (!lineId) {
+    // 還沒設定 LINE 連結時，頁首按鈕改成直接撥電話
+    if (!lineUrl) {
       $$('[data-line-link]').forEach(function (el) {
         el.href = 'tel:' + phone.replace(/[^\d+]/g, '');
         el.textContent = '電話預約 ' + phone;
@@ -46,7 +47,14 @@
       });
     }
   }
-  if (lineId || phone) $('#contactBox').hidden = false;
+  if (email) {
+    $$('[data-email-link]').forEach(function (el) {
+      el.href = 'mailto:' + email;
+      el.hidden = false;
+    });
+    $$('[data-email]').forEach(function (el) { el.textContent = email; });
+  }
+  if (lineUrl || phone || email) $('#contactBox').hidden = false;
 
   $('#year').textContent = new Date().getFullYear();
 
@@ -97,6 +105,8 @@
   var result = $('#result');
   var resultText = $('#resultText');
   var sendLine = $('#sendLine');
+  var sendLineLabel = $('#sendLineLabel');
+  var resultTitle = $('#resultTitle');
   var copyBtn = $('#copyBtn');
 
   // 出發日期不能選過去
@@ -151,16 +161,24 @@
 
     var msg = buildMessage();
     resultText.textContent = msg;
-    // 有設定 LINE ID 就直接開啟與車主的對話；沒有則開啟 LINE 分享讓客人選對象
-    sendLine.href = lineId
-      ? 'https://line.me/R/oaMessage/' + encodeURIComponent(lineId) + '/?' + encodeURIComponent(msg)
-      : 'https://line.me/R/share?text=' + encodeURIComponent(msg);
+    // 個人 LINE 帳號無法預先帶入訊息：有設定連結時，按鈕會先複製訊息再開啟聊天，客人貼上即可。
+    // 沒設定連結則開啟 LINE 分享，讓客人自己選對象。
+    sendLine.href = lineUrl || 'https://line.me/R/share?text=' + encodeURIComponent(msg);
     copyBtn.textContent = '複製訊息';
+    sendLineLabel.textContent = lineUrl ? '複製訊息並開啟 LINE' : '用 LINE 傳送';
+    resultTitle.textContent = lineUrl
+      ? '訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：'
+      : '訊息整理好了，傳給我就完成詢價：';
     result.hidden = false;
     result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 
-  copyBtn.addEventListener('click', function () {
+  sendLine.addEventListener('click', function () {
+    if (lineUrl) copyMessage();
+  });
+  copyBtn.addEventListener('click', copyMessage);
+
+  function copyMessage() {
     var text = resultText.textContent;
     var done = function () { copyBtn.textContent = '已複製 ✓'; };
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -176,7 +194,7 @@
       sel.addRange(range);
       try { document.execCommand('copy'); done(); } catch (err) { copyBtn.textContent = '請長按上方文字複製'; }
     }
-  });
+  }
 
   // ---- 進場動畫 ----
   var reveals = $$('.reveal');

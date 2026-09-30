@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>山行接駁｜電子名片</title>
+  <meta name="description" content="山行接駁的電子名片：電話、LINE、信箱，一鍵存到手機通訊錄。">
+  <meta name="theme-color" content="#14231c">
+  <link rel="canonical" href="https://gohike.tw/card.html">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://gohike.tw/card.html">
+  <meta property="og:title" content="山行接駁｜電子名片">
+  <meta property="og:description" content="台北出發登山口專車接駁。一鍵存到手機通訊錄。">
+  <meta property="og:image" content="https://gohike.tw/images/hero-sm.jpg">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=Noto+Serif+TC:wght@700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="cardpage">
+  <main class="cardwrap">
+    <a class="cardwrap__back" href="./">← 回首頁</a>
+
+    <article class="bizcard">
+      <header class="bizcard__top">
+        <img class="bizcard__bg" src="images/hero-sm.jpg" alt="">
+        <div class="logo">
+          <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 12 8l5 8 3-4 10 14z" fill="currentColor"/><path d="M12 8l3 4.8-3 2.2-3-1.6z" fill="#fff" opacity=".9"/></svg>
+          <span class="logo__text"><b data-brand>山行接駁</b><small data-tagline>登山口專車</small></span>
+        </div>
+        <p class="bizcard__pitch">台北出發・高山登山口專車接駁</p>
+      </header>
+
+      <div class="bizcard__body">
+        <ul class="bizcard__rows">
+          <li data-phone-row hidden><span>電話</span><a data-phone-link><b data-phone></b></a></li>
+          <li data-line-row hidden><span>LINE</span><a data-line-link><b data-line-id>加入好友</b></a></li>
+          <li data-email-row hidden><span>信箱</span><a data-email-link><span data-email></span></a></li>
+          <li><span>網站</span><a href="https://gohike.tw/">gohike.tw</a></li>
+          <li><span>車款</span><p>福斯 Caravelle 九人座・最多 8 位乘客</p></li>
+        </ul>
+        <a class="bizcard__qr" data-line-link data-line-row hidden>
+          <img src="images/line-qr.png" alt="LINE 加好友行動條碼" width="576" height="576">
+          <small>掃描加 LINE</small>
+        </a>
+      </div>
+    </article>
+
+    <a class="btn btn--accent btn--lg btn--block" href="contact.vcf">存到手機通訊錄</a>
+    <div class="cardwrap__actions">
+      <a class="btn btn--outline" data-phone-link data-phone-row hidden>撥打電話</a>
+      <a class="btn btn--line" data-line-link data-line-row hidden>加 LINE</a>
+      <button class="btn btn--outline" type="button" id="shareBtn">分享名片</button>
+    </div>
+    <p class="cardwrap__hint">iPhone：點「存到手機通訊錄」後，選「新增聯絡人」。<br>Android：下載完成後點開檔案，選擇「聯絡人」匯入。</p>
+  </main>
+
+  <script src="js/config.js"></script>
+  <script src="js/card.js"></script>
+</body>
+</html>

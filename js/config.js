@@ -4,12 +4,18 @@ window.SITE = {
   brand: '山行接駁',
   tagline: '登山口專車',
 
-  // LINE ID：官方帳號請含 @（例如 '@abc1234'），個人帳號直接填 ID。
-  // 留空時，「LINE 詢價」按鈕會帶客人到詢價表單，由客人自行選擇傳送對象。
-  lineId: '',
+  // LINE 加好友連結（LINE 行動條碼掃出來的網址）。對應的條碼圖片是 images/line-qr.png。
+  // 留空時，LINE 按鈕會帶客人到詢價表單，由客人自行選擇傳送對象。
+  lineUrl: 'https://line.me/ti/p/1fAToCMY_h',
+
+  // LINE ID（顯示給客人在 LINE 裡搜尋加好友用）。留空則只顯示「加入好友」。
+  lineId: '0910321666',
 
   // 聯絡電話（例如 '0912-345-678'）。留空則不顯示電話按鈕。
   phone: '0910-321-666',
+
+  // 聯絡信箱。留空則不顯示。
+  email: 'taipei.cars@gmail.com',
 
   // 當日來回起價（新台幣 / 每車）
   dayTripPrice: 7000,
