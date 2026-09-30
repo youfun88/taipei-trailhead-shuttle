@@ -1,6 +1,7 @@
 // 把 js/config.js、js/prices.js 的資料寫成靜態內容，讓搜尋引擎與 AI 不必執行 JavaScript 也讀得到。
 // 產出：index.html 裡 <!-- build:xxx --> 標記之間的區塊、sitemap.xml、llms.txt。
 // 用法：node scripts/build.mjs（發布流程會自動執行；改完價格或聯絡資料想在本機預覽時也可以手動跑）。
+import { createHash } from 'node:crypto';
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -195,6 +196,15 @@ const fontTags = [
 ].join('\n');
 html = region(html, 'font', fontTags);
 cardHtml = region(cardHtml, 'font', fontTags);
+
+// ---- css / js 網址加上內容版本號：避免瀏覽器拿舊版頁面配新版程式（或反過來）而壞掉 ----
+const versioned = (page) =>
+  page.replace(/((?:href|src)=")((?:css|js)\/[\w.-]+\.(?:css|js))(?:\?v=[0-9a-f]+)?(")/g, (_, a, file, c) => {
+    const hash = createHash('sha1').update(readFileSync(join(root, file))).digest('hex').slice(0, 8);
+    return `${a}${file}?v=${hash}${c}`;
+  });
+html = versioned(html);
+cardHtml = versioned(cardHtml);
 write('index.html', html);
 write('card.html', cardHtml);
 

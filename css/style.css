@@ -287,6 +287,23 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .result { margin-top: 28px; padding: 24px; border-radius: 16px; background: #eef4ef; border: 1.5px solid #cfe0d3; }
 .result__title { font-weight: 700; color: var(--forest); }
 .result pre { margin: 14px 0 18px; padding: 16px 18px; border-radius: 12px; background: #fff; font-family: var(--sans); font-size: .96rem; line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
+.result__done, .result__label, .result__again { display: none; }
+.result:focus { outline: 0; }
+/* 寄出成功：收起表單欄位，只留下確認畫面 */
+.form.is-sent > :not(.result) { display: none; }
+.form.is-sent .result { margin-top: 0; padding: clamp(28px, 5vw, 44px) clamp(20px, 4vw, 36px); text-align: center; animation: sent-in .5s ease both; }
+.form.is-sent .result__done { display: block; }
+.form.is-sent .result__done svg { width: 76px; height: 76px; }
+.form.is-sent .result__done circle { fill: var(--forest); }
+.form.is-sent .result__done path { fill: none; stroke: #fff; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 32; stroke-dashoffset: 32; animation: sent-check .45s .25s ease forwards; }
+.form.is-sent .result__done h3 { margin-top: 14px; font-family: var(--serif); font-size: 1.9rem; font-weight: 900; color: var(--forest); }
+.form.is-sent .result__title { margin: 10px auto 0; max-width: 24em; font-weight: 500; font-size: 1.05rem; color: var(--ink); }
+.form.is-sent .result__label { display: block; margin-top: 26px; font-size: .82rem; font-weight: 700; letter-spacing: .12em; color: var(--muted); text-align: left; }
+.form.is-sent .result pre { margin-top: 8px; text-align: left; }
+.form.is-sent .result__again { display: inline-block; margin-top: 18px; padding: 8px 4px; border: 0; background: none; color: var(--forest); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; }
+.form.is-sent .result__again:hover { color: var(--accent-btn); }
+@keyframes sent-in { from { opacity: 0; transform: translateY(12px); } }
+@keyframes sent-check { to { stroke-dashoffset: 0; } }
 .result__actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .result__actions .btn { flex: 1 1 160px; }
 

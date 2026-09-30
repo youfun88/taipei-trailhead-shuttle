@@ -10,7 +10,8 @@
   var lineId = (SITE.lineId || '').trim();
   var phone = (SITE.phone || '').trim();
   var email = (SITE.email || '').trim();
-  var formEndpoint = (SITE.formEndpoint || '').trim();
+  var formKey = (SITE.web3formsKey || '').trim();
+  var formEndpoint = formKey ? 'https://api.web3forms.com/submit' : '';
 
   if (SITE.brand) {
     $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
@@ -129,7 +130,8 @@
   var sendLineLabel = $('#sendLineLabel');
   var resultTitle = $('#resultTitle');
   var copyBtn = $('#copyBtn');
-  var submitBtn = $('#submitBtn');
+  var againBtn = $('#againBtn');
+  var submitBtn = $('button[type="submit"]', form);
   var submitLabel = formEndpoint ? '送出詢價' : '整理成詢價訊息';
   submitBtn.textContent = submitLabel;
 
@@ -174,16 +176,31 @@
     sendLine.href = lineUrl || 'https://line.me/R/share?text=' + encodeURIComponent(resultText.textContent);
     sendLineLabel.textContent = lineUrl ? '複製訊息並開啟 LINE' : '用 LINE 傳送';
     result.hidden = false;
-    result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // 把詢價寄到車主信箱（FormSubmit）。寄不出去時回傳 false，由呼叫端改請客人用 LINE 或電話。
+  // 寄出成功：收起表單，換成確認畫面，並把畫面帶到那裡
+  function showSent(name) {
+    form.classList.add('is-sent');
+    showResult('謝謝你，' + name + '！我們已經收到你的詢價，會盡快與你聯絡。');
+    form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    result.focus({ preventScroll: true });
+  }
+  if (againBtn) {
+    againBtn.addEventListener('click', function () {
+      form.classList.remove('is-sent');
+      result.hidden = true;
+      form.reset();
+      form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  // 把詢價寄到車主信箱（Web3Forms）。寄不出去時回傳 false，由呼叫端改請客人用 LINE 或電話。
   function sendEmail(f, msg) {
     var body = {
-      _subject: '登山接駁詢價：' + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
-      _template: 'table',
-      _captcha: 'false',
-      _honey: f._honey.value,
+      access_key: formKey,
+      subject: '登山接駁詢價：' + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
+      from_name: 'gohike.tw 詢價表單',
+      botcheck: f._honey ? f._honey.value : '',
       '稱呼': f.name.value.trim(),
       '電話': f.phone.value.trim(),
       '目的地': f.dest.value,
@@ -233,6 +250,7 @@
       showResult(lineUrl
         ? '訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：'
         : '訊息整理好了，傳給我就完成詢價：');
+      result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
 
@@ -245,9 +263,10 @@
       submitBtn.disabled = false;
       submitBtn.textContent = submitLabel;
       if (ok) {
-        showResult('詢價已送出，我看到就會打電話或傳訊息回覆你。想更快，也可以把同一則訊息用 LINE 傳給我：');
+        showSent(f.name.value.trim());
       } else {
         showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我' + (phone ? '，或直接打 ' + phone : '') + '：', true);
+        result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
   });
