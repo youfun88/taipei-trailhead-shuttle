@@ -33,6 +33,8 @@
 
 `robots.txt` 允許所有搜尋引擎與 AI 讀取。
 
+每次發布完成後，會用 IndexNow 自動通知 Bing 網站有更新。根目錄的 `69ea85e35b38b64cc0d55ad2fe4b18c0.txt` 是 IndexNow 的驗證金鑰，不要刪除或改名。
+
 ## 修改路線
 
 路線卡片在 `index.html` 的「熱門路線」區塊，每條路線是一個 `<article class="route">`。
