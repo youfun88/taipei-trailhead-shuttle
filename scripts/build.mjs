@@ -135,7 +135,7 @@ function jsonLd(html) {
       alternateName: 'gohike.tw',
       description,
       url: URL,
-      image: URL + 'images/hero.jpg',
+      image: URL + 'images/hero-sm.jpg',
       telephone: intlPhone,
       email: SITE.email,
       priceRange: `NT$${Math.min(...allPrices).toLocaleString('en-US')}–NT$${Math.max(...allPrices).toLocaleString('en-US')}`,
@@ -162,7 +162,7 @@ function region(html, name, content) {
   const close = `<!-- /build:${name} -->`;
   const a = html.indexOf(open);
   const b = html.indexOf(close);
-  if (a === -1 || b === -1) throw new Error(`index.html 找不到 ${open} 區塊`);
+  if (a === -1 || b === -1) throw new Error(`找不到 ${open} 區塊`);
   return html.slice(0, a + open.length) + '\n' + content + '\n' + html.slice(html.lastIndexOf('\n', b) + 1);
 }
 
@@ -178,7 +178,25 @@ html = region(html, 'price-table', priceTable());
 html = region(html, 'price-faq', priceFaqHtml());
 html = region(html, 'about', `        <p class="footer__about">${esc(about)}</p>`);
 html = region(html, 'jsonld', jsonLd(html));
+
+// ---- 標題字型：只向 Google Fonts 要頁面上實際用到的字，檔案才會小 ----
+let cardHtml = read('card.html');
+const headingText = [html, cardHtml]
+  .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)].map((m) => m[1].replace(/<[^>]+>/g, '')))
+  .join('');
+const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
+const glyphs = [...new Set(headingText + SITE.brand + SITE.owner + SITE.tagline + '詢價掃描加好友—・，。：、？（）' + ascii)].filter((ch) => ch === ' ' || ch.trim()).sort().join('');
+const fontUrl = 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap&text=' + encodeURIComponent(glyphs);
+const fontTags = [
+  '  <link rel="preconnect" href="https://fonts.googleapis.com">',
+  '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
+  `  <link rel="preload" as="style" href="${esc(fontUrl)}" onload="this.onload=null;this.rel='stylesheet'">`,
+  `  <noscript><link rel="stylesheet" href="${esc(fontUrl)}"></noscript>`,
+].join('\n');
+html = region(html, 'font', fontTags);
+cardHtml = region(cardHtml, 'font', fontTags);
 write('index.html', html);
+write('card.html', cardHtml);
 
 // ---- sitemap.xml ----
 const today = new Date().toISOString().slice(0, 10);

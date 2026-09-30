@@ -90,7 +90,7 @@
     dock.classList.toggle('is-visible', y > window.innerHeight * 0.6);
   }
   window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  requestAnimationFrame(onScroll);
 
   function setMenu(open) {
     nav.classList.toggle('is-open', open);
