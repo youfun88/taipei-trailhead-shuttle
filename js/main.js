@@ -37,6 +37,14 @@
       el.hidden = false;
     });
     $$('[data-phone]').forEach(function (el) { el.textContent = phone; });
+    // 還沒設定 LINE ID 時，頁首按鈕改成直接撥電話
+    if (!lineId) {
+      $$('[data-line-link]').forEach(function (el) {
+        el.href = 'tel:' + phone.replace(/[^\d+]/g, '');
+        el.textContent = '電話預約 ' + phone;
+        el.classList.replace('btn--line', 'btn--accent');
+      });
+    }
   }
   if (lineId || phone) $('#contactBox').hidden = false;
 

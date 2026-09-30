@@ -289,6 +289,8 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .footer__inner { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding-bottom: 32px; border-bottom: 1px solid rgba(255, 255, 255, .14); }
 .logo--footer { color: #fff; }
 .footer__about { margin-top: 14px; }
+.footer__phone { display: inline-block; margin-top: 12px; color: #fff; text-decoration: none; }
+.footer__phone b { margin-left: 6px; font-size: 1.25rem; letter-spacing: .04em; }
 .footer__nav { display: flex; flex-wrap: wrap; gap: 8px 28px; align-content: start; }
 .footer__nav a { text-decoration: none; padding: 6px 0; }
 .footer__nav a:hover, .credits a:hover { color: #fff; }
