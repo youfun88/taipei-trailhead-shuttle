@@ -20,66 +20,16 @@
     $$('[data-tagline]').forEach(function (el) { el.textContent = SITE.tagline; });
   }
 
-  // ---- 價格（資料在 prices.js）----
-  var PRICES = window.PRICES || [];
-  var ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
-  var money = function (n) { return n == null ? '詢價' : '$' + Number(n).toLocaleString('en-US'); };
-  var el = function (tag, text, cls) {
-    var node = document.createElement(tag);
-    node.textContent = text;
-    if (cls) node.className = cls;
-    return node;
-  };
-
-  var CARS = { five: '五人座', nine: '九人座' };
-
-  // 起價 = 所有路線、車型裡最低的單程價
-  var lowest = null;
-  PRICES.forEach(function (r) {
-    Object.keys(ORIGINS).forEach(function (o) {
-      Object.keys(CARS).forEach(function (c) {
-        var p = r[o][c];
-        if (p && (lowest == null || p[0] < lowest)) lowest = p[0];
-      });
-    });
-  });
-  if (lowest != null) {
-    $$('[data-price]').forEach(function (node) { node.textContent = Number(lowest).toLocaleString('en-US'); });
-  }
-
-  // 路線卡片上的價格（單程）
-  $$('[data-price-key]').forEach(function (box) {
-    var route = PRICES.filter(function (r) { return r.key === box.dataset.priceKey; })[0];
-    if (!route) return;
-    Object.keys(ORIGINS).forEach(function (o) {
-      var row = document.createElement('div');
-      row.appendChild(el('span', ORIGINS[o]));
-      Object.keys(CARS).forEach(function (c) {
-        if (route[o][c]) row.appendChild(el('b', CARS[c] + ' ' + money(route[o][c][0])));
-      });
-      if (row.children.length === 1) row.appendChild(el('b', '歡迎詢價'));
-      box.appendChild(row);
-    });
-  });
-
-  // 收費表：出發地、車型各一組切換
-  var priceBody = $('#priceBody');
+  // ---- 收費表：出發地、車型各一組切換（表格內容由 scripts/build.mjs 產生）----
+  var priceBodies = $$('.price__table tbody');
   var priceTabs = $$('.price__tab');
   var priceState = { origin: 'taipei', car: 'nine' };
-  function renderPrices() {
-    priceBody.textContent = '';
-    PRICES.forEach(function (r) {
-      var p = r[priceState.origin][priceState.car];
-      var tr = document.createElement('tr');
-      var th = el('th', r.name);
-      th.scope = 'row';
-      tr.appendChild(th);
-      tr.appendChild(el('td', money(p ? p[0] : null)));
-      tr.appendChild(el('td', money(p ? p[1] : null)));
-      priceBody.appendChild(tr);
+  function showPrices() {
+    priceBodies.forEach(function (tb) {
+      tb.hidden = tb.dataset.origin !== priceState.origin || tb.dataset.car !== priceState.car;
     });
     priceTabs.forEach(function (t) {
-      var on = (t.dataset.origin || t.dataset.car) === (t.dataset.origin ? priceState.origin : priceState.car);
+      var on = t.dataset.origin ? t.dataset.origin === priceState.origin : t.dataset.car === priceState.car;
       t.classList.toggle('is-active', on);
       t.setAttribute('aria-pressed', String(on));
     });
@@ -88,10 +38,10 @@
     t.addEventListener('click', function () {
       if (t.dataset.origin) priceState.origin = t.dataset.origin;
       if (t.dataset.car) priceState.car = t.dataset.car;
-      renderPrices();
+      showPrices();
     });
   });
-  renderPrices();
+  showPrices();
 
   if (lineUrl) {
     $$('a[data-line-link], a[data-line-direct]').forEach(function (el) {

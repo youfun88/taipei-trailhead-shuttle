@@ -212,6 +212,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .price__table tbody td { font-family: var(--serif); font-weight: 900; font-size: 1.25rem; color: var(--forest); white-space: nowrap; }
 .price__table tbody td:last-child { color: var(--accent-dark); }
 .price__table tbody tr:last-child th, .price__table tbody tr:last-child td { border-bottom: 0; }
+.price__table tbody[hidden] { display: none; }
 .price__table tbody tr:hover { background: #faf7f0; }
 .price__notes { display: grid; gap: 10px; margin-top: 28px; color: var(--muted); font-size: .96rem; }
 .price__notes li { display: grid; grid-template-columns: 3.4em 1fr; gap: 12px; }
@@ -293,6 +294,9 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .faq details[open] summary::after { transform: rotate(45deg); background: var(--forest); color: #fff; }
 .faq summary:hover { color: var(--forest); }
 .faq details p { padding: 0 48px 26px 4px; color: var(--muted); }
+.faq__sub { margin-top: 56px; font-family: var(--serif); font-size: 1.4rem; font-weight: 900; }
+.faq--prices { margin-top: 20px; }
+.faq--prices summary { padding: 18px 4px; font-size: 1.04rem; }
 
 /* ---------- 結尾 ---------- */
 .cta { position: relative; isolation: isolate; padding: clamp(90px, 13vw, 170px) 0; color: #fff; text-align: center; }
@@ -303,7 +307,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .footer { padding: 56px 0 32px; background: var(--ink); color: rgba(255, 255, 255, .78); font-size: .95rem; }
 .footer__inner { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding-bottom: 32px; border-bottom: 1px solid rgba(255, 255, 255, .14); }
 .logo--footer { color: #fff; }
-.footer__about { margin-top: 14px; }
+.footer__about { margin-top: 14px; max-width: 34em; }
 .footer__owner { margin-top: 12px; color: #fff; }
 .footer__phone { display: inline-block; margin-top: 2px; color: #fff; text-decoration: none; }
 .footer__email { display: block; margin-top: 4px; color: rgba(255, 255, 255, .78); text-decoration: none; }

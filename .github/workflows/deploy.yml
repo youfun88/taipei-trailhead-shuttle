@@ -20,6 +20,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - name: 產生靜態內容（價格、結構化資料、sitemap）
+        run: node scripts/build.mjs
       - name: 檢查語法、連結與圖片大小
         run: node scripts/check.mjs
 
@@ -38,8 +40,9 @@ jobs:
       - uses: actions/checkout@v7
       - name: 整理要發布的檔案
         run: |
+          node scripts/build.mjs
           mkdir _site
-          cp -r index.html card.html contact.vcf favicon.svg css js images _site/
+          cp -r index.html card.html contact.vcf robots.txt sitemap.xml llms.txt favicon.svg css js images _site/
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
