@@ -16,7 +16,4 @@ window.SITE = {
 
   // 聯絡信箱。留空則不顯示。
   email: 'taipei.cars@gmail.com',
-
-  // 當日來回起價（新台幣 / 每車）
-  dayTripPrice: 7000,
 };

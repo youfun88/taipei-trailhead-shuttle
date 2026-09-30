@@ -18,10 +18,70 @@
   if (SITE.tagline) {
     $$('[data-tagline]').forEach(function (el) { el.textContent = SITE.tagline; });
   }
-  if (SITE.dayTripPrice) {
-    var price = Number(SITE.dayTripPrice).toLocaleString('en-US');
-    $$('[data-price]').forEach(function (el) { el.textContent = price; });
+
+  // ---- 價格（資料在 prices.js）----
+  var PRICES = window.PRICES || [];
+  var ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
+  var money = function (n) { return n == null ? '詢價' : '$' + Number(n).toLocaleString('en-US'); };
+  var el = function (tag, text, cls) {
+    var node = document.createElement(tag);
+    node.textContent = text;
+    if (cls) node.className = cls;
+    return node;
+  };
+
+  // 起價 = 所有路線裡最低的單程價
+  var lowest = PRICES.reduce(function (min, r) {
+    return Object.keys(ORIGINS).reduce(function (m, o) {
+      var v = r[o] && r[o].oneWay;
+      return v != null && (m == null || v < m) ? v : m;
+    }, min);
+  }, null);
+  if (lowest != null) {
+    $$('[data-price]').forEach(function (node) { node.textContent = Number(lowest).toLocaleString('en-US'); });
   }
+
+  // 路線卡片上的價格
+  $$('[data-price-key]').forEach(function (box) {
+    var route = PRICES.filter(function (r) { return r.key === box.dataset.priceKey; })[0];
+    if (!route) return;
+    Object.keys(ORIGINS).forEach(function (o) {
+      var row = document.createElement('div');
+      row.appendChild(el('span', ORIGINS[o]));
+      if (route[o].oneWay == null) {
+        row.appendChild(el('b', '歡迎詢價'));
+      } else {
+        row.appendChild(el('b', '單程 ' + money(route[o].oneWay)));
+        row.appendChild(el('b', '來回 ' + money(route[o].round)));
+      }
+      box.appendChild(row);
+    });
+  });
+
+  // 收費表
+  var priceBody = $('#priceBody');
+  var priceTabs = $$('.price__tab');
+  function renderPrices(origin) {
+    priceBody.textContent = '';
+    PRICES.forEach(function (r) {
+      var tr = document.createElement('tr');
+      var th = el('th', r.name);
+      th.scope = 'row';
+      tr.appendChild(th);
+      tr.appendChild(el('td', money(r[origin].oneWay)));
+      tr.appendChild(el('td', money(r[origin].round)));
+      priceBody.appendChild(tr);
+    });
+    priceTabs.forEach(function (t) {
+      var on = t.dataset.origin === origin;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-pressed', String(on));
+    });
+  }
+  priceTabs.forEach(function (t) {
+    t.addEventListener('click', function () { renderPrices(t.dataset.origin); });
+  });
+  renderPrices('taipei');
 
   if (lineUrl) {
     $$('a[data-line-link], a[data-line-direct]').forEach(function (el) {
@@ -83,7 +143,7 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
 
   // ---- 路線篩選 ----
-  var chips = $$('.chip');
+  var chips = $$('.chips .chip');
   var routes = $$('.route');
   chips.forEach(function (chip) {
     chip.addEventListener('click', function () {
