@@ -57,6 +57,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .eyebrow--light { color: #ffd9bd; }
 .section { padding: clamp(72px, 10vw, 128px) 0; }
 .section--tint { background: var(--sand); }
+.section--tight { padding: clamp(40px, 4.5vw, 64px) 0 clamp(48px, 5.5vw, 80px); }
 .section__lead { max-width: 40em; margin-top: 18px; color: var(--muted); font-size: 1.06rem; }
 .note { margin-top: 28px; font-size: .9rem; color: var(--muted); }
 
