@@ -138,7 +138,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .facts__v small { font-weight: 500; color: var(--muted); font-size: .85rem; }
 
 /* ---------- 怎麼搭 ---------- */
-.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; margin-top: 64px; counter-reset: step; position: relative; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; counter-reset: step; position: relative; }
 .steps::before { content: ''; position: absolute; top: 27px; left: 28px; right: calc(33.333% - 28px); border-top: 2px dashed #c9c1ac; }
 .step { position: relative; padding-right: 36px; }
 .step__no {
@@ -350,7 +350,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .facts__v { font-size: 1rem; }
   .facts__v b { font-size: 1.4rem; }
 
-  .steps { grid-template-columns: 1fr; gap: 36px; margin-top: 44px; }
+  .steps { grid-template-columns: 1fr; gap: 36px; }
   .steps::before { top: 28px; bottom: 60px; left: 27px; right: auto; border-top: 0; border-left: 2px dashed #c9c1ac; }
   .step { display: grid; grid-template-columns: 56px 1fr; column-gap: 20px; padding-right: 0; }
   .step__no { grid-row: span 2; }
