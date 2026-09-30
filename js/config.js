@@ -23,5 +23,5 @@ window.SITE = {
   // 詢價表單寄信用的 Web3Forms 金鑰（access key）。
   // 到 https://web3forms.com 輸入上面的信箱，金鑰會寄到那個信箱；貼在這裡之後，表單送出的詢價就會寄到信箱。
   // 留空則不寄信，表單只會整理成訊息讓客人用 LINE 傳送。
-  web3formsKey: '',
+  web3formsKey: 'fad080d9-b878-4d45-a029-f9bf70a03d0f',
 };
