@@ -22,7 +22,11 @@ for (const file of readdirSync(join(root, 'js')).filter((f) => f.endsWith('.js')
 }
 
 // 2. 頁面引用的檔案
-const pages = readdirSync(root).filter((f) => f.endsWith('.html'));
+const pages = [
+  ...readdirSync(root).filter((f) => f.endsWith('.html')),
+  // build.mjs 產生的路線頁
+  ...(existsSync(join(root, 'routes')) ? readdirSync(join(root, 'routes')).map((k) => `routes/${k}/index.html`) : []),
+];
 let refCount = 0;
 let idCount = 0;
 for (const page of pages) {

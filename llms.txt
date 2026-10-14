@@ -43,3 +43,11 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 - [首頁：路線、價格、詢價表單、常見問題](https://gohike.tw/)
 - [電子名片：一鍵存到手機通訊錄](https://gohike.tw/card.html)
+- [玉山登山接駁：塔塔加登山口（南投信義），價格與常見問題](https://gohike.tw/routes/yushan/)
+- [雪山・武陵四秀登山接駁：武陵農場登山口（台中和平），價格與常見問題](https://gohike.tw/routes/xueshan/)
+- [合歡山群峰登山接駁：武嶺・昆陽・小風口登山口（南投仁愛），價格與常見問題](https://gohike.tw/routes/hehuan/)
+- [大霸尖山登山接駁：觀霧・大鹿林道登山口（新竹五峰），價格與常見問題](https://gohike.tw/routes/dabajian/)
+- [南湖大山登山接駁：勝光登山口（台中和平），價格與常見問題](https://gohike.tw/routes/nanhu/)
+- [奇萊南華登山接駁：屯原登山口（南投仁愛），價格與常見問題](https://gohike.tw/routes/qilai/)
+- [嘉明湖登山接駁：向陽登山口（台東海端），價格與常見問題](https://gohike.tw/routes/jiaming/)
+- [松蘿湖登山接駁：松蘿湖登山口（宜蘭大同），價格與常見問題](https://gohike.tw/routes/songluo/)

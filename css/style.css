@@ -476,3 +476,36 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .dock.is-visible { transform: none; }
   .dock .btn { flex: 1; min-height: 50px; padding: 0 10px; }
 }
+
+/* ---------- 路線頁 routes/<key>/（由 scripts/build.mjs 產生）---------- */
+.page-header .page-nav { margin-left: auto; margin-right: 24px; }
+.route-page { padding-top: calc(var(--header-h) + 40px); }
+.crumbs { font-size: .9rem; color: var(--muted); }
+.crumbs a { color: var(--forest); }
+.route-page__grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(28px, 5vw, 64px); align-items: center; margin-top: 24px; }
+.route-page h1 { font-size: clamp(2.2rem, 5vw, 3.6rem); margin-top: 10px; }
+.route-page__facts { display: grid; gap: 6px; margin-top: 24px; }
+.route-page__facts div { display: flex; gap: 14px; }
+.route-page__facts dt { flex: none; width: 5em; color: var(--moss); }
+.route-page__facts dd { font-weight: 700; }
+.route-page__cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+.route-page__photo { margin: 0; }
+.route-page__photo img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: var(--radius); box-shadow: var(--shadow); }
+.route-page__photo figcaption { margin-top: 8px; font-size: .78rem; color: var(--muted); }
+.route-page__table th small { display: block; font-size: .78rem; font-weight: 400; color: var(--muted); }
+.route-page__note { margin-top: 16px; font-size: .94rem; color: var(--muted); }
+.route-page__note a { color: var(--forest); }
+.route-page__others { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 12px; margin-top: 28px; }
+.route-page__others a { display: grid; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: #fff; text-decoration: none; transition: border-color .2s, transform .2s; }
+.route-page__others a:hover { border-color: var(--forest); transform: translateY(-2px); }
+.route-page__others span { font-size: .88rem; color: var(--muted); }
+.route h3 a { text-decoration: none; }
+.route h3 a:hover { color: var(--forest); text-decoration: underline; text-underline-offset: 4px; }
+
+@media (max-width: 760px) {
+  body.page { padding-bottom: 0; }
+  .page-header .page-nav { display: none; }
+  .route-page__grid { grid-template-columns: 1fr; }
+  .route-page__photo { order: -1; }
+  .route-page__cta .btn { flex: 1 1 140px; }
+}
