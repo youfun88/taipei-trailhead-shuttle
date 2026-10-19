@@ -42,7 +42,7 @@ jobs:
         run: |
           node scripts/build.mjs
           mkdir _site
-          cp -r index.html card.html contact.vcf robots.txt sitemap.xml llms.txt 69ea85e35b38b64cc0d55ad2fe4b18c0.txt favicon.svg css js images _site/
+          cp -r index.html card.html contact.vcf robots.txt sitemap.xml llms.txt 69ea85e35b38b64cc0d55ad2fe4b18c0.txt favicon.svg css js images routes _site/
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:

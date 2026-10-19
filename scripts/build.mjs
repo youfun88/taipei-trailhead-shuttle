@@ -15,8 +15,10 @@ const write = (f, s) => writeFileSync(join(root, f), s);
 const sandbox = { window: {} };
 vm.runInNewContext(read('js/config.js'), sandbox);
 vm.runInNewContext(read('js/prices.js'), sandbox);
+vm.runInNewContext(read('js/routes.js'), sandbox);
 const SITE = sandbox.window.SITE;
 const PRICES = sandbox.window.PRICES;
+const ROUTES = sandbox.window.ROUTES;
 
 const URL = 'https://gohike.tw/';
 const ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
@@ -24,6 +26,8 @@ const CARS = { five: '五人座', nine: '九人座' };
 const SEATS = { five: 4, nine: 8 };
 const TRIPS = ['單程', '來回', '一天來回'];
 const money = (n) => '$' + Number(n).toLocaleString('en-US');
+// 坐滿時每人分攤：五人座 4 人、九人座 8 人
+const perHead = (price, car) => Math.round(price / SEATS[car]);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 const intlPhone = SITE.phone.replace(/\D/g, '').replace(/^0/, '+886');
 
@@ -40,14 +44,22 @@ const description =
 
 // ---- 產生各區塊 ----
 function cardPrice(route) {
-  return Object.keys(ORIGINS)
+  // 卡片只列一種走法：有單程就列單程，沒有就列來回或一天來回
+  const i = [0, 1, 2].find((t) => Object.keys(ORIGINS).some((o) => Object.keys(CARS).some((c) => route[o][c]?.[t]))) ?? 0;
+  const head = `<p class="route__price-k">${TRIPS[i]}・整車價</p>`;
+  const rows = Object.keys(ORIGINS)
     .map((o) => {
       const cells = Object.keys(CARS)
-        .filter((c) => route[o][c]?.[0])
-        .map((c) => `<b>${CARS[c]} ${money(route[o][c][0])}</b>`);
+        .filter((c) => route[o][c]?.[i])
+        .map((c) => `<b>${CARS[c]} ${money(route[o][c][i])}</b>`);
       return `<div><span>${ORIGINS[o]}</span>${cells.length ? cells.join('') : '<b>歡迎詢價</b>'}</div>`;
     })
     .join('');
+  // 揪團分攤：用坐得最滿的車型（有九人座就用九人座）的最低價
+  const car = Object.keys(ORIGINS).some((o) => route[o].nine?.[i]) ? 'nine' : 'five';
+  const best = Math.min(...Object.keys(ORIGINS).map((o) => route[o][car]?.[i]).filter(Boolean));
+  const share = Number.isFinite(best) ? `<p class="route__share">${SEATS[car]} 人分攤，每人約 NT${money(perHead(best, car))} 起</p>` : '';
+  return head + rows + share;
 }
 
 function priceTable() {
@@ -59,7 +71,7 @@ function priceTable() {
         const p = r[o][c] || [];
         // 整條路線都沒有價格顯示「詢價」；只是沒有這種走法則顯示「—」
         const blank = priced.includes(r) ? '—' : '詢價';
-        const cells = TRIPS.map((_, i) => `<td>${p[i] ? money(p[i]) : blank}</td>`).join('');
+        const cells = TRIPS.map((_, i) => `<td>${p[i] ? `${money(p[i])}<small>每人 ${money(perHead(p[i], c))}</small>` : blank}</td>`).join('');
         return `              <tr><th scope="row">${esc(r.name)}</th>${cells}</tr>`;
       }).join('\n');
       bodies.push(
@@ -80,15 +92,30 @@ function priceAnswer(r) {
     })
     .join('') + '以上為整車價格；來回是去程、回程各一趟，一天來回是當天送上山、等下山再載回。';
 }
-const priceFaq = priced.map((r) => ({ q: `${r.name}登山接駁多少錢？`, a: priceAnswer(r) }));
 
-function priceFaqHtml() {
-  return priceFaq
-    .map(
-      (f) =>
-        `          <details>\n            <summary>${esc(f.q)}</summary>\n            <p>${esc(f.a)}</p>\n          </details>`,
-    )
-    .join('\n');
+// ---- 首頁路線卡片：js/routes.js 的介紹 + prices.js 的價格 ----
+function routeCard(rt) {
+  const price = PRICES.find((r) => r.key === rt.key);
+  if (!price) throw new Error(`prices.js 沒有路線 ${rt.key}`);
+  const media = rt.img
+    ? `\n            <div class="route__media"><img src="${rt.img.src}" alt="${esc(rt.img.alt)}" loading="lazy" width="${rt.img.w}" height="${rt.img.h}">${rt.alt ? `<span class="route__alt">${rt.alt}</span>` : ''}</div>`
+    : '';
+  const facts = [['登山口', rt.trailhead], ['台北車程', rt.drive], ...(rt.img ? [] : [['海拔', rt.alt]])].filter((f) => f[1]);
+  return `          <article class="route reveal${rt.img ? '' : ' route--plain'}" id="route-${rt.key}" data-days="${rt.days}">${media}
+            <div class="route__body">
+              <p class="route__tags">${rt.dayTags.map((t) => `<span>${esc(t)}</span>`).join('')}</p>
+              <h3><a href="routes/${rt.key}/">${esc(rt.name)}</a></h3>
+              <p class="route__sub">${esc(rt.sub)}</p>
+              <ul class="route__points">
+                <li><b>景色特色</b>${esc(rt.card.scenery)}</li>
+                <li><b>適合對象</b>${esc(rt.card.audience)}</li>
+                <li><b>交通特色</b>${esc(rt.card.transport)}</li>
+              </ul>
+              <dl>${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
+              <div class="route__price">${cardPrice(price)}</div>
+              <div class="route__links"><a class="route__link" href="#book" data-dest="${esc(rt.dest)}">詢問這條路線</a><a class="route__more" href="routes/${rt.key}/">查看接駁詳情</a></div>
+            </div>
+          </article>`;
 }
 
 const about =
@@ -96,11 +123,17 @@ const about =
   `提供五人座（最多 4 位乘客）與九人座（最多 8 位乘客）兩種車型，整車計價。` +
   `聯絡人${SITE.owner}，預約電話 ${SITE.phone}，LINE ID ${SITE.lineId}，信箱 ${SITE.email}。`;
 
+// 首頁常見問題（<!-- faq:start --> 到 <!-- faq:end --> 之間）
+const pageFaq = (html) =>
+  [...html.slice(html.indexOf('<!-- faq:start -->'), html.indexOf('<!-- faq:end -->')).matchAll(/<summary>([\s\S]*?)<\/summary>\s*<p>([\s\S]*?)<\/p>/g)].map((m) => ({
+    q: strip(m[1]),
+    a: strip(m[2]),
+  }));
+const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+
 function jsonLd(html) {
   // 常見問題直接從頁面上的問答抓，避免兩邊內容不一致
-  const faqBlock = html.slice(html.indexOf('<div class="faq">'), html.indexOf('<!-- build:price-faq -->'));
-  const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-  const faq = [...faqBlock.matchAll(/<summary>([\s\S]*?)<\/summary>\s*<p>([\s\S]*?)<\/p>/g)].map((m) => ({ q: strip(m[1]), a: strip(m[2]) }));
+  const faq = pageFaq(html);
 
   const offers = [];
   for (const r of priced) {
@@ -151,7 +184,7 @@ function jsonLd(html) {
     {
       '@type': 'FAQPage',
       '@id': URL + '#faq',
-      mainEntity: [...faq, ...priceFaq].map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+      mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
     },
   ];
   return `  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')}</script>`;
@@ -170,23 +203,21 @@ function region(html, name, content) {
 let html = read('index.html');
 html = html.replace(/(<meta name="description" content=")[^"]*(")/, (_, a, b) => a + esc(description) + b);
 html = html.replace(/(<(b|span) data-price>)[^<]*(<\/\2>)/g, (_, a, tag, c) => a + lowestText + c);
-html = html.replace(/(<div class="route__price" data-price-key="([^"]+)">)[\s\S]*?(<\/div>\n)/g, (m, a, key, c) => {
-  const route = PRICES.find((r) => r.key === key);
-  if (!route) throw new Error(`prices.js 沒有路線 ${key}`);
-  return a + cardPrice(route) + c;
+// 「8 人同行，台中至合歡山來回每人約 NT$1,500」這類句子：data-share="路線 出發地 車型 走法(0 單程、1 來回、2 一天來回)"
+html = html.replace(/(<span data-share="([\w-]+) (\w+) (\w+) (\d)">)[^<]*(<\/span>)/g, (m, a, key, o, c, i, z) => {
+  const p = PRICES.find((r) => r.key === key)?.[o]?.[c]?.[i];
+  if (!p) throw new Error(`data-share 找不到價格：${key} ${o} ${c} ${i}`);
+  return a + perHead(p, c).toLocaleString('en-US') + z;
 });
+html = region(html, 'route-cards', ROUTES.map(routeCard).join('\n\n'));
 html = region(html, 'price-table', priceTable());
-html = region(html, 'price-faq', priceFaqHtml());
 html = region(html, 'about', `        <p class="footer__about">${esc(about)}</p>`);
 html = region(html, 'jsonld', jsonLd(html));
 
-// ---- 路線頁 routes/<key>/：每條有價格、也有路線卡片的路線一頁，讓「玉山 登山接駁」這類搜尋有專屬頁面 ----
-// 內容全部取自首頁的路線卡片（登山口、車程、海拔、照片）、prices.js 和首頁的常見問題，不另外寫新的事實。
-const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-const noParen = (s) => s.replace(/（.*?）/g, '');
+// ---- 路線頁 routes/<key>/：js/routes.js 的每條路線一頁，讓「玉山 登山接駁」這類搜尋有專屬頁面 ----
+// 介紹取自 js/routes.js、價格取自 prices.js、共通問答取自首頁的常見問題。
 const credits = [...html.matchAll(/<li>([^<—]+?)\s*—\s*([\s\S]*?)<\/li>/g)].map((m) => ({ label: m[1].trim(), html: m[2].trim() }));
-const homeFaq = [...html.slice(html.indexOf('<div class="faq">'), html.indexOf('<!-- build:price-faq -->')).matchAll(/<summary>([\s\S]*?)<\/summary>\s*<p>([\s\S]*?)<\/p>/g)]
-  .map((m) => ({ q: strip(m[1]), a: strip(m[2]) }));
+const homeFaq = pageFaq(html);
 const SHARED_FAQ = ['是什麼車？最多可以坐幾個人？', '可以到我家接嗎？', '兩天、三天的行程，下山怎麼接？', '入園、入山證和山屋要自己申請嗎？', '天氣不好要取消怎麼辦？'];
 const sharedFaq = SHARED_FAQ.map((q) => {
   const f = homeFaq.find((x) => x.q === q);
@@ -194,28 +225,13 @@ const sharedFaq = SHARED_FAQ.map((q) => {
   return f;
 });
 
-const cards = [...html.matchAll(/<article class="route[^"]*" id="route-([\w-]+)"[^>]*>([\s\S]*?)<\/article>/g)].map(([, key, b]) => {
-  const img = b.match(/<img src="([^"]+)" alt="([^"]*)"[^>]*width="(\d+)" height="(\d+)"/);
-  const title = strip(b.match(/<h3>([\s\S]*?)<\/h3>/)[1]);
-  const facts = Object.fromEntries([...b.matchAll(/<dt>(.*?)<\/dt><dd>(.*?)<\/dd>/g)].map((m) => [m[1], m[2]]));
-  const credit = credits.find((c) => img[2].includes(c.label) || title.includes(c.label));
-  if (!credit) throw new Error(`路線 ${key} 的照片在頁尾找不到授權資料`);
-  return {
-    key,
-    title,
-    tags: [...b.matchAll(/<p class="route__tags">([\s\S]*?)<\/p>/g)].flatMap((m) => [...m[1].matchAll(/<span>(.*?)<\/span>/g)].map((s) => s[1])),
-    alt: (b.match(/class="route__alt">(.*?)</) || [])[1],
-    img: { src: img[1], alt: img[2], w: img[3], h: img[4] },
-    trailhead: facts['登山口'],
-    // 「塔塔加（南投信義）」→ 名稱「塔塔加登山口」、完整「塔塔加登山口（南投信義）」；本身已叫「…登山口」的不重複加
-    trailheadName: noParen(facts['登山口']).replace(/(?<!登山口)$/, '登山口'),
-    trailheadFull: noParen(facts['登山口']).replace(/(?<!登山口)$/, '登山口') + ((facts['登山口'].match(/（.*?）/) || [''])[0]),
-    drive: facts['台北車程'],
-    credit,
-  };
+const routePages = ROUTES.map((rt) => {
+  const credit = rt.img && credits.find((c) => rt.img.alt.includes(c.label) || rt.name.includes(c.label));
+  if (rt.img && !credit) throw new Error(`路線 ${rt.key} 的照片在頁尾找不到授權資料`);
+  return { rt, route: PRICES.find((r) => r.key === rt.key), credit };
 });
-const routePages = cards.map((card) => ({ card, route: priced.find((r) => r.key === card.key) })).filter((x) => x.route);
 const routeUrl = (key) => `${URL}routes/${key}/`;
+const isPriced = (r) => priced.includes(r);
 
 function fromPrice(r, o) {
   // 這個出發地最便宜的走法，例如「五人座單程 $6,500」
@@ -225,29 +241,35 @@ function fromPrice(r, o) {
   return `${CARS[best.c]}${TRIPS[best.i]} ${money(best.p)}`;
 }
 
-function routePage({ card, route }) {
-  const name = noParen(route.name);
-  const trailhead = card.trailheadName;
-  const url = routeUrl(route.key);
-  const title = `${name}登山接駁｜台北、台中出發到${trailhead}｜${SITE.brand}`;
+function routePage({ rt, route, credit }) {
+  const name = rt.name;
+  const url = routeUrl(rt.key);
+  const title = `${name}登山接駁｜台北、台中出發｜${SITE.brand}`;
   const desc =
-    `${name}登山接駁包車，專車送到${trailhead}、下山再接你回市區。` +
-    Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('，') +
-    `，整車計價。預約電話 ${SITE.phone}。`;
-  const faq = [{ q: `${route.name}登山接駁多少錢？`, a: priceAnswer(route) }, ...sharedFaq];
+    `${name}登山接駁包車：${rt.sub}。台北、台中出發，接送地點：${rt.trailhead}。` +
+    (isPriced(route)
+      ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('，') + '，整車計價。'
+      : '整車計價，歡迎詢價。') +
+    `預約電話 ${SITE.phone}。`;
+  const faq = [...rt.faq, ...(isPriced(route) ? [{ q: `${route.name}登山接駁多少錢？`, a: priceAnswer(route) }] : []), ...sharedFaq];
   const tel = 'tel:' + SITE.phone.replace(/[^\d+]/g, '');
+  const ask = `/?dest=${encodeURIComponent(rt.dest)}#book`;
+  const image = rt.img ? URL + rt.img.src : URL + 'images/hero-sm.jpg';
 
   const rows = Object.keys(ORIGINS).flatMap((o) =>
     Object.keys(CARS).map((c) => {
       const p = route[o][c];
-      const cells = TRIPS.map((_, i) => `<td>${p?.[i] ? money(p[i]) : '—'}</td>`).join('');
+      const cells = TRIPS.map((_, i) => `<td>${p?.[i] ? `${money(p[i])}<small>每人 ${money(perHead(p[i], c))}</small>` : isPriced(route) ? '—' : '詢價'}</td>`).join('');
       return `            <tr><th scope="row">${ORIGINS[o]}・${CARS[c]}<small>最多 ${SEATS[c]} 位乘客</small></th>${cells}</tr>`;
     }),
   );
 
   const others = routePages
-    .filter((x) => x.route.key !== route.key)
-    .map((x) => `          <li><a href="/routes/${x.route.key}/"><b>${esc(noParen(x.route.name))}</b><span>${esc(fromPrice(x.route, 'taipei') || fromPrice(x.route, 'taichung'))} 起</span></a></li>`)
+    .filter((x) => x.rt.key !== rt.key)
+    .map((x) => {
+      const from = isPriced(x.route) ? (fromPrice(x.route, 'taipei') || fromPrice(x.route, 'taichung')) + ' 起' : '歡迎詢價';
+      return `          <li><a href="/routes/${x.rt.key}/"><b>${esc(x.rt.name)}</b><span>${esc(from)}</span></a></li>`;
+    })
     .join('\n');
 
   const offers = Object.keys(ORIGINS).flatMap((o) =>
@@ -268,18 +290,23 @@ function routePage({ card, route }) {
       {
         '@type': 'TaxiService',
         '@id': url + '#service',
-        name: `${route.name}登山接駁`,
+        name: `${name}登山接駁`,
         serviceType: '登山接駁包車',
         description: desc,
         url,
-        image: URL + card.img.src,
+        image,
         provider: { '@id': URL + '#business' },
         areaServed: ['台北市', '新北市', '台中市'].map((n) => ({ '@type': 'City', name: n })),
-        offers,
+        ...(offers.length ? { offers } : {}),
       },
       { '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     ],
   };
+
+  const facts = [['登山口', rt.trailhead], ['台北車程', rt.drive], ['海拔', rt.alt], ['行程類型', rt.dayTags.join('、')]].filter((f) => f[1]);
+  const links = [...rt.links, { label: '臺灣登山申請一站式服務網（入園、入山申請）', url: 'https://hike.taiwan.gov.tw/' }].filter(
+    (l, i, all) => all.findIndex((x) => x.url === l.url) === i,
+  );
 
   return `<!doctype html>
 <html lang="zh-Hant-TW">
@@ -297,7 +324,7 @@ function routePage({ card, route }) {
   <meta property="og:url" content="${url}">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(desc)}">
-  <meta property="og:image" content="${URL}${card.img.src}">
+  <meta property="og:image" content="${image}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <!-- build:font -->
@@ -336,31 +363,58 @@ function routePage({ card, route }) {
     <section class="section route-page">
       <div class="wrap">
         <p class="crumbs"><a href="/">${esc(SITE.brand)}</a> / <a href="/#routes">熱門路線</a> / ${esc(name)}</p>
-        <div class="route-page__grid">
+        <div class="route-page__grid${rt.img ? '' : ' route-page__grid--plain'}">
           <div>
-            <p class="eyebrow">${esc(card.title)}</p>
+            <p class="route-page__labels">${rt.labels.map((l) => `<span>${esc(l)}</span>`).join('')}</p>
             <h1>${esc(name)}登山接駁</h1>
-            <p class="section__lead">台北、台中出發，專車送到${esc(card.trailheadFull)}，下山再接你回市區。五人座、九人座整車計價，價格公開。</p>
+            <p class="route-page__sub">${esc(rt.sub)}</p>
+            <p class="section__lead">${esc(rt.scenery)}</p>
             <dl class="route-page__facts">
-              <div><dt>登山口</dt><dd>${esc(card.trailhead)}</dd></div>${card.drive ? `\n              <div><dt>台北車程</dt><dd>${esc(card.drive)}</dd></div>` : ''}${card.alt ? `\n              <div><dt>海拔</dt><dd>${esc(card.alt)}</dd></div>` : ''}${card.tags.length ? `\n              <div><dt>常見行程</dt><dd>${esc(card.tags.join('、'))}</dd></div>` : ''}
+${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('\n')}
             </dl>
             <div class="route-page__cta">
+              <a class="btn btn--accent" href="${esc(ask)}">我要詢問這條路線</a>
               <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>
-              <a class="btn btn--outline" href="${tel}">電話 ${esc(SITE.phone)}</a>
             </div>
-          </div>
+          </div>${
+            rt.img
+              ? `
           <figure class="route-page__photo">
-            <img src="/${card.img.src}" alt="${esc(card.img.alt)}" width="${card.img.w}" height="${card.img.h}" fetchpriority="high">
-            <figcaption>照片：${card.credit.html}</figcaption>
-          </figure>
+            <img src="/${rt.img.src}" alt="${esc(rt.img.alt)}" width="${rt.img.w}" height="${rt.img.h}" fetchpriority="high">
+            <figcaption>照片：${credit.html}</figcaption>
+          </figure>`
+              : ''
+          }
         </div>
       </div>
     </section>
 
     <section class="section section--tint section--tight">
       <div class="wrap">
+        <h2>路線特色</h2>
+        <div class="route-page__cols">
+          <div><h3>景觀</h3><p>${esc(rt.scenery)}</p></div>
+          <div><h3>行程類型</h3><p>${esc([...rt.dayTags, ...rt.labels.filter((l) => !rt.dayTags.includes(l))].join('・'))}</p></div>
+          <div><h3>適合客群</h3><p>${esc(rt.audience)}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <h2>交通接駁</h2>
+        <dl class="route-page__transport">
+          <div><dt>出發地</dt><dd>台北（台北車站、板橋車站）、台中，也可以到府接送</dd></div>
+          <div><dt>接送位置</dt><dd>${esc(rt.trailhead)}</dd></div>${rt.drive ? `\n          <div><dt>台北車程</dt><dd>${esc(rt.drive)}（一般路況下的概估）</dd></div>` : ''}
+          <div><dt>注意事項</dt><dd>${esc(rt.transport)}</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tint section--tight">
+      <div class="wrap">
         <h2>${esc(name)}接駁價格</h2>
-        <p class="section__lead">整台車的價格，不是按人頭。來回是去程、回程各一趟；一天來回是當天送上山、等下山再載回。</p>
+        <p class="section__lead">整台車的價格，不是按人頭；小字是坐滿時的每人分攤（五人座 4 人、九人座 8 人）。來回是去程、回程各一趟；一天來回是當天送上山、等下山再載回。</p>
         <div class="price">
           <table class="price__table route-page__table">
             <thead><tr><th scope="col">出發地・車型</th>${TRIPS.map((t) => `<th scope="col">${t}</th>`).join('')}</tr></thead>
@@ -369,16 +423,34 @@ ${rows.join('\n')}
             </tbody>
           </table>
         </div>
-        <p class="route-page__note">「—」表示沒有這種走法，可以直接詢價。預約時請告訴我日期、人數和上車地點，也可以用<a href="/#book">線上詢價表單</a>。</p>
+        <p class="route-page__note">${isPriced(route) ? '「—」表示沒有這種走法，可以直接詢價。' : '這條路線依行程報價，歡迎詢價。'}預約時請告訴我們日期、人數和上車地點，也可以用<a href="${esc(ask)}">線上詢價表單</a>。</p>
       </div>
     </section>
 
     <section class="section section--tight">
       <div class="wrap wrap--narrow">
+        <h2>登山須知</h2>
+        <p class="section__lead">我們負責交通接駁；入園入山申請、山屋或營地、登山保險和裝備請自行準備。出發前請到官方網站確認最新的開放情形、路況與管制。</p>
+        <ul class="route-page__links">
+${links.map((l) => `          <li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join('\n')}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tint section--tight">
+      <div class="wrap wrap--narrow">
         <h2>常見問題</h2>
         <div class="faq">
 ${faq.map((f) => `          <details>\n            <summary>${esc(f.q)}</summary>\n            <p>${esc(f.a)}</p>\n          </details>`).join('\n')}
         </div>
+      </div>
+    </section>
+
+    <section class="section section--tight route-page__end">
+      <div class="wrap">
+        <h2>準備好出發了嗎？</h2>
+        <p>告訴我們日期、人數與上車地點，確認車輛及行程後提供報價。</p>
+        <a class="btn btn--accent btn--lg" href="${esc(ask)}">我要詢問這條路線</a>
       </div>
     </section>
 
@@ -414,12 +486,13 @@ ${others}
 </html>
 `;
 }
-const routeHtml = Object.fromEntries(routePages.map((x) => [x.route.key, routePage(x)]));
+const routeHtml = Object.fromEntries(routePages.map((x) => [x.rt.key, routePage(x)]));
 
 // ---- 標題字型：只向 Google Fonts 要頁面上實際用到的字，檔案才會小 ----
 let cardHtml = read('card.html');
 const headingText = [html, cardHtml, ...Object.values(routeHtml)]
-  .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)].map((m) => m[1].replace(/<[^>]+>/g, '')))
+  // 標題，以及路線頁用標題字型的副標
+  .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>|<p class="route-page__sub">([\s\S]*?)<\/p>/g)].map((m) => (m[1] ?? m[2]).replace(/<[^>]+>/g, '')))
   .join('');
 const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
 const glyphs = [...new Set(headingText + SITE.brand + SITE.owner + SITE.tagline + '詢價掃描加好友—・，。：、？（）' + ascii)].filter((ch) => ch === ' ' || ch.trim()).sort().join('');
@@ -458,7 +531,7 @@ write(
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${URL}</loc><lastmod>${today}</lastmod></url>
   <url><loc>${URL}card.html</loc><lastmod>${today}</lastmod></url>
-${routePages.map((x) => `  <url><loc>${routeUrl(x.route.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${routePages.map((x) => `  <url><loc>${routeUrl(x.rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `,
 );
@@ -500,7 +573,7 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 - [首頁：路線、價格、詢價表單、常見問題](${URL})
 - [電子名片：一鍵存到手機通訊錄](${URL}card.html)
-${routePages.map((x) => `- [${noParen(x.route.name)}登山接駁：${x.card.trailheadFull}，價格與常見問題](${routeUrl(x.route.key)})`).join('\n')}
+${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地點、價格與常見問題](${routeUrl(x.rt.key)})`).join('\n')}
 `,
 );
 

@@ -121,6 +121,29 @@
     });
   });
 
+  // ---- 常見問題分類（沒有 JavaScript 時三類全部顯示）----
+  var faqTabs = $$('.faq-tabs [role="tab"]');
+  function showFaq(tab) {
+    faqTabs.forEach(function (t) {
+      var on = t === tab;
+      t.classList.toggle('is-active', on);
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      $('#' + t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  faqTabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { showFaq(t); });
+    t.addEventListener('keydown', function (e) {
+      var step = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!step) return;
+      var next = faqTabs[(i + step + faqTabs.length) % faqTabs.length];
+      showFaq(next);
+      next.focus();
+    });
+  });
+  if (faqTabs.length) showFaq(faqTabs[0]);
+
   // ---- 詢價表單 ----
   var form = $('#quoteForm');
   var errorBox = $('#formError');
@@ -139,6 +162,17 @@
   var today = new Date();
   today.setMinutes(today.getMinutes() - today.getTimezoneOffset());
   form.elements.date.min = today.toISOString().slice(0, 10);
+  form.elements.returnDate.min = form.elements.date.min;
+  form.elements.flight.min = form.elements.date.min;
+  form.elements.date.addEventListener('change', function () {
+    form.elements.returnDate.min = form.elements.date.value || form.elements.date.min;
+  });
+
+  // 路線頁「我要詢問這條路線」會帶 ?dest=目的地 過來
+  var askDest = new URLSearchParams(location.search).get('dest');
+  if (askDest && $$('option', form.elements.dest).some(function (o) { return o.value === askDest; })) {
+    form.elements.dest.value = askDest;
+  }
 
   // 從路線卡片、方案按鈕帶入預設值
   $$('[data-dest]').forEach(function (a) {
@@ -148,21 +182,36 @@
     a.addEventListener('click', function () { form.elements.days.value = a.dataset.days; });
   });
 
+  function fullPhone(f) {
+    var num = f.phone.value.trim();
+    if (!num) return '';
+    // 選了國際區碼就去掉號碼開頭的 0，例如 +886 0912… → +886 912…
+    return f.cc.value ? f.cc.value + ' ' + num.replace(/^0/, '') : num;
+  }
+  function withWeek(value) {
+    var d = new Date(value + 'T00:00:00');
+    return value.replace(/-/g, '/') + '（' + '日一二三四五六'.charAt(d.getDay()) + '）';
+  }
+
   function buildMessage() {
     var f = form.elements;
-    var d = new Date(f.date.value + 'T00:00:00');
-    var week = '日一二三四五六'.charAt(d.getDay());
     var lines = [
       '【登山接駁詢價】',
       '稱呼：' + f.name.value.trim(),
-      '電話：' + f.phone.value.trim(),
+      '希望聯絡方式：' + f.contact.value,
+      fullPhone(f) ? '電話：' + fullPhone(f) : '',
+      f.email.value.trim() ? 'Email：' + f.email.value.trim() : '',
       '目的地：' + f.dest.value,
-      '出發日期：' + f.date.value.replace(/-/g, '/') + '（' + week + '）',
+      '去程日期：' + withWeek(f.date.value),
+      f.returnDate.value ? '回程日期：' + withWeek(f.returnDate.value) : '',
+      '接送需求：' + f.trip.value,
       '行程天數：' + f.days.value,
       '人數：' + f.people.value,
       '車型：' + f.car.value,
       '上車地點：' + f.pickup.value,
-      f.note.value.trim() ? '備註：' + f.note.value.trim() : '',
+      f.flight.value ? '航班抵達日期：' + withWeek(f.flight.value) : '',
+      '偏好語言：' + f.lang.value,
+      f.note.value.trim() ? '其他需求：' + f.note.value.trim() : '',
     ];
     return lines.filter(Boolean).join('\n');
   }
@@ -203,14 +252,20 @@
       subject: '登山接駁詢價：' + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
       from_name: 'gohike.tw 詢價表單',
       '稱呼': f.name.value.trim(),
-      '電話': f.phone.value.trim(),
+      '希望聯絡方式': f.contact.value,
+      '電話': fullPhone(f) || '（未填）',
+      'Email': f.email.value.trim() || '（未填）',
       '目的地': f.dest.value,
-      '出發日期': f.date.value.replace(/-/g, '/'),
+      '去程日期': f.date.value.replace(/-/g, '/'),
+      '回程日期': f.returnDate.value.replace(/-/g, '/') || '（未填）',
+      '接送需求': f.trip.value,
       '行程天數': f.days.value,
       '人數': f.people.value,
       '車型': f.car.value,
       '上車地點': f.pickup.value,
-      '備註': f.note.value.trim() || '（無）',
+      '航班抵達日期': f.flight.value.replace(/-/g, '/') || '（未填）',
+      '偏好語言': f.lang.value,
+      '其他需求': f.note.value.trim() || '（無）',
       '完整訊息': msg,
     };
     return fetch(formEndpoint, {
@@ -228,15 +283,23 @@
     if (sending) return;
     var f = form.elements;
     var missing = [];
-    if (!f.name.value.trim()) missing.push(f.name);
-    if (!f.phone.value.trim()) missing.push(f.phone);
-    if (!f.dest.value) missing.push(f.dest);
-    if (!f.date.value) missing.push(f.date);
+    var problems = [];
+    var phoneVal = f.phone.value.trim();
+    var emailVal = f.email.value.trim();
+    var method = f.contact.value;
+    if (!f.name.value.trim()) { missing.push(f.name); problems.push('稱呼'); }
+    // 電話或 Email 擇一；選了 Email 聯絡就要有 Email，選 WhatsApp 或電話就要有電話
+    if (method === 'Email' && !emailVal) { missing.push(f.email); problems.push('Email（你選了用 Email 聯絡）'); }
+    else if ((method === 'WhatsApp' || method === '電話') && !phoneVal) { missing.push(f.phone); problems.push('手機號碼（你選了用 ' + method + ' 聯絡）'); }
+    else if (!phoneVal && !emailVal) { missing.push(f.phone, f.email); problems.push('手機號碼或 Email 擇一'); }
+    if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { missing.push(f.email); problems.push('Email 格式不正確'); }
+    if (!f.dest.value) { missing.push(f.dest); problems.push('目的地'); }
+    if (!f.date.value) { missing.push(f.date); problems.push('去程日期'); }
 
     $$('.is-invalid', form).forEach(function (el) { el.classList.remove('is-invalid'); });
     if (missing.length) {
       missing.forEach(function (el) { el.classList.add('is-invalid'); });
-      errorBox.textContent = '還有必填欄位沒填：稱呼、聯絡電話、目的地、出發日期。';
+      errorBox.textContent = '請再確認：' + problems.join('、') + '。';
       errorBox.hidden = false;
       result.hidden = true;
       missing[0].focus();
@@ -250,7 +313,7 @@
     if (!formEndpoint) {
       showResult(lineUrl
         ? '訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：'
-        : '訊息整理好了，傳給我就完成詢價：');
+        : '訊息整理好了，傳給我們就完成詢價：');
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
@@ -266,7 +329,7 @@
       if (ok) {
         showSent(f.name.value.trim());
       } else {
-        showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我' + (phone ? '，或直接打 ' + phone : '') + '：', true);
+        showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我們' + (phone ? '，或直接打 ' + phone : '') + '：', true);
         result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
