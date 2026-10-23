@@ -121,7 +121,7 @@ function routeCard(rt) {
 const about =
   `${SITE.brand}是台北、台中出發的登山接駁包車服務，接送${routeNames}等登山口，` +
   `提供五人座（最多 4 位乘客）與九人座（最多 8 位乘客）兩種車型，整車計價。` +
-  `詢價請用 LINE（ID ${SITE.lineId}）、Email（${SITE.email}）或網站上的詢價表單。`;
+  `詢價請用 LINE（ID ${SITE.lineId}）、WhatsApp、Email（${SITE.email}）或網站上的詢價表單。`;
 
 // 首頁常見問題（<!-- faq:start --> 到 <!-- faq:end --> 之間）
 const pageFaq = (html) =>
@@ -458,7 +458,7 @@ ${others}
     </section>
   </main>
 
-  <div class="dock is-visible">
+  <div class="dock is-visible">${SITE.whatsapp ? `\n    <a class="btn btn--outline" href="https://wa.me/${SITE.whatsapp.replace(/\D/g, '')}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
     <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>
     <a class="btn btn--accent" href="${esc(ask)}">免費詢價</a>
   </div>
@@ -554,7 +554,7 @@ write(
 - 入園入山申請、山屋、保險與裝備由乘客自行準備；詢價時可提供入山證、山屋的申請資訊。
 - 付款：訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。
 - 取消：出發三日前可全額退費取消或改期；遇封山或官方管制，可於出發前一日取消。
-- 詢價請用 LINE、Email 或網站表單（司機行車中不便接聽電話）。
+- 詢價請用 LINE、WhatsApp（${SITE.whatsapp}）、Email 或網站表單（司機行車中不便接聽電話）。
 
 ## 價格（新台幣，整車，單程 / 來回 / 一天來回，— 表示沒有這種走法或請詢價）
 

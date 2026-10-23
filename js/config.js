@@ -18,7 +18,7 @@ window.SITE = {
   phone: '0910-321-666',
 
   // WhatsApp 號碼（含國碼，例如 '+886910321666'）。填了才會在詢價區和手機底部顯示 WhatsApp 按鈕。
-  whatsapp: '',
+  whatsapp: '+886910321666',
 
   // Instagram、Facebook 粉絲專頁網址。填了才會在頁尾顯示連結。
   instagramUrl: 'https://www.instagram.com/taipei_cars/',
