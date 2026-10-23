@@ -407,7 +407,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
     <section class="section section--tint section--tight">
       <div class="wrap">
         <h2>${esc(name)}接駁價格</h2>
-        <p class="section__lead">以上為整車參考費用，不是按人頭計價。來回是去程、回程兩段行程接駁；一天來回是當天送上山、依約定時間接回。實際報價依上車地點、接送時間與停靠需求確認，若有額外費用會在預約成立前列明。</p>
+        <p class="section__lead">以下為整車參考費用，不是按人頭計價。來回是去程、回程兩段行程接駁；一天來回是當天送上山、依約定時間接回。實際報價依上車地點、接送時間與停靠需求確認，若有額外費用會在預約成立前列明。</p>
         <div class="price">
           <table class="price__table route-page__table">
             <thead><tr><th scope="col">出發地・車型</th>${TRIPS.map((t) => `<th scope="col">${t}</th>`).join('')}</tr></thead>

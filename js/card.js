@@ -22,6 +22,12 @@
   }
   if (phone) show('[data-phone-row]', '[data-phone-link]', 'tel:' + phone.replace(/[^\d+]/g, ''), '[data-phone]', phone);
   if (email) show('[data-email-row]', '[data-email-link]', 'mailto:' + email, '[data-email]', email);
+  var wa = (SITE.whatsapp || '').replace(/\D/g, '');
+  if (wa) show('[data-wa-row]', '[data-wa-link]', 'https://wa.me/' + wa, '[data-wa]', '+' + wa.replace(/^(886)(\d{3})(\d{3})(\d{3})$/, '$1 $2-$3-$4'));
+  var ig = (SITE.instagramUrl || '').trim();
+  if (ig) show('[data-ig-row]', '[data-ig-link]', ig, '[data-ig]', '@' + ig.replace(/\/+$/, '').split('/').pop());
+  if (SITE.facebookUrl) show('[data-fb-row]', '[data-fb-link]', SITE.facebookUrl);
+  $$('[data-wa-link], [data-ig-link], [data-fb-link]').forEach(function (el) { el.target = '_blank'; el.rel = 'noopener'; });
   if (lineUrl) {
     show('[data-line-row]', '[data-line-link]', lineUrl);
     if (lineId) $$('[data-line-id]').forEach(function (el) { el.textContent = lineId; });

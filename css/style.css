@@ -128,7 +128,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .hero__content { padding-bottom: clamp(36px, 6vw, 64px); }
 .hero__content { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 40px; }
 .hero h1 { text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
-.hero h1 em { font-style: normal; color: #ffcfa8; }
+.hero h1 em { font-style: normal; color: #ffcfa8; white-space: nowrap; }
 .hero__picks { display: grid; gap: 10px; width: 270px; }
 .hero__picks p { font-size: .8rem; font-weight: 700; letter-spacing: .18em; color: rgba(255, 255, 255, .8); }
 .hero__picks a {
@@ -192,6 +192,8 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .chip:hover { border-color: var(--forest); }
 .chip.is-active { background: var(--forest); border-color: var(--forest); color: #fff; font-weight: 700; }
 .routes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px; margin-top: 32px; }
+.routes__more { display: flex; justify-content: center; margin-top: 32px; }
+.routes__more .btn { min-width: 240px; }
 .route {
   display: flex; flex-direction: column; overflow: hidden;
   background: var(--paper); border-radius: var(--radius); box-shadow: var(--shadow);
@@ -507,6 +509,9 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .chips::-webkit-scrollbar { display: none; }
   .chip { flex: none; }
   .routes { grid-template-columns: 1fr; gap: 20px; }
+  /* 手機上卡片太長：三個重點留在路線頁，卡片只放登山口、車程和價格 */
+  .route__points { display: none; }
+  .route dl { margin-top: 10px; }
   .price { margin-inline: -8px; }
   .price { padding-inline: 12px; }
   .price__table th, .price__table td { padding: 13px 4px; }

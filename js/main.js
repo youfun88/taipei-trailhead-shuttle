@@ -125,21 +125,45 @@
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setMenu(false); });
 
   // ---- 路線篩選 ----
+  // 「全部」先顯示前 6 條，按「看全部」再展開（沒有 JavaScript 時全部顯示）
   var chips = $$('.chips .chip');
   var routes = $$('.route');
+  var routesMore = $('#routesMore');
+  var ROUTE_LIMIT = 6;
+  var routeFilter = 'all';
+  var showAllRoutes = false;
+  function applyRouteFilter() {
+    var shown = 0;
+    routes.forEach(function (r) {
+      var match = routeFilter === 'all' || r.dataset.days.split(' ').indexOf(routeFilter) !== -1;
+      var folded = routeFilter === 'all' && !showAllRoutes && shown >= ROUTE_LIMIT;
+      if (match) shown++;
+      r.hidden = !match || folded;
+    });
+    if (routesMore) {
+      routesMore.textContent = '看全部 ' + routes.length + ' 條路線';
+      routesMore.hidden = routeFilter !== 'all' || showAllRoutes || shown <= ROUTE_LIMIT;
+    }
+  }
   chips.forEach(function (chip) {
     chip.addEventListener('click', function () {
-      var f = chip.dataset.filter;
+      routeFilter = chip.dataset.filter;
       chips.forEach(function (c) {
         var on = c === chip;
         c.classList.toggle('is-active', on);
         c.setAttribute('aria-pressed', String(on));
       });
-      routes.forEach(function (r) {
-        r.hidden = f !== 'all' && r.dataset.days.split(' ').indexOf(f) === -1;
-      });
+      applyRouteFilter();
     });
   });
+  if (routesMore) {
+    routesMore.addEventListener('click', function () {
+      showAllRoutes = true;
+      applyRouteFilter();
+      if (routes[ROUTE_LIMIT]) routes[ROUTE_LIMIT].querySelector('a').focus({ preventScroll: true });
+    });
+  }
+  applyRouteFilter();
 
   // ---- 常見問題分類（沒有 JavaScript 時三類全部顯示）----
   var faqTabs = $$('.faq-tabs [role="tab"]');
@@ -244,6 +268,12 @@
     // 個人 LINE 帳號無法預先帶入訊息：按鈕會先複製訊息再開啟聊天，客人貼上即可。
     sendLine.href = lineUrl || 'https://line.me/R/share?text=' + encodeURIComponent(resultText.textContent);
     sendLineLabel.textContent = lineUrl ? '複製訊息並開啟 LINE' : '用 LINE 傳送';
+    // WhatsApp 可以預先帶入訊息
+    var sendWa = $('#sendWa');
+    if (sendWa && whatsapp) {
+      sendWa.href = 'https://wa.me/' + whatsapp + '?text=' + encodeURIComponent(resultText.textContent);
+      sendWa.hidden = false;
+    }
     result.hidden = false;
   }
 
