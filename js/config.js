@@ -14,8 +14,15 @@ window.SITE = {
   // LINE ID（顯示給客人在 LINE 裡搜尋加好友用）。留空則只顯示「加入好友」。
   lineId: '0910321666',
 
-  // 聯絡電話（例如 '0912-345-678'）。留空則不顯示電話按鈕。
+  // 聯絡電話（例如 '0912-345-678'）。只用在電子名片 card.html；首頁不顯示電話（司機行車中不便接聽，請客人用文字詢價）。
   phone: '0910-321-666',
+
+  // WhatsApp 號碼（含國碼，例如 '+886910321666'）。填了才會在詢價區和手機底部顯示 WhatsApp 按鈕。
+  whatsapp: '',
+
+  // Instagram、Facebook 粉絲專頁網址。填了才會在頁尾顯示連結。
+  instagramUrl: '',
+  facebookUrl: '',
 
   // 聯絡信箱。留空則不顯示。
   email: 'taipei.cars@gmail.com',

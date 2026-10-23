@@ -10,6 +10,7 @@
   var lineId = (SITE.lineId || '').trim();
   var phone = (SITE.phone || '').trim();
   var email = (SITE.email || '').trim();
+  var whatsapp = (SITE.whatsapp || '').replace(/\D/g, '');
   var formKey = (SITE.web3formsKey || '').trim();
   var formEndpoint = formKey ? 'https://api.web3forms.com/submit' : '';
 
@@ -76,7 +77,26 @@
     });
     $$('[data-email]').forEach(function (el) { el.textContent = email; });
   }
-  if (lineUrl || phone || email) $('#contactBox').hidden = false;
+  if (whatsapp) {
+    $$('[data-whatsapp-link]').forEach(function (el) {
+      el.href = 'https://wa.me/' + whatsapp;
+      el.target = '_blank';
+      el.rel = 'noopener';
+      el.hidden = false;
+    });
+  }
+  [['instagramUrl', '[data-instagram-link]'], ['facebookUrl', '[data-facebook-link]']].forEach(function (s) {
+    var url = (SITE[s[0]] || '').trim();
+    if (!url) return;
+    $$(s[1]).forEach(function (el) {
+      el.href = url;
+      el.target = '_blank';
+      el.rel = 'noopener';
+      el.hidden = false;
+    });
+    $$('[data-social]').forEach(function (el) { el.hidden = false; });
+  });
+  if (lineUrl || whatsapp || email) $('#contactBox').hidden = false;
 
   $('#year').textContent = new Date().getFullYear();
 
@@ -288,9 +308,9 @@
     var emailVal = f.email.value.trim();
     var method = f.contact.value;
     if (!f.name.value.trim()) { missing.push(f.name); problems.push('稱呼'); }
-    // 電話或 Email 擇一；選了 Email 聯絡就要有 Email，選 WhatsApp 或電話就要有電話
+    // 電話或 Email 擇一；選了 Email 聯絡就要有 Email，選 WhatsApp 就要有電話
     if (method === 'Email' && !emailVal) { missing.push(f.email); problems.push('Email（你選了用 Email 聯絡）'); }
-    else if ((method === 'WhatsApp' || method === '電話') && !phoneVal) { missing.push(f.phone); problems.push('手機號碼（你選了用 ' + method + ' 聯絡）'); }
+    else if (method === 'WhatsApp' && !phoneVal) { missing.push(f.phone); problems.push('手機號碼（你選了用 ' + method + ' 聯絡）'); }
     else if (!phoneVal && !emailVal) { missing.push(f.phone, f.email); problems.push('手機號碼或 Email 擇一'); }
     if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { missing.push(f.email); problems.push('Email 格式不正確'); }
     if (!f.dest.value) { missing.push(f.dest); problems.push('目的地'); }
@@ -329,7 +349,7 @@
       if (ok) {
         showSent(f.name.value.trim());
       } else {
-        showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我們' + (phone ? '，或直接打 ' + phone : '') + '：', true);
+        showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我們' + (email ? '，或寄到 ' + email : '') + '：', true);
         result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });

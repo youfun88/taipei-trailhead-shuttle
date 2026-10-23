@@ -26,10 +26,7 @@ const CARS = { five: '五人座', nine: '九人座' };
 const SEATS = { five: 4, nine: 8 };
 const TRIPS = ['單程', '來回', '一天來回'];
 const money = (n) => '$' + Number(n).toLocaleString('en-US');
-// 坐滿時每人分攤：五人座 4 人、九人座 8 人
-const perHead = (price, car) => Math.round(price / SEATS[car]);
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const intlPhone = SITE.phone.replace(/\D/g, '').replace(/^0/, '+886');
 
 const priced = PRICES.filter((r) => Object.keys(ORIGINS).some((o) => Object.keys(CARS).some((c) => r[o][c])));
 const allOneWay = priced.flatMap((r) => Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).map((c) => r[o][c]?.[0]))).filter(Boolean);
@@ -40,7 +37,7 @@ const routeNames = [...new Set(priced.map((r) => r.name.replace(/（.*?）/, '')
 
 const description =
   `${SITE.brand}提供台北、台中出發的登山接駁包車，專車直達${priced.slice(0, 5).map((r) => r.name.replace(/（.*?）/, '')).join('、')}等高山登山口，下山再接你回家。` +
-  `五人座、九人座整車計價，單程 NT$${lowestText} 起，各路線價格公開。預約電話 ${SITE.phone}。`;
+  `五人座、九人座整車計價，單程 NT$${lowestText} 起，各路線價格公開，歡迎用 LINE 或線上表單詢價。`;
 
 // ---- 產生各區塊 ----
 function cardPrice(route) {
@@ -55,11 +52,7 @@ function cardPrice(route) {
       return `<div><span>${ORIGINS[o]}</span>${cells.length ? cells.join('') : '<b>歡迎詢價</b>'}</div>`;
     })
     .join('');
-  // 揪團分攤：用坐得最滿的車型（有九人座就用九人座）的最低價
-  const car = Object.keys(ORIGINS).some((o) => route[o].nine?.[i]) ? 'nine' : 'five';
-  const best = Math.min(...Object.keys(ORIGINS).map((o) => route[o][car]?.[i]).filter(Boolean));
-  const share = Number.isFinite(best) ? `<p class="route__share">${SEATS[car]} 人分攤，每人約 NT${money(perHead(best, car))} 起</p>` : '';
-  return head + rows + share;
+  return head + rows;
 }
 
 function priceTable() {
@@ -71,7 +64,7 @@ function priceTable() {
         const p = r[o][c] || [];
         // 整條路線都沒有價格顯示「詢價」；只是沒有這種走法則顯示「—」
         const blank = priced.includes(r) ? '—' : '詢價';
-        const cells = TRIPS.map((_, i) => `<td>${p[i] ? `${money(p[i])}<small>每人 ${money(perHead(p[i], c))}</small>` : blank}</td>`).join('');
+        const cells = TRIPS.map((_, i) => `<td>${p[i] ? money(p[i]) : blank}</td>`).join('');
         return `              <tr><th scope="row">${esc(r.name)}</th>${cells}</tr>`;
       }).join('\n');
       bodies.push(
@@ -121,7 +114,7 @@ function routeCard(rt) {
 const about =
   `${SITE.brand}是台北、台中出發的登山接駁包車服務，接送${routeNames}等登山口，` +
   `提供五人座（最多 4 位乘客）與九人座（最多 8 位乘客）兩種車型，整車計價。` +
-  `聯絡人${SITE.owner}，預約電話 ${SITE.phone}，LINE ID ${SITE.lineId}，信箱 ${SITE.email}。`;
+  `詢價請用 LINE（ID ${SITE.lineId}）、Email（${SITE.email}）或網站上的詢價表單。`;
 
 // 首頁常見問題（<!-- faq:start --> 到 <!-- faq:end --> 之間）
 const pageFaq = (html) =>
@@ -170,15 +163,14 @@ function jsonLd(html) {
       description,
       url: URL,
       image: URL + 'images/hero-sm.jpg',
-      telephone: intlPhone,
       email: SITE.email,
       priceRange: `NT$${Math.min(...allPrices).toLocaleString('en-US')}–NT$${Math.max(...allPrices).toLocaleString('en-US')}`,
       currenciesAccepted: 'TWD',
       address: { '@type': 'PostalAddress', addressCountry: 'TW' },
       areaServed: ['台北市', '新北市', '台中市'].map((name) => ({ '@type': 'City', name })),
       knowsLanguage: 'zh-Hant-TW',
-      contactPoint: { '@type': 'ContactPoint', name: SITE.owner, telephone: intlPhone, email: SITE.email, contactType: 'reservations', availableLanguage: 'zh-Hant-TW' },
-      sameAs: [SITE.lineUrl].filter(Boolean),
+      contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: URL + '#book', contactType: 'reservations', availableLanguage: 'zh-Hant-TW' },
+      sameAs: [SITE.lineUrl, SITE.instagramUrl, SITE.facebookUrl].filter(Boolean),
       hasOfferCatalog: { '@type': 'OfferCatalog', name: '登山接駁路線與價格', itemListElement: offers },
     },
     {
@@ -203,12 +195,6 @@ function region(html, name, content) {
 let html = read('index.html');
 html = html.replace(/(<meta name="description" content=")[^"]*(")/, (_, a, b) => a + esc(description) + b);
 html = html.replace(/(<(b|span) data-price>)[^<]*(<\/\2>)/g, (_, a, tag, c) => a + lowestText + c);
-// 「8 人同行，台中至合歡山來回每人約 NT$1,500」這類句子：data-share="路線 出發地 車型 走法(0 單程、1 來回、2 一天來回)"
-html = html.replace(/(<span data-share="([\w-]+) (\w+) (\w+) (\d)">)[^<]*(<\/span>)/g, (m, a, key, o, c, i, z) => {
-  const p = PRICES.find((r) => r.key === key)?.[o]?.[c]?.[i];
-  if (!p) throw new Error(`data-share 找不到價格：${key} ${o} ${c} ${i}`);
-  return a + perHead(p, c).toLocaleString('en-US') + z;
-});
 html = region(html, 'route-cards', ROUTES.map(routeCard).join('\n\n'));
 html = region(html, 'price-table', priceTable());
 html = region(html, 'about', `        <p class="footer__about">${esc(about)}</p>`);
@@ -218,7 +204,7 @@ html = region(html, 'jsonld', jsonLd(html));
 // 介紹取自 js/routes.js、價格取自 prices.js、共通問答取自首頁的常見問題。
 const credits = [...html.matchAll(/<li>([^<—]+?)\s*—\s*([\s\S]*?)<\/li>/g)].map((m) => ({ label: m[1].trim(), html: m[2].trim() }));
 const homeFaq = pageFaq(html);
-const SHARED_FAQ = ['是什麼車？最多可以坐幾個人？', '可以到我家接嗎？', '兩天、三天的行程，下山怎麼接？', '入園、入山證和山屋要自己申請嗎？', '天氣不好要取消怎麼辦？'];
+const SHARED_FAQ = ['單程、來回、一天來回有什麼差別？', '如果下山時間比預計晚，司機會等嗎？', '九人座真的可以坐八位乘客加八個大背包嗎？', '入園、入山證和山屋要自己申請嗎？', '如果行程取消或需要改期怎麼辦？'];
 const sharedFaq = SHARED_FAQ.map((q) => {
   const f = homeFaq.find((x) => x.q === q);
   if (!f) throw new Error(`首頁常見問題找不到「${q}」，路線頁需要它`);
@@ -250,16 +236,15 @@ function routePage({ rt, route, credit }) {
     (isPriced(route)
       ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('，') + '，整車計價。'
       : '整車計價，歡迎詢價。') +
-    `預約電話 ${SITE.phone}。`;
+    '歡迎用 LINE 或線上表單詢價。';
   const faq = [...rt.faq, ...(isPriced(route) ? [{ q: `${route.name}登山接駁多少錢？`, a: priceAnswer(route) }] : []), ...sharedFaq];
-  const tel = 'tel:' + SITE.phone.replace(/[^\d+]/g, '');
   const ask = `/?dest=${encodeURIComponent(rt.dest)}#book`;
   const image = rt.img ? URL + rt.img.src : URL + 'images/hero-sm.jpg';
 
   const rows = Object.keys(ORIGINS).flatMap((o) =>
     Object.keys(CARS).map((c) => {
       const p = route[o][c];
-      const cells = TRIPS.map((_, i) => `<td>${p?.[i] ? `${money(p[i])}<small>每人 ${money(perHead(p[i], c))}</small>` : isPriced(route) ? '—' : '詢價'}</td>`).join('');
+      const cells = TRIPS.map((_, i) => `<td>${p?.[i] ? money(p[i]) : isPriced(route) ? '—' : '詢價'}</td>`).join('');
       return `            <tr><th scope="row">${ORIGINS[o]}・${CARS[c]}<small>最多 ${SEATS[c]} 位乘客</small></th>${cells}</tr>`;
     }),
   );
@@ -353,7 +338,6 @@ function routePage({ rt, route, credit }) {
         <a href="/#routes">熱門路線</a>
         <a href="/#pricing">收費</a>
         <a href="/#faq">常見問題</a>
-        <a class="nav__tel" href="${tel}">${esc(SITE.phone)}</a>
       </nav>
       <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>
     </div>
@@ -404,7 +388,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
       <div class="wrap">
         <h2>交通接駁</h2>
         <dl class="route-page__transport">
-          <div><dt>出發地</dt><dd>台北（台北車站、板橋車站）、台中，也可以到府接送</dd></div>
+          <div><dt>出發地</dt><dd>台北車站、台中高鐵站，也可以到府接送</dd></div>
           <div><dt>接送位置</dt><dd>${esc(rt.trailhead)}</dd></div>${rt.drive ? `\n          <div><dt>台北車程</dt><dd>${esc(rt.drive)}（一般路況下的概估）</dd></div>` : ''}
           <div><dt>注意事項</dt><dd>${esc(rt.transport)}</dd></div>
         </dl>
@@ -414,7 +398,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
     <section class="section section--tint section--tight">
       <div class="wrap">
         <h2>${esc(name)}接駁價格</h2>
-        <p class="section__lead">整台車的價格，不是按人頭；小字是坐滿時的每人分攤（五人座 4 人、九人座 8 人）。來回是去程、回程各一趟；一天來回是當天送上山、等下山再載回。</p>
+        <p class="section__lead">以上為整車參考費用，不是按人頭計價。來回是去程、回程兩段行程接駁；一天來回是當天送上山、依約定時間接回。實際報價依上車地點、接送時間與停靠需求確認，若有額外費用會在預約成立前列明。</p>
         <div class="price">
           <table class="price__table route-page__table">
             <thead><tr><th scope="col">出發地・車型</th>${TRIPS.map((t) => `<th scope="col">${t}</th>`).join('')}</tr></thead>
@@ -548,11 +532,14 @@ write(
 
 ## 服務內容
 
-- 登山接駁包車：從台北車站、板橋車站、台中或指定地址出發，專車直達登山口；下山時在登山口接回市區。
+- 登山接駁包車：從台北車站、台中高鐵站或指定地址出發，專車直達登山口；下山時在登山口接回市區。
 - 行程：當日來回、兩天、三天以上都可以預約。
 - 車型：五人座（最多 4 位乘客）、九人座（Volkswagen Caravelle 或同級，最多 8 位乘客）。
 - 計價：整車計價，不是按人頭。單程是一趟車；來回是去程、回程各一趟；一天來回是當天送上山、等下山再載回。
-- 入園入山申請、山屋、保險與裝備由乘客自行準備。
+- 入園入山申請、山屋、保險與裝備由乘客自行準備；詢價時可提供入山證、山屋的申請資訊。
+- 付款：訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。
+- 取消：出發三日前可全額退費取消或改期；遇封山或官方管制，可於出發前一日取消。
+- 詢價請用 LINE、Email 或網站表單（司機行車中不便接聽電話）。
 
 ## 價格（新台幣，整車，單程 / 來回 / 一天來回，— 表示沒有這種走法或請詢價）
 
@@ -564,8 +551,6 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 ## 預約與聯絡
 
-- 聯絡人：${SITE.owner}
-- 電話：${SITE.phone}
 - LINE ID：${SITE.lineId}（${SITE.lineUrl}）
 - 信箱：${SITE.email}
 

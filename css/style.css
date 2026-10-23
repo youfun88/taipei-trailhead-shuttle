@@ -190,7 +190,6 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .route__points { display: grid; gap: 6px; margin-top: 12px; font-size: .9rem; color: var(--muted); }
 .route__points b { margin-right: 8px; color: var(--forest); }
 .route__price-k { font-size: .76rem; font-weight: 700; letter-spacing: .1em; color: var(--moss); }
-.route__share { padding-top: 6px; border-top: 1px dashed #d8d0bc; font-size: .84rem; color: var(--muted); }
 .route--plain .route__body { border-top: 6px solid var(--forest); }
 .route__price { display: grid; gap: 6px; margin-bottom: 18px; padding: 12px 14px; border-radius: 12px; background: var(--sand); font-size: .9rem; }
 .route__price div { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
@@ -345,11 +344,11 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .footer__inner { display: flex; justify-content: space-between; gap: 32px; flex-wrap: wrap; padding-bottom: 32px; border-bottom: 1px solid rgba(255, 255, 255, .14); }
 .logo--footer { color: #fff; }
 .footer__about { margin-top: 14px; max-width: 34em; }
-.footer__owner { margin-top: 12px; color: #fff; }
-.footer__phone { display: inline-block; margin-top: 2px; color: #fff; text-decoration: none; }
 .footer__email { display: block; margin-top: 4px; color: rgba(255, 255, 255, .78); text-decoration: none; }
 .footer__email:hover { color: #fff; }
-.footer__phone b { margin-left: 6px; font-size: 1.25rem; letter-spacing: .04em; }
+.footer__social { display: flex; gap: 16px; margin-top: 10px; }
+.footer__social a { color: rgba(255, 255, 255, .78); }
+.footer__social a:hover { color: #fff; }
 .footer__nav { display: flex; flex-wrap: wrap; gap: 8px 28px; align-content: start; }
 .footer__nav a { text-decoration: none; padding: 6px 0; }
 .footer__nav a:hover, .credits a:hover { color: #fff; }
