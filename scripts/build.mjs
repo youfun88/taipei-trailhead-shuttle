@@ -2,7 +2,7 @@
 // 產出：index.html 裡 <!-- build:xxx --> 標記之間的區塊、sitemap.xml、llms.txt。
 // 用法：node scripts/build.mjs（發布流程會自動執行；改完價格或聯絡資料想在本機預覽時也可以手動跑）。
 import { createHash } from 'node:crypto';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import vm from 'node:vm';
@@ -26,6 +26,12 @@ const CARS = { five: '五人座', nine: '九人座' };
 const SEATS = { five: 4, nine: 8 };
 const TRIPS = ['單程', '來回', '一天來回'];
 const money = (n) => '$' + Number(n).toLocaleString('en-US');
+// 有 -sm 小圖（寬 480px）就加上 srcset，讓手機和小卡片不必下載大圖
+const srcset = (src, sizes) => {
+  const sm = src.replace(/\.webp$/, '-sm.webp');
+  return sm !== src && existsSync(join(root, sm)) ? ` srcset="${sm} 480w, ${src} 880w" sizes="${sizes}"` : '';
+};
+const CARD_SIZES = '(max-width: 760px) calc(100vw - 40px), (max-width: 1020px) 50vw, 370px';
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const priced = PRICES.filter((r) => Object.keys(ORIGINS).some((o) => Object.keys(CARS).some((c) => r[o][c])));
@@ -93,7 +99,7 @@ function routeCard(rt) {
   const tags = rt.dayTags.map((t) => `<span>${esc(t)}</span>`).join('');
   // 有照片的卡片把天數標籤疊在照片上
   const media = rt.img
-    ? `\n            <div class="route__media"><img src="${rt.img.src}" alt="${esc(rt.img.alt)}" loading="lazy" width="${rt.img.w}" height="${rt.img.h}"><p class="route__tags route__tags--media">${tags}</p>${rt.alt ? `<span class="route__alt">${rt.alt}</span>` : ''}</div>`
+    ? `\n            <div class="route__media"><img src="${rt.img.src}"${srcset(rt.img.src, CARD_SIZES)} alt="${esc(rt.img.alt)}" loading="lazy" width="${rt.img.w}" height="${rt.img.h}"><p class="route__tags route__tags--media">${tags}</p>${rt.alt ? `<span class="route__alt">${rt.alt}</span>` : ''}</div>`
     : '';
   const facts = [['登山口', rt.trailhead], ['台北車程', rt.drive], ...(rt.img ? [] : [['海拔', rt.alt]])].filter((f) => f[1]);
   return `          <article class="route reveal${rt.img ? '' : ' route--plain'}" id="route-${rt.key}" data-days="${rt.days}">${media}
@@ -254,7 +260,8 @@ function routePage({ rt, route, credit }) {
     .filter((x) => x.rt.key !== rt.key)
     .map((x) => {
       const from = isPriced(x.route) ? (fromPrice(x.route, 'taipei') || fromPrice(x.route, 'taichung')) + ' 起' : '歡迎詢價';
-      return `          <li><a href="/routes/${x.rt.key}/"><b>${esc(x.rt.name)}</b><span>${esc(from)}</span></a></li>`;
+      const thumb = x.rt.img ? `<img src="/${x.rt.img.src.replace(/\.webp$/, '-sm.webp')}" alt="" loading="lazy" width="480" height="320">` : '';
+      return `          <li><a href="/routes/${x.rt.key}/">${thumb}<b>${esc(x.rt.name)}</b><span>${esc(from)}</span></a></li>`;
     })
     .join('\n');
 
@@ -313,6 +320,7 @@ function routePage({ rt, route, credit }) {
   <meta property="og:image" content="${image}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <!-- build:font -->
   <!-- /build:font -->
   <link rel="stylesheet" href="/css/style.css">
@@ -365,7 +373,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
             rt.img
               ? `
           <figure class="route-page__photo">
-            <img src="/${rt.img.src}" alt="${esc(rt.img.alt)}" width="${rt.img.w}" height="${rt.img.h}" fetchpriority="high">
+            <img src="/${rt.img.src}"${srcset(rt.img.src, '(max-width: 760px) calc(100vw - 40px), 560px').replace(/(srcset="|, )(images\/)/g, '$1/$2')} alt="${esc(rt.img.alt)}" width="${rt.img.w}" height="${rt.img.h}" fetchpriority="high">
             <figcaption>照片：${credit.html}</figcaption>
           </figure>`
               : ''
@@ -449,6 +457,11 @@ ${others}
       </div>
     </section>
   </main>
+
+  <div class="dock is-visible">
+    <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>
+    <a class="btn btn--accent" href="${esc(ask)}">免費詢價</a>
+  </div>
 
   <footer class="footer">
     <div class="wrap footer__inner">

@@ -42,7 +42,7 @@ jobs:
         run: |
           node scripts/build.mjs
           mkdir _site
-          cp -r index.html card.html contact.vcf robots.txt sitemap.xml llms.txt 69ea85e35b38b64cc0d55ad2fe4b18c0.txt favicon.svg css js images routes _site/
+          cp -r index.html 404.html card.html contact.vcf robots.txt sitemap.xml llms.txt 69ea85e35b38b64cc0d55ad2fe4b18c0.txt favicon.svg css js images routes _site/
       - uses: actions/configure-pages@v6
       - uses: actions/upload-pages-artifact@v5
         with:
@@ -54,8 +54,10 @@ jobs:
       - name: 通知 Bing（IndexNow）
         continue-on-error: true
         run: |
+          # 通知 sitemap.xml 裡的所有網址（首頁與路線頁）
+          body=$(node -e "const s=require('fs').readFileSync('sitemap.xml','utf8');console.log(JSON.stringify({host:'gohike.tw',key:'69ea85e35b38b64cc0d55ad2fe4b18c0',keyLocation:'https://gohike.tw/69ea85e35b38b64cc0d55ad2fe4b18c0.txt',urlList:[...s.matchAll(/<loc>([^<]+)<\\/loc>/g)].map(m=>m[1])}))")
           code=$(curl -s -o /tmp/indexnow.txt -w "%{http_code}" -X POST "https://api.indexnow.org/indexnow" \
             -H "Content-Type: application/json; charset=utf-8" \
-            -d '{"host":"gohike.tw","key":"69ea85e35b38b64cc0d55ad2fe4b18c0","keyLocation":"https://gohike.tw/69ea85e35b38b64cc0d55ad2fe4b18c0.txt","urlList":["https://gohike.tw/","https://gohike.tw/card.html"]}')
+            -d "$body")
           echo "IndexNow 回應：$code $(cat /tmp/indexnow.txt)"
           case "$code" in 200|202) ;; *) exit 1 ;; esac
