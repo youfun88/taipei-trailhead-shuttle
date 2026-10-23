@@ -26,8 +26,6 @@ const pages = [
   ...readdirSync(root).filter((f) => f.endsWith('.html')),
   // build.mjs 產生的路線頁
   ...(existsSync(join(root, 'routes')) ? readdirSync(join(root, 'routes')).map((k) => `routes/${k}/index.html`) : []),
-  // build.mjs 產生的攻略文章
-  ...(existsSync(join(root, 'articles')) ? readdirSync(join(root, 'articles')).map((k) => `articles/${k}/index.html`) : []),
 ];
 let refCount = 0;
 let idCount = 0;

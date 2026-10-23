@@ -247,7 +247,6 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .price__table tbody td { font-family: var(--serif); font-weight: 900; font-size: 1.25rem; color: var(--forest); white-space: nowrap; }
 .price__table tbody td:nth-child(3) { color: var(--accent-dark); }
 .price__table tbody td:nth-child(4) { color: var(--ink); }
-.price__ask { display: inline-block; padding: 2px 12px; border-radius: 999px; background: #fbe3d1; color: #a5480f; font-family: var(--sans); font-size: .82rem; font-weight: 700; }
 .price__table tbody tr:last-child th, .price__table tbody tr:last-child td { border-bottom: 0; }
 .price__table tbody[hidden] { display: none; }
 .price__table tbody tr:hover { background: #faf7f0; }
@@ -276,46 +275,6 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .perks svg { width: 38px; height: 38px; fill: none; stroke: #ffb27f; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .perks h3 { margin-top: 16px; }
 .perks p { margin-top: 8px; font-size: .95rem; color: rgba(255, 255, 255, .82); }
-
-/* ---------- 其他服務 ---------- */
-.services { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
-.services li { padding: 26px 24px; border: 1.5px solid var(--line); border-radius: var(--radius); background: #fff; transition: border-color .2s, transform .2s; }
-.services li:hover { border-color: var(--forest); transform: translateY(-3px); }
-.services svg { width: 36px; height: 36px; fill: none; stroke: var(--accent-btn); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
-.services h3 { margin-top: 14px; }
-.services p { margin-top: 8px; font-size: .95rem; color: var(--muted); }
-
-/* ---------- 登山交通攻略 ---------- */
-.guides { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 36px; }
-.guide { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); text-decoration: none; transition: transform .3s, box-shadow .3s; }
-.guide:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(20, 35, 28, .06), 0 24px 40px -18px rgba(20, 35, 28, .35); }
-.guide img { aspect-ratio: 16 / 9; object-fit: cover; }
-.guide__body { display: grid; gap: 8px; padding: 18px 20px 22px; }
-.guide__body b { font-size: 1.08rem; line-height: 1.5; }
-.guide__body small { font-size: .88rem; color: var(--muted); line-height: 1.65; }
-.guide:hover b { color: var(--forest); }
-
-/* 文章頁 articles/<slug>/ */
-.article { padding-top: calc(var(--header-h) + 40px); }
-.article h1 { margin-top: 14px; font-size: clamp(1.9rem, 4.4vw, 2.9rem); }
-.article h2 { margin-top: 44px; font-size: clamp(1.35rem, 2.6vw, 1.75rem); }
-.article p { margin-top: 14px; }
-.article__lead { font-size: 1.1rem; color: var(--muted); }
-.article__img { width: 100%; margin-top: 28px; aspect-ratio: 16 / 9; object-fit: cover; border-radius: var(--radius); }
-.article ul:not(.route-page__others):not(.article__more) { display: grid; gap: 8px; margin-top: 14px; padding-left: 1.3em; list-style: disc; }
-.article__table { margin-top: 28px; overflow-x: auto; border: 1.5px solid var(--line); border-radius: 16px; background: #fff; }
-.article__table table { width: 100%; border-collapse: collapse; font-size: .94rem; }
-.article__table th, .article__table td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-.article__table thead th { font-size: .82rem; letter-spacing: .08em; color: var(--moss); white-space: nowrap; }
-.article__table tbody tr:last-child > * { border-bottom: 0; }
-.article__table tbody th a { color: var(--forest); font-weight: 700; }
-.article__table .nowrap { display: block; white-space: nowrap; }
-.article__table tbody th small { display: block; font-weight: 400; color: var(--muted); font-size: .8rem; }
-.article__cta { margin-top: 48px; padding: 28px; border-radius: 20px; background: var(--forest); color: #fff; text-align: center; }
-.article__cta h2 { margin-top: 0; }
-.article__cta p { margin: 10px 0 20px; color: rgba(255, 255, 255, .85); }
-.article__more { display: grid; gap: 10px; margin-top: 16px; }
-.article__more a { color: var(--forest); font-weight: 700; }
 
 /* ---------- 詢價 ---------- */
 .book { display: grid; grid-template-columns: 5fr 7fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
@@ -500,7 +459,6 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .routes { grid-template-columns: repeat(2, 1fr); }
   .perks { grid-template-columns: repeat(2, 1fr); }
   .policy__grid { grid-template-columns: repeat(2, 1fr); }
-  .guides { grid-template-columns: repeat(2, 1fr); }
   .hero__picks { display: none; }
   .hero__content { grid-template-columns: 1fr; }
   .book { grid-template-columns: 1fr; }
@@ -555,8 +513,6 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .perks { grid-template-columns: 1fr; gap: 14px; }
   .policy { margin-inline: -8px; }
   .policy__grid { grid-template-columns: 1fr; gap: 12px; }
-  .services { grid-template-columns: 1fr; gap: 14px; }
-  .guides { grid-template-columns: 1fr; gap: 16px; }
   .perks li { display: grid; grid-template-columns: 38px 1fr; column-gap: 16px; padding: 22px 20px; }
   .perks svg { grid-row: span 2; }
   .perks h3 { margin-top: 0; }
