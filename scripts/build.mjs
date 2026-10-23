@@ -414,7 +414,7 @@ ${rows.join('\n')}
     <section class="section section--tight">
       <div class="wrap wrap--narrow">
         <h2>登山須知</h2>
-        <p class="section__lead">我們負責交通接駁；入園入山申請、山屋或營地、登山保險和裝備請自行準備。出發前請到官方網站確認最新的開放情形、路況與管制。</p>
+        <p class="section__lead">我們負責交通接駁；入園入山申請、山屋或營地、登山保險和裝備請自行準備，詢價時我們可以提供入山證、山屋的申請資訊。出發前請到官方網站確認最新的開放情形、路況與管制。</p>
         <ul class="route-page__links">
 ${links.map((l) => `          <li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join('\n')}
         </ul>
