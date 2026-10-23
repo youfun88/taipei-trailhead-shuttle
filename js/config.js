@@ -22,7 +22,7 @@ window.SITE = {
 
   // Instagram、Facebook 粉絲專頁網址。填了才會在頁尾顯示連結。
   instagramUrl: '',
-  facebookUrl: '',
+  facebookUrl: 'https://www.facebook.com/taipei.cars',
 
   // 聯絡信箱。留空則不顯示。
   email: 'taipei.cars@gmail.com',

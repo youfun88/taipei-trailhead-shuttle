@@ -477,7 +477,7 @@ ${others}
         <a href="/#routes">熱門路線</a>
         <a href="/#pricing">收費</a>
         <a href="/#book">詢價</a>
-        <a href="/#faq">常見問題</a>
+        <a href="/#faq">常見問題</a>${SITE.facebookUrl ? `\n        <a href="${esc(SITE.facebookUrl)}" target="_blank" rel="noopener">Facebook 粉絲專頁</a>` : ''}
       </nav>
     </div>
   </footer>
