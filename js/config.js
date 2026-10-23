@@ -21,7 +21,7 @@ window.SITE = {
   whatsapp: '',
 
   // Instagram、Facebook 粉絲專頁網址。填了才會在頁尾顯示連結。
-  instagramUrl: '',
+  instagramUrl: 'https://www.instagram.com/taipei_cars/',
   facebookUrl: 'https://www.facebook.com/taipei.cars',
 
   // 聯絡信箱。留空則不顯示。
