@@ -16,9 +16,11 @@ const sandbox = { window: {} };
 vm.runInNewContext(read('js/config.js'), sandbox);
 vm.runInNewContext(read('js/prices.js'), sandbox);
 vm.runInNewContext(read('js/routes.js'), sandbox);
+vm.runInNewContext(read('js/articles.js'), sandbox);
 const SITE = sandbox.window.SITE;
 const PRICES = sandbox.window.PRICES;
 const ROUTES = sandbox.window.ROUTES;
+const ARTICLES = sandbox.window.ARTICLES;
 
 const URL = 'https://gohike.tw/';
 const ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
@@ -62,9 +64,8 @@ function priceTable() {
       const isDefault = o === 'taipei' && c === 'nine';
       const rows = PRICES.map((r) => {
         const p = r[o][c] || [];
-        // 整條路線都沒有價格顯示「詢價」；只是沒有這種走法則顯示「—」
-        const blank = priced.includes(r) ? '—' : '詢價';
-        const cells = TRIPS.map((_, i) => `<td>${p[i] ? money(p[i]) : blank}</td>`).join('');
+        // 沒有公開價格的走法都顯示「詢價」
+        const cells = TRIPS.map((_, i) => `<td>${p[i] ? money(p[i]) : '<span class="price__ask">詢價</span>'}</td>`).join('');
         return `              <tr><th scope="row">${esc(r.name)}</th>${cells}</tr>`;
       }).join('\n');
       bodies.push(
@@ -245,7 +246,7 @@ function routePage({ rt, route, credit }) {
   const rows = Object.keys(ORIGINS).flatMap((o) =>
     Object.keys(CARS).map((c) => {
       const p = route[o][c];
-      const cells = TRIPS.map((_, i) => `<td>${p?.[i] ? money(p[i]) : isPriced(route) ? '—' : '詢價'}</td>`).join('');
+      const cells = TRIPS.map((_, i) => `<td>${p?.[i] ? money(p[i]) : '<span class="price__ask">詢價</span>'}</td>`).join('');
       return `            <tr><th scope="row">${ORIGINS[o]}・${CARS[c]}<small>最多 ${SEATS[c]} 位乘客</small></th>${cells}</tr>`;
     }),
   );
@@ -409,7 +410,7 @@ ${rows.join('\n')}
           </table>
         </div>
         <p class="route-page__note route-page__pay"><b>付款與取消</b>訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。出發三日前通知可全額退費取消或改期，遇封山或官方管制可於出發前一日取消。<a href="/#payment">付款與取消說明</a></p>
-        <p class="route-page__note">${isPriced(route) ? '「—」表示沒有這種走法，可以直接詢價。' : '這條路線依行程報價，歡迎詢價。'}預約時請告訴我們日期、人數和上車地點，也可以用<a href="${esc(ask)}">線上詢價表單</a>。</p>
+        <p class="route-page__note">${isPriced(route) ? '標示「詢價」的走法，歡迎直接詢問報價。' : '這條路線依行程報價，歡迎詢價。'}預約時請告訴我們日期、人數和上車地點，也可以用<a href="${esc(ask)}">線上詢價表單</a>。</p>
       </div>
     </section>
 
@@ -474,9 +475,194 @@ ${others}
 }
 const routeHtml = Object.fromEntries(routePages.map((x) => [x.rt.key, routePage(x)]));
 
+// ---- 登山交通攻略 articles/<slug>/：js/articles.js 的每篇文章一頁 ----
+const articleUrl = (slug) => `${URL}articles/${slug}/`;
+const routeByKey = (key) => {
+  const x = routePages.find((p) => p.rt.key === key);
+  if (!x) throw new Error(`文章提到的路線 ${key} 不在 js/routes.js`);
+  return x;
+};
+const enDrive = (s) => s.replace('約 ', 'about ').replace(' 小時', ' hours');
+
+function compareTable(a) {
+  const en = a.lang === 'en';
+  const head = en ? ['Route', 'Elevation', 'Typical trip', 'Trailhead', 'Drive from Taipei'] : ['路線', '海拔', '行程天數', '登山口', '台北車程'];
+  const rows = a.routes.map((key) => {
+    const { rt } = routeByKey(key);
+    const t = en ? a.routeEn[key] : { name: rt.name, days: rt.dayTags.join('、'), trailhead: rt.trailhead };
+    const drive = rt.drive ? (en ? enDrive(rt.drive) : rt.drive) : '';
+    return `<tr><th scope="row"><a href="/routes/${key}/">${esc(t.name)}</a></th><td>${esc(rt.alt || '')}</td><td>${esc(t.days)}</td><td>${esc(t.trailhead)}</td><td>${esc(drive)}</td></tr>`;
+  });
+  return `<div class="article__table"><table><thead><tr>${head.map((h) => `<th scope="col">${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+
+function priceCompare() {
+  const rows = priced.map((r) => {
+    const i = [0, 1, 2].find((t) => Object.keys(ORIGINS).some((o) => Object.keys(CARS).some((c) => r[o][c]?.[t])));
+    const cell = (o) => Object.keys(CARS).filter((c) => r[o][c]?.[i]).map((c) => `<span class="nowrap">${CARS[c]} ${money(r[o][c][i])}</span>`).join('') || '詢價';
+    // 用兩地都有價格的車型比較，九人座優先
+    const car = ['nine', 'five'].find((c) => r.taipei[c]?.[i] && r.taichung[c]?.[i]);
+    const [tp, tc] = car ? [r.taipei[car][i], r.taichung[car][i]] : [];
+    const diff = !car ? '詢價' : tp === tc ? '價格相同' : tp < tc ? `台北出發省 ${money(tc - tp)}` : `台中出發省 ${money(tp - tc)}`;
+    return `<tr><th scope="row"><a href="/routes/${r.key}/">${esc(r.name)}</a><small>${TRIPS[i]}・整車價</small></th><td>${cell('taipei')}</td><td>${cell('taichung')}</td><td>${diff}</td></tr>`;
+  });
+  return `<div class="article__table"><table><thead><tr><th scope="col">路線</th><th scope="col">台北出發</th><th scope="col">台中出發</th><th scope="col">比較</th></tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
+}
+
+const articleImage = (a) => {
+  const rt = a.routes.map((k) => routeByKey(k).rt).find((r) => r.img);
+  return rt ? rt.img.src : 'images/hero-sm.jpg';
+};
+
+function articlePage(a) {
+  const en = a.lang === 'en';
+  const url = articleUrl(a.slug);
+  const image = URL + articleImage(a);
+  const L = en
+    ? { home: 'Home', guides: 'Hiking transport guides', routes: 'Routes', prices: 'Prices', faq: 'FAQ', related: 'Routes in this article', from: 'from', cta: 'Plan your shuttle', ctaText: 'Tell us your dates, group size and pickup point, and we will reply with a quote.', ask: 'Get a free quote', more: 'More guides' }
+    : { home: SITE.brand, guides: '登山交通攻略', routes: '熱門路線', prices: '收費與付款', faq: '常見問題', related: '文中提到的路線', from: '起', cta: '準備好出發了嗎？', ctaText: '告訴我們日期、人數與上車地點，確認車輛及行程後提供報價。', ask: '免費詢價', more: '更多登山交通攻略' };
+  const body = a.sections
+    .map((s) => `        <h2>${esc(s.h)}</h2>\n${(s.p || []).map((p) => `        <p>${esc(p)}</p>`).join('\n')}${s.list ? `\n        <ul>${s.list.map((li) => `<li>${esc(li)}</li>`).join('')}</ul>` : ''}`)
+    .join('\n');
+  const related = a.routes.length
+    ? `        <h2>${L.related}</h2>\n        <ul class="route-page__others">\n${a.routes
+        .map((k) => {
+          const x = routeByKey(k);
+          const name = en ? a.routeEn[k].name : x.rt.name;
+          const from = isPriced(x.route) ? (en ? `${L.from} NT${money(Math.min(...Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => x.route[o][c] || [])).filter(Boolean)))} per vehicle` : `${fromPrice(x.route, 'taipei') || fromPrice(x.route, 'taichung')} ${L.from}`) : '';
+          return `          <li><a href="/routes/${k}/"><b>${esc(name)}</b><span>${esc(from)}</span></a></li>`;
+        })
+        .join('\n')}\n        </ul>`
+    : '';
+  const others = ARTICLES.filter((x) => x.slug !== a.slug)
+    .map((x) => `          <li><a href="/articles/${x.slug}/"><b>${esc(x.title)}</b></a></li>`)
+    .join('\n');
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: SITE.brand, item: URL },
+          { '@type': 'ListItem', position: 2, name: '登山交通攻略', item: URL + '#guides' },
+          { '@type': 'ListItem', position: 3, name: a.title, item: url },
+        ],
+      },
+      { '@type': 'Article', '@id': url + '#article', headline: a.title, description: a.desc, inLanguage: a.lang, image, url, mainEntityOfPage: url, author: { '@id': URL + '#business' }, publisher: { '@id': URL + '#business' } },
+    ],
+  };
+  return `<!doctype html>
+<html lang="${a.lang}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${esc(a.title)}｜${esc(SITE.brand)}</title>
+  <meta name="description" content="${esc(a.desc)}">
+  <meta name="theme-color" content="#14231c">
+  <link rel="canonical" href="${url}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:locale" content="${en ? 'en_US' : 'zh_TW'}">
+  <meta property="og:site_name" content="${esc(SITE.brand)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:title" content="${esc(a.title)}">
+  <meta property="og:description" content="${esc(a.desc)}">
+  <meta property="og:image" content="${image}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- build:font -->
+  <!-- /build:font -->
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GTRGBHGVD0');
+  </script>
+</head>
+<body class="page">
+  <a class="skip" href="#main">${en ? 'Skip to content' : '跳到主要內容'}</a>
+
+  <header class="header is-solid page-header">
+    <div class="wrap header__inner">
+      <a class="logo" href="/">
+        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 12 8l5 8 3-4 10 14z" fill="currentColor"/><path d="M12 8l3 4.8-3 2.2-3-1.6z" fill="#fff" opacity=".9"/></svg>
+        <span class="logo__text"><b>${esc(SITE.brand)}</b><small>${esc(SITE.tagline)}</small></span>
+      </a>
+      <nav class="nav page-nav" aria-label="${en ? 'Main menu' : '主選單'}">
+        <a href="/#routes">${L.routes}</a>
+        <a href="/#pricing">${L.prices}</a>
+        <a href="/#faq">${L.faq}</a>
+      </nav>
+      <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE ${en ? 'chat' : '詢價'}</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="section article">
+      <div class="wrap wrap--narrow">
+        <p class="crumbs"><a href="/">${esc(SITE.brand)}</a> / <a href="/#guides">${L.guides}</a></p>
+        <h1>${esc(a.title)}</h1>
+        <p class="article__lead">${esc(a.lead)}</p>
+        <img class="article__img" src="/${articleImage(a)}" alt="" width="880" height="587" fetchpriority="high">
+${a.compare ? `        ${compareTable(a)}\n` : ''}${a.prices ? `        ${priceCompare()}\n` : ''}${body}
+${related}
+        <div class="article__cta">
+          <h2>${L.cta}</h2>
+          <p>${L.ctaText}</p>
+          <a class="btn btn--accent btn--lg" href="/#book">${L.ask}</a>
+        </div>
+        <h2>${L.more}</h2>
+        <ul class="article__more">
+${others}
+        </ul>
+      </div>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <a class="logo logo--footer" href="/">
+          <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 12 8l5 8 3-4 10 14z" fill="currentColor"/></svg>
+          <span class="logo__text"><b>${esc(SITE.brand)}</b><small>${esc(SITE.tagline)}</small></span>
+        </a>
+        <p class="footer__about">${esc(about)}</p>
+      </div>
+      <nav class="footer__nav" aria-label="頁尾選單">
+        <a href="/">首頁</a>
+        <a href="/#routes">熱門路線</a>
+        <a href="/#pricing">收費</a>
+        <a href="/#guides">登山交通攻略</a>
+        <a href="/#book">詢價</a>
+        <a href="/#faq">常見問題</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
+`;
+}
+const articleHtml = Object.fromEntries(ARTICLES.map((a) => [a.slug, articlePage(a)]));
+
+// 首頁「登山交通攻略」卡片
+html = region(
+  html,
+  'articles',
+  ARTICLES.map(
+    (a) => `          <a class="guide reveal" href="articles/${a.slug}/"${a.lang === 'en' ? ' lang="en"' : ''}>
+            <img src="${articleImage(a)}" alt="" loading="lazy" width="880" height="587">
+            <span class="guide__body"><b>${esc(a.title)}</b><small>${esc(a.desc)}</small></span>
+          </a>`,
+  ).join('\n'),
+);
+
 // ---- 標題字型：只向 Google Fonts 要頁面上實際用到的字，檔案才會小 ----
 let cardHtml = read('card.html');
-const headingText = [html, cardHtml, ...Object.values(routeHtml)]
+const headingText = [html, cardHtml, ...Object.values(routeHtml), ...Object.values(articleHtml)]
   // 標題，以及路線頁用標題字型的副標
   .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>|<p class="route-page__sub">([\s\S]*?)<\/p>/g)].map((m) => (m[1] ?? m[2]).replace(/<[^>]+>/g, '')))
   .join('');
@@ -508,6 +694,11 @@ for (const [key, page] of Object.entries(routeHtml)) {
   mkdirSync(join(root, 'routes', key), { recursive: true });
   write(`routes/${key}/index.html`, versioned(region(page, 'font', fontTags)));
 }
+rmSync(join(root, 'articles'), { recursive: true, force: true });
+for (const [slug, page] of Object.entries(articleHtml)) {
+  mkdirSync(join(root, 'articles', slug), { recursive: true });
+  write(`articles/${slug}/index.html`, versioned(region(page, 'font', fontTags)));
+}
 
 // ---- sitemap.xml ----
 const today = new Date().toISOString().slice(0, 10);
@@ -518,13 +709,14 @@ write(
   <url><loc>${URL}</loc><lastmod>${today}</lastmod></url>
   <url><loc>${URL}card.html</loc><lastmod>${today}</lastmod></url>
 ${routePages.map((x) => `  <url><loc>${routeUrl(x.rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${ARTICLES.map((a) => `  <url><loc>${articleUrl(a.slug)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `,
 );
 
 // ---- llms.txt（給 AI 助理讀的摘要）----
 const priceRows = priced
-  .map((r) => `| ${r.name} | ${['taipei', 'taichung'].flatMap((o) => ['five', 'nine'].map((c) => (r[o][c] ? r[o][c].map((v) => (v ? money(v) : '—')).join(' / ') : '—'))).join(' | ')} |`)
+  .map((r) => `| ${r.name} | ${['taipei', 'taichung'].flatMap((o) => ['five', 'nine'].map((c) => (r[o][c] ? r[o][c].map((v) => (v ? money(v) : '詢價')).join(' / ') : '詢價'))).join(' | ')} |`)
   .join('\n');
 write(
   'llms.txt',
@@ -541,9 +733,10 @@ write(
 - 入園入山申請、山屋、保險與裝備由乘客自行準備；詢價時可提供入山證、山屋的申請資訊。
 - 付款：訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。
 - 取消：出發三日前可全額退費取消或改期；遇封山或官方管制，可於出發前一日取消。
+- 其他服務：可安排桃園、台中機場接送；飯店、車站等其他交通需求另行報價；可聘請登山嚮導（簽訂登山嚮導服務契約、投保登山綜合保險），或轉介至合法登山同業以商業團報名。
 - 詢價請用 LINE、Email 或網站表單（司機行車中不便接聽電話）。
 
-## 價格（新台幣，整車，單程 / 來回 / 一天來回，— 表示沒有這種走法或請詢價）
+## 價格（新台幣，整車，單程 / 來回 / 一天來回，「詢價」表示請直接詢問報價）
 
 | 路線 | 台北出發 五人座 | 台北出發 九人座 | 台中出發 五人座 | 台中出發 九人座 |
 | --- | --- | --- | --- | --- |
@@ -561,6 +754,7 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 - [首頁：路線、價格、詢價表單、常見問題](${URL})
 - [電子名片：一鍵存到手機通訊錄](${URL}card.html)
 ${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地點、價格與常見問題](${routeUrl(x.rt.key)})`).join('\n')}
+${ARTICLES.map((a) => `- [${a.title}](${articleUrl(a.slug)})`).join('\n')}
 `,
 );
 
