@@ -297,7 +297,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .contact__qr img { width: 100%; border-radius: 8px; }
 .contact__hint { margin-top: 10px; font-size: .85rem; color: var(--muted); }
 .contact__row { display: flex; align-items: baseline; gap: 14px; margin-top: 8px; text-decoration: none; }
-.contact__row span { width: 3em; color: var(--muted); font-size: .92rem; }
+.contact__row span { flex: none; width: 5.6em; color: var(--muted); font-size: .92rem; }
 .contact__row b { font-size: 1.3rem; }
 .contact__row:hover b { color: var(--accent-dark); }
 .contact__row--sm b { font-size: 1rem; font-weight: 500; word-break: break-all; }
