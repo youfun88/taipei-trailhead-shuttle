@@ -90,13 +90,14 @@ function priceAnswer(r) {
 function routeCard(rt) {
   const price = PRICES.find((r) => r.key === rt.key);
   if (!price) throw new Error(`prices.js 沒有路線 ${rt.key}`);
+  const tags = rt.dayTags.map((t) => `<span>${esc(t)}</span>`).join('');
+  // 有照片的卡片把天數標籤疊在照片上
   const media = rt.img
-    ? `\n            <div class="route__media"><img src="${rt.img.src}" alt="${esc(rt.img.alt)}" loading="lazy" width="${rt.img.w}" height="${rt.img.h}">${rt.alt ? `<span class="route__alt">${rt.alt}</span>` : ''}</div>`
+    ? `\n            <div class="route__media"><img src="${rt.img.src}" alt="${esc(rt.img.alt)}" loading="lazy" width="${rt.img.w}" height="${rt.img.h}"><p class="route__tags route__tags--media">${tags}</p>${rt.alt ? `<span class="route__alt">${rt.alt}</span>` : ''}</div>`
     : '';
   const facts = [['登山口', rt.trailhead], ['台北車程', rt.drive], ...(rt.img ? [] : [['海拔', rt.alt]])].filter((f) => f[1]);
   return `          <article class="route reveal${rt.img ? '' : ' route--plain'}" id="route-${rt.key}" data-days="${rt.days}">${media}
-            <div class="route__body">
-              <p class="route__tags">${rt.dayTags.map((t) => `<span>${esc(t)}</span>`).join('')}</p>
+            <div class="route__body">${rt.img ? '' : `\n              <p class="route__tags">${tags}</p>`}
               <h3><a href="routes/${rt.key}/">${esc(rt.name)}</a></h3>
               <p class="route__sub">${esc(rt.sub)}</p>
               <ul class="route__points">
@@ -336,7 +337,7 @@ function routePage({ rt, route, credit }) {
       </a>
       <nav class="nav page-nav" aria-label="主選單">
         <a href="/#routes">熱門路線</a>
-        <a href="/#pricing">收費</a>
+        <a href="/#pricing">收費與付款</a>
         <a href="/#faq">常見問題</a>
       </nav>
       <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>
@@ -407,6 +408,7 @@ ${rows.join('\n')}
             </tbody>
           </table>
         </div>
+        <p class="route-page__note route-page__pay"><b>付款與取消</b>訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。出發三日前通知可全額退費取消或改期，遇封山或官方管制可於出發前一日取消。<a href="/#payment">付款與取消說明</a></p>
         <p class="route-page__note">${isPriced(route) ? '「—」表示沒有這種走法，可以直接詢價。' : '這條路線依行程報價，歡迎詢價。'}預約時請告訴我們日期、人數和上車地點，也可以用<a href="${esc(ask)}">線上詢價表單</a>。</p>
       </div>
     </section>

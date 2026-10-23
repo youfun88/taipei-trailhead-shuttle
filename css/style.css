@@ -126,7 +126,31 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
     linear-gradient(90deg, rgba(20, 35, 28, .55) 0%, rgba(20, 35, 28, 0) 65%);
 }
 .hero__content { padding-bottom: clamp(36px, 6vw, 64px); }
+.hero__content { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 40px; }
 .hero h1 { text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
+.hero h1 em { font-style: normal; color: #ffcfa8; }
+.hero__picks { display: grid; gap: 10px; width: 270px; }
+.hero__picks p { font-size: .8rem; font-weight: 700; letter-spacing: .18em; color: rgba(255, 255, 255, .8); }
+.hero__picks a {
+  display: flex; align-items: center; gap: 14px; padding: 8px 16px 8px 8px; border-radius: 16px;
+  background: rgba(20, 35, 28, .35); border: 1px solid rgba(255, 255, 255, .22); backdrop-filter: blur(10px);
+  color: #fff; text-decoration: none; transition: background-color .2s, transform .2s, border-color .2s;
+}
+.hero__picks a:hover { background: rgba(20, 35, 28, .6); border-color: rgba(255, 255, 255, .5); transform: translateX(-4px); }
+.hero__picks img { width: 56px; height: 56px; border-radius: 11px; object-fit: cover; }
+.hero__picks span { display: grid; line-height: 1.35; }
+.hero__picks b { font-size: 1rem; }
+.hero__picks small { font-size: .8rem; color: rgba(255, 255, 255, .75); }
+.hero__picks a::after { content: '→'; margin-left: auto; opacity: .7; }
+
+/* 區塊交界的山稜線 */
+.ridge { position: relative; }
+.ridge::before {
+  content: ''; position: absolute; left: 0; right: 0; bottom: calc(100% - 1px); height: clamp(22px, 3.6vw, 52px);
+  background: inherit; pointer-events: none;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60V44l70-12 60 8 90-26 70 18 60-10 90 20 80-24 60-12 70 22 80-8 80 18 90-22 60 12 90-18 60 16 90-8v42z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60V44l70-12 60 8 90-26 70 18 60-10 90 20 80-24 60-12 70 22 80-8 80 18 90-22 60 12 90-18 60 16 90-8v42z'/%3E%3C/svg%3E") bottom / 100% 100% no-repeat;
+}
 .hero__lead { max-width: 34em; margin-top: 22px; font-size: clamp(1.05rem, 1.6vw, 1.25rem); color: rgba(255, 255, 255, .92); text-shadow: 0 1px 12px rgba(0, 0, 0, .4); }
 .hero__cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 34px; }
 .facts {
@@ -183,6 +207,9 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 }
 .route__body { display: flex; flex-direction: column; flex: 1; padding: 22px 24px 24px; }
 .route__tags { display: flex; gap: 6px; }
+.route__tags--media { position: absolute; left: 14px; top: 14px; }
+.route__tags--media span { background: rgba(255, 253, 248, .94); box-shadow: 0 4px 12px -4px rgba(0, 0, 0, .3); }
+.route__media + .route__body h3 { margin-top: 0; }
 .route__tags span { padding: 1px 10px; border-radius: 6px; background: #fbe3d1; color: #a5480f; font-size: .78rem; font-weight: 700; }
 .route h3 { margin-top: 10px; font-family: var(--serif); font-size: 1.45rem; font-weight: 900; }
 .route dl { margin: 12px 0 14px; display: grid; gap: 4px; font-size: .94rem; }
@@ -228,6 +255,17 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .price__notes li { display: grid; grid-template-columns: 4.6em 1fr; gap: 12px; }
 .price__notes b { color: var(--ink); }
 
+/* 付款與取消 */
+.policy { margin-top: 48px; padding: clamp(22px, 3.4vw, 40px); border-radius: 24px; background: var(--forest); color: #fff; }
+.policy__title { font-family: var(--serif); font-weight: 900; font-size: clamp(1.4rem, 2.6vw, 1.8rem); }
+.policy__pay { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.policy__pay span { padding: 4px 14px; border-radius: 999px; background: rgba(255, 255, 255, .14); border: 1px solid rgba(255, 255, 255, .25); font-size: .9rem; font-weight: 700; }
+.policy__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 24px; }
+.policy__grid li { padding: 20px; border-radius: 16px; background: rgba(255, 255, 255, .07); border: 1px solid rgba(255, 255, 255, .14); }
+.policy svg { width: 32px; height: 32px; fill: none; stroke: #ffb27f; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.policy h4 { margin: 12px 0 0; font-size: 1.08rem; }
+.policy__grid p { margin-top: 6px; font-size: .92rem; color: rgba(255, 255, 255, .84); }
+
 /* ---------- 為什麼 ---------- */
 .band { position: relative; isolation: isolate; padding: clamp(80px, 11vw, 140px) 0; color: #fff; }
 .band__img, .cta__img { position: absolute; inset: 0; z-index: -2; width: 100%; height: 100%; object-fit: cover; }
@@ -244,6 +282,9 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .book__steps { margin-top: 32px; display: grid; gap: 14px; font-weight: 500; }
 .book__steps li { display: flex; align-items: center; gap: 14px; }
 .book__steps b { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--forest); color: #fff; font-size: .9rem; }
+.book__pay { margin-top: 24px; padding: 14px 18px; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); font-size: .95rem; color: var(--muted); }
+.book__pay b { display: block; color: var(--ink); }
+.book__pay a { color: var(--forest); font-weight: 700; }
 .contact { margin-top: 36px; padding-top: 24px; border-top: 1px solid #d8d0bc; }
 .contact__title { font-size: .88rem; font-weight: 700; color: var(--muted); letter-spacing: .1em; }
 .contact__title span { margin-left: 4px; font-size: 1.15rem; color: var(--ink); letter-spacing: .06em; }
@@ -417,6 +458,9 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 @media (max-width: 1020px) {
   .routes { grid-template-columns: repeat(2, 1fr); }
   .perks { grid-template-columns: repeat(2, 1fr); }
+  .policy__grid { grid-template-columns: repeat(2, 1fr); }
+  .hero__picks { display: none; }
+  .hero__content { grid-template-columns: 1fr; }
   .book { grid-template-columns: 1fr; }
   .book__intro { position: static; }
   .has-reveal .routes .reveal { transition-delay: 0s; }
@@ -467,6 +511,8 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .price__table tbody td { font-size: .98rem; }
   .seg { grid-template-columns: repeat(2, 1fr); }
   .perks { grid-template-columns: 1fr; gap: 14px; }
+  .policy { margin-inline: -8px; }
+  .policy__grid { grid-template-columns: 1fr; gap: 12px; }
   .perks li { display: grid; grid-template-columns: 38px 1fr; column-gap: 16px; padding: 22px 20px; }
   .perks svg { grid-row: span 2; }
   .perks h3 { margin-top: 0; }
@@ -506,6 +552,8 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .route-page__table th small { display: block; font-size: .78rem; font-weight: 400; color: var(--muted); }
 .route-page__note { margin-top: 16px; font-size: .94rem; color: var(--muted); }
 .route-page__note a { color: var(--forest); }
+.route-page__pay { margin-top: 24px; padding: 16px 20px; border-radius: 14px; background: var(--paper); border-left: 5px solid var(--forest); color: var(--ink); }
+.route-page__pay b { display: block; margin-bottom: 4px; font-size: 1.05rem; color: var(--forest); }
 .route-page__labels { display: flex; flex-wrap: wrap; gap: 6px; }
 .route-page__labels span { padding: 1px 10px; border-radius: 6px; background: #fbe3d1; color: #a5480f; font-size: .8rem; font-weight: 700; }
 .route-page__sub { margin-top: 8px; font-family: var(--serif); font-size: 1.3rem; font-weight: 900; color: var(--forest); }
