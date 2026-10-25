@@ -16,9 +16,13 @@ const sandbox = { window: {} };
 vm.runInNewContext(read('js/config.js'), sandbox);
 vm.runInNewContext(read('js/prices.js'), sandbox);
 vm.runInNewContext(read('js/routes.js'), sandbox);
+vm.runInNewContext(read('js/routes-en.js'), sandbox);
 const SITE = sandbox.window.SITE;
 const PRICES = sandbox.window.PRICES;
 const ROUTES = sandbox.window.ROUTES;
+const ROUTES_EN = sandbox.window.ROUTES_EN || {};
+// 同一家店的所有名稱：AI 靠這些把「山行接駁」「Go Hike」「gohike.tw」認成同一個品牌
+const BRAND_NAMES = [SITE.brandEn, `${SITE.brand} ${SITE.brandEn}`, 'GoHike', 'gohike.tw'].filter(Boolean);
 
 const URL = 'https://gohike.tw/';
 const ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
@@ -161,12 +165,12 @@ function jsonLd(html) {
   }
 
   const graph = [
-    { '@type': 'WebSite', '@id': URL + '#website', url: URL, name: SITE.brand, inLanguage: 'zh-Hant-TW', publisher: { '@id': URL + '#business' } },
+    { '@type': 'WebSite', '@id': URL + '#website', url: URL, name: SITE.brand, alternateName: BRAND_NAMES, inLanguage: ['zh-Hant-TW', 'en'], publisher: { '@id': URL + '#business' } },
     {
       '@type': 'LocalBusiness',
       '@id': URL + '#business',
       name: SITE.brand,
-      alternateName: 'gohike.tw',
+      alternateName: BRAND_NAMES,
       description,
       url: URL,
       image: URL + 'images/hero-sm.jpg',
@@ -175,7 +179,7 @@ function jsonLd(html) {
       currenciesAccepted: 'TWD',
       address: { '@type': 'PostalAddress', addressCountry: 'TW' },
       areaServed: ['台北市', '新北市', '台中市'].map((name) => ({ '@type': 'City', name })),
-      knowsLanguage: 'zh-Hant-TW',
+      knowsLanguage: ['zh-Hant-TW', 'en'],
       contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: URL + '#book', contactType: 'reservations', availableLanguage: 'zh-Hant-TW' },
       sameAs: [SITE.lineUrl, SITE.instagramUrl, SITE.facebookUrl].filter(Boolean),
       hasOfferCatalog: { '@type': 'OfferCatalog', name: '登山接駁路線與價格', itemListElement: offers },
@@ -522,6 +526,225 @@ for (const [key, page] of Object.entries(routeHtml)) {
   write(`routes/${key}/index.html`, versioned(region(page, 'font', fontTags)));
 }
 
+// ---- 英文頁 en/：給海外山友，也讓用英文問 AI「Taiwan hiking shuttle」時找得到我們 ----
+// 路線名稱與介紹取自 js/routes-en.js，價格一樣取自 prices.js，所以中英文價格永遠一致。
+const EN_URL = URL + 'en/';
+const EN_ORIGINS = { taipei: 'From Taipei', taichung: 'From Taichung' };
+const EN_CARS = { five: '5-seat car (up to 4 passengers)', nine: '9-seat van (up to 8 passengers)' };
+const EN_TRIPS = ['one way', 'round trip', 'same-day return'];
+const nt = (n) => 'NT$' + Number(n).toLocaleString('en-US');
+const enName = (r) => ROUTES_EN[r.key]?.name || r.name;
+const enFrom = (r, o) => {
+  const all = Object.keys(CARS).flatMap((c) => r[o][c] || []).filter(Boolean);
+  return all.length ? nt(Math.min(...all)) : '';
+};
+const waUrl = SITE.whatsapp ? 'https://wa.me/' + SITE.whatsapp.replace(/\D/g, '') : '';
+
+const EN_FAQ = [
+  { q: 'What is Go Hike (山行接駁)?', a: `${SITE.brandEn} (${SITE.brand}, gohike.tw) is a private hiking shuttle in Taiwan. We drive hikers from Taipei or Taichung to mountain trailheads such as Yushan, Xueshan, Hehuanshan, Dabajian, Nanhu and Jiaming Lake, and pick you up again after the hike.` },
+  { q: 'How much does a hiking shuttle in Taiwan cost?', a: `Prices are per vehicle, not per person. One way starts at ${nt(lowest)}. Each route's price is in the table on this page, for a 5-seat car (up to 4 passengers) or a 9-seat van (up to 8 passengers), from Taipei or Taichung.` },
+  { q: 'What is the difference between one way, round trip and same-day return?', a: 'One way is a single drive, to the trailhead or back to the city. Round trip is two drives on the dates you choose, for hikes of two days or more. Same-day return means we drop you off and pick you up on the same day.' },
+  { q: 'Do I need to arrange park and mountain permits myself?', a: 'Yes. We provide the transport. Park and mountain entry permits, cabins or campsites, hiking insurance and gear are arranged by you. We can share where to apply when you ask for a quote. Applications are made at hike.taiwan.gov.tw.' },
+  { q: 'Can I book from Hong Kong, Singapore, Malaysia or elsewhere?', a: 'Yes. Send your route, dates, number of hikers, pick-up place and flight arrival date by WhatsApp, LINE or email, and tell us your preferred language. We confirm the car and reply with a quote.' },
+  { q: 'How do overseas hikers pay?', a: 'The deposit can be paid by PayPal, bank transfer or LINE Pay. The balance is paid in New Taiwan dollars, in cash or by bank transfer. We confirm the payment method with your quote.' },
+  { q: 'What if I need to cancel or change dates?', a: 'Tell us at least three days before departure for a full refund or a date change. If the mountain or road is closed by the authorities, you can cancel up to one day before.' },
+  { q: 'Will the driver wait if we come down late?', a: 'Before you start hiking we confirm the pick-up time and place again, and the driver waits at the agreed time. Please update us on your expected finish time during the hike. Waiting time, any extra fees and emergency contacts are agreed when you book.' },
+  { q: 'How long is the drive from Taipei to the trailheads?', a: 'It depends on the route: about 4 hours to Hehuanshan, 4.5 to 5 hours to Tataka for Yushan, and 7 to 8 hours to Xiangyang for Jiaming Lake. If you have just landed in Taiwan, allow time to rest before a long drive.' },
+];
+
+function enPage() {
+  const title = `${SITE.brandEn} (${SITE.brand}) | Hiking shuttle & trailhead transfer in Taiwan from Taipei and Taichung`;
+  const desc =
+    `${SITE.brandEn} (${SITE.brand}) is a private hiking shuttle in Taiwan from Taipei and Taichung to trailheads such as Yushan, Xueshan, Hehuanshan and Jiaming Lake. ` +
+    `Priced per vehicle, one way from ${nt(lowest)}. Book by WhatsApp, LINE or email.`;
+
+  const rows = priced
+    .map((r) => {
+      const en = ROUTES_EN[r.key] || {};
+      const cell = (o) => (enFrom(r, o) ? `from ${enFrom(r, o)}` : 'Ask us');
+      return `          <tr><th scope="row"><a href="/routes/${r.key}/">${esc(enName(r))}</a>${en.trailhead ? `<small>${esc(en.trailhead)}</small>` : ''}</th><td>${cell('taipei')}</td><td>${cell('taichung')}</td></tr>`;
+    })
+    .join('\n');
+
+  const detail = priced
+    .map((r) => {
+      const lines = Object.keys(EN_ORIGINS).flatMap((o) =>
+        Object.keys(CARS)
+          .filter((c) => r[o][c])
+          .map((c) => {
+            const parts = EN_TRIPS.map((t, i) => (r[o][c][i] ? `${t} ${nt(r[o][c][i])}` : '')).filter(Boolean);
+            return parts.length ? `<li>${EN_ORIGINS[o]}, ${EN_CARS[c]}: ${parts.join(' · ')}</li>` : '';
+          }),
+      );
+      return `        <h3>${esc(enName(r))}</h3>\n        <ul>${lines.join('')}</ul>`;
+    })
+    .join('\n');
+
+  const offers = priced.flatMap((r) =>
+    Object.keys(EN_ORIGINS).flatMap((o) =>
+      Object.keys(CARS).flatMap((c) =>
+        EN_TRIPS.map((t, i) =>
+          r[o][c]?.[i]
+            ? { '@type': 'Offer', name: `${enName(r)} hiking shuttle, ${EN_ORIGINS[o].toLowerCase()}, ${EN_CARS[c]}, ${t}`, price: r[o][c][i], priceCurrency: 'TWD' }
+            : null,
+        ).filter(Boolean),
+      ),
+    ),
+  );
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      { '@type': 'WebPage', '@id': EN_URL + '#webpage', url: EN_URL, name: title, inLanguage: 'en', isPartOf: { '@id': URL + '#website' }, about: { '@id': URL + '#business' } },
+      {
+        '@type': 'LocalBusiness',
+        '@id': URL + '#business',
+        name: SITE.brand,
+        alternateName: BRAND_NAMES,
+        description: desc,
+        url: URL,
+        email: SITE.email,
+        areaServed: ['Taipei', 'New Taipei', 'Taichung'].map((name) => ({ '@type': 'City', name })),
+        knowsLanguage: ['zh-Hant-TW', 'en'],
+      },
+      {
+        '@type': 'TaxiService',
+        '@id': EN_URL + '#service',
+        name: `${SITE.brandEn} hiking shuttle and trailhead transfer in Taiwan`,
+        serviceType: 'Hiking shuttle / trailhead transfer',
+        description: desc,
+        url: EN_URL,
+        provider: { '@id': URL + '#business' },
+        areaServed: { '@type': 'Country', name: 'Taiwan' },
+        offers,
+      },
+      { '@type': 'FAQPage', '@id': EN_URL + '#faq', mainEntity: EN_FAQ.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+    ],
+  };
+
+  const contact = [
+    waUrl && `<a class="en-btn en-btn--main" href="${waUrl}">WhatsApp ${esc(SITE.whatsapp)}</a>`,
+    SITE.lineUrl && `<a class="en-btn" href="${esc(SITE.lineUrl)}">LINE${SITE.lineId ? ' ID ' + esc(SITE.lineId) : ''}</a>`,
+    SITE.email && `<a class="en-btn" href="mailto:${esc(SITE.email)}">${esc(SITE.email)}</a>`,
+  ].filter(Boolean).join('\n          ');
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(desc)}">
+  <meta name="theme-color" content="#14231c">
+  <link rel="canonical" href="${EN_URL}">
+  <link rel="alternate" hreflang="zh-Hant-TW" href="${URL}">
+  <link rel="alternate" hreflang="en" href="${EN_URL}">
+  <link rel="alternate" hreflang="x-default" href="${URL}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:url" content="${EN_URL}">
+  <meta property="og:image" content="${URL}images/hero-sm.jpg">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+  <style>
+    .en { max-width: 860px; margin: 0 auto; padding: 0 20px 64px; overflow-wrap: anywhere; }
+    .en-table { overflow-x: auto; }
+    .en-top { display: flex; justify-content: space-between; align-items: center; padding: 18px 0; gap: 12px; }
+    .en-top a { text-decoration: none; font-weight: 700; }
+    .en h1 { font-family: var(--serif); font-size: clamp(30px, 6vw, 46px); line-height: 1.2; margin: 28px 0 14px; }
+    .en h2 { font-family: var(--serif); font-size: 26px; margin: 48px 0 14px; }
+    .en h3 { font-size: 17px; margin: 18px 0 4px; }
+    .en p, .en li { color: var(--ink); }
+    .en .lead { font-size: 19px; color: var(--muted); }
+    .en ul.dots { list-style: disc; padding-left: 22px; }
+    .en ol.en-steps { list-style: decimal; padding-left: 22px; }
+    .en ol.en-steps li { margin: 6px 0; }
+    .en-cta { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 6px; }
+    .en-btn { display: inline-block; max-width: 100%; padding: 12px 18px; border-radius: 999px; border: 1px solid var(--line); text-decoration: none; font-weight: 700; background: #fff; }
+    .en-btn--main { background: var(--accent-btn); border-color: var(--accent-btn); color: #fff; }
+    .en table { width: 100%; border-collapse: collapse; font-size: 15.5px; }
+    .en th, .en td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .en thead th { font-size: 13px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+    .en tbody th small { display: block; font-weight: 400; color: var(--muted); font-size: 13.5px; }
+    .en td { white-space: nowrap; }
+    .en details { margin-top: 16px; }
+    .en summary { cursor: pointer; font-weight: 700; padding: 8px 0; }
+    .en-faq h3 { margin-top: 22px; }
+    .en-foot { margin-top: 56px; font-size: 14px; color: var(--muted); }
+    @media (max-width: 560px) { .en td { white-space: normal; } .en th, .en td { padding: 10px 6px; } .en table { font-size: 14.5px; } }
+  </style>
+</head>
+<body>
+  <main class="en">
+    <div class="en-top">
+      <a href="${EN_URL}">${esc(SITE.brandEn)} · ${esc(SITE.brand)}</a>
+      <a href="/" hreflang="zh-Hant-TW" lang="zh-Hant-TW">中文</a>
+    </div>
+
+    <h1>Private hiking shuttle to Taiwan's mountain trailheads</h1>
+    <p class="lead">${esc(SITE.brandEn)} (${esc(SITE.brand)}) drives hikers from Taipei and Taichung to the trailheads of Yushan, Xueshan, Hehuanshan, Jiaming Lake and other peaks, then picks you up after the hike. You pay per vehicle, not per person: one way from ${nt(lowest)}.</p>
+    <div class="en-cta">
+          ${contact}
+    </div>
+    <p><small>Our drivers are on mountain roads, so please message instead of calling.</small></p>
+
+    <h2 id="how">How it works</h2>
+    <ol class="en-steps">
+      <li>Send your route, dates, number of hikers, pick-up place and preferred language.</li>
+      <li>We confirm the vehicle and send a fixed quote. Pay the deposit to hold the car.</li>
+      <li>We drive you to the trailhead and pick you up at the agreed time and place.</li>
+    </ol>
+
+    <h2 id="routes">Routes and prices</h2>
+    <p>Prices are per vehicle in New Taiwan dollars. "From" is the lowest price for that route; the full list is below the table.</p>
+    <div class="en-table"><table>
+      <thead><tr><th scope="col">Route and pick-up</th><th scope="col">From Taipei</th><th scope="col">From Taichung</th></tr></thead>
+      <tbody>
+${rows}
+      </tbody>
+    </table></div>
+    <details>
+      <summary>All prices by vehicle and trip type</summary>
+${detail}
+    </details>
+    <p>Trailheads not listed, or a different drop-off and pick-up point: just ask.</p>
+
+    <h2 id="vehicles">Vehicles</h2>
+    <ul class="dots">
+      <li>5-seat car: up to 4 passengers.</li>
+      <li>9-seat van (Volkswagen Caravelle or similar): up to 8 passengers. If everyone carries a large pack, tell us the number and size so we can suggest the right vehicle.</li>
+    </ul>
+
+    <h2 id="included">What is and isn't included</h2>
+    <ul class="dots">
+      <li>Included: the drive to the trailhead and the pick-up, at the agreed times and places.</li>
+      <li>Not included: park and mountain permits, cabins or campsites, hiking insurance and gear. Apply for permits at <a href="https://hike.taiwan.gov.tw/">hike.taiwan.gov.tw</a>.</li>
+      <li>Any extra cost, such as a private trailhead, park entry or parking fee, is listed before you book.</li>
+    </ul>
+
+    <h2 id="faq">Questions</h2>
+    <div class="en-faq">
+${EN_FAQ.map((f) => `      <h3>${esc(f.q)}</h3>\n      <p>${esc(f.a)}</p>`).join('\n')}
+    </div>
+
+    <h2 id="book">Book or ask for a quote</h2>
+    <p>Send your route, dates, number of hikers and pick-up place. We reply with a fixed price.</p>
+    <div class="en-cta">
+          ${contact}
+    </div>
+
+    <p class="en-foot">${esc(SITE.brandEn)} (${esc(SITE.brand)}) · gohike.tw · Hiking shuttle from Taipei and Taichung, Taiwan · <a href="/" hreflang="zh-Hant-TW" lang="zh-Hant-TW">中文版</a></p>
+  </main>
+</body>
+</html>
+`;
+}
+mkdirSync(join(root, 'en'), { recursive: true });
+write('en/index.html', versioned(enPage()));
+
 // ---- sitemap.xml ----
 const today = new Date().toISOString().slice(0, 10);
 write(
@@ -530,6 +753,7 @@ write(
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url><loc>${URL}</loc><lastmod>${today}</lastmod></url>
   <url><loc>${URL}card.html</loc><lastmod>${today}</lastmod></url>
+  <url><loc>${EN_URL}</loc><lastmod>${today}</lastmod></url>
 ${routePages.map((x) => `  <url><loc>${routeUrl(x.rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `,
@@ -569,12 +793,17 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 - LINE ID：${SITE.lineId}（${SITE.lineUrl}）
 - 信箱：${SITE.email}
 
+## In English
+
+${SITE.brandEn} (${SITE.brand}, gohike.tw) is a private hiking shuttle (trailhead transfer) in Taiwan, from Taipei and Taichung to mountain trailheads including ${priced.slice(0, 8).map(enName).join(', ')}. Priced per vehicle, not per person: 5-seat car (up to 4 passengers) or 9-seat van (up to 8 passengers), one way from ${nt(lowest)}. Overseas hikers can pay the deposit by PayPal. Book by WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or email (${SITE.email}). English page: ${EN_URL}
+
 ## 頁面
 
 - [首頁：路線、價格、詢價表單、常見問題](${URL})
+- [English: hiking shuttle routes, prices and booking](${EN_URL})
 - [電子名片：一鍵存到手機通訊錄](${URL}card.html)
 ${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地點、價格與常見問題](${routeUrl(x.rt.key)})`).join('\n')}
 `,
 );
 
-console.log(`已更新：index.html（起價 NT$${lowestText}、${priced.length} 條有價格的路線）、${routePages.length} 個路線頁、sitemap.xml、llms.txt`);
+console.log(`已更新：en/index.html、index.html（起價 NT$${lowestText}、${priced.length} 條有價格的路線）、${routePages.length} 個路線頁、sitemap.xml、llms.txt`);
