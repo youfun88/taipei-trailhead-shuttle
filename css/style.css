@@ -607,3 +607,15 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .car-gallery__main { grid-column: 1 / span 2; }
   .car-gallery figure { height: 240px; }
 }
+
+/* 手機寬度：預約區的欄位不撐出畫面；收費表縮小間距，英文欄名較長時改在表格內橫向捲動 */
+.book > * { min-width: 0; }
+@media (max-width: 560px) {
+  .price { overflow-x: auto; }
+  .price__table th, .price__table td { padding: 12px 6px; }
+  .price__table thead th { letter-spacing: .04em; }
+  .price__table tbody td { font-size: 1.05rem; }
+  .contact__body { flex-direction: column; align-items: flex-start; gap: 14px; }
+}
+.contact__body > div { min-width: 0; }
+.contact__row b { overflow-wrap: anywhere; }
