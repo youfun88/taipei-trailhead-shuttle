@@ -21,6 +21,7 @@ const SITE = sandbox.window.SITE;
 const PRICES = sandbox.window.PRICES;
 const ROUTES = sandbox.window.ROUTES;
 const ROUTES_EN = sandbox.window.ROUTES_EN || {};
+const LINKS_EN = sandbox.window.LINKS_EN || {};
 // 同一家店的所有名稱：AI 靠這些把「山行接駁」「Go Hike」「gohike.tw」認成同一個品牌
 const BRAND_NAMES = [SITE.brandEn, `${SITE.brand} ${SITE.brandEn}`, 'GoHike', 'gohike.tw'].filter(Boolean);
 
@@ -314,6 +315,9 @@ function routePage({ rt, route, credit }) {
   <meta name="description" content="${esc(desc)}">
   <meta name="theme-color" content="#14231c">
   <link rel="canonical" href="${url}">
+  <link rel="alternate" hreflang="zh-Hant-TW" href="${url}">
+  <link rel="alternate" hreflang="en" href="${URL}en/routes/${rt.key}/">
+  <link rel="alternate" hreflang="x-default" href="${url}">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="zh_TW">
@@ -351,6 +355,7 @@ function routePage({ rt, route, credit }) {
         <a href="/#routes">熱門路線</a>
         <a href="/#pricing">收費與付款</a>
         <a href="/#faq">常見問題</a>
+        <a href="/en/routes/${rt.key}/" hreflang="en" lang="en">English</a>
       </nav>
       <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>
     </div>
@@ -590,7 +595,7 @@ function enRouteCard(rt) {
   const facts = [['Trailhead', en.trailhead], ['Drive', rt.drive && en.drive && `${en.drive} from Taipei`], ...(rt.img ? [] : [['Altitude', rt.alt]])].filter((f) => f[1]);
   return `          <article class="route reveal${rt.img ? '' : ' route--plain'}" id="route-${rt.key}" data-days="${rt.days}">${media}
             <div class="route__body">${rt.img ? '' : `\n              <p class="route__tags">${tags}</p>`}
-              <h3><a href="/routes/${rt.key}/" hreflang="zh-Hant-TW">${esc(en.name)}</a></h3>
+              <h3><a href="/en/routes/${rt.key}/">${esc(en.name)}</a></h3>
               <p class="route__sub">${esc(en.sub)}</p>
               <ul class="route__points">
                 <li><b>Scenery</b>${esc(en.card.scenery)}</li>
@@ -599,7 +604,7 @@ function enRouteCard(rt) {
               </ul>
               <dl>${facts.map(([k, v]) => `<div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('')}</dl>
               <div class="route__price">${enCardPrice(price)}</div>
-              <div class="route__links"><a class="route__link" href="#book" data-dest="${esc(en.dest)}">Ask about this route</a><a class="route__more" href="/routes/${rt.key}/" hreflang="zh-Hant-TW">Route details (Chinese)</a></div>
+              <div class="route__links"><a class="route__link" href="#book" data-dest="${esc(en.dest)}">Ask about this route</a><a class="route__more" href="/en/routes/${rt.key}/">Route details</a></div>
             </div>
           </article>`;
 }
@@ -613,10 +618,10 @@ function enJsonLd(page) {
           r[o][c]?.[i]
             ? {
                 '@type': 'Offer',
-                name: `${enName(r)} hiking shuttle, ${EN_ORIGINS[o].toLowerCase()}, ${EN_CARS[c]}, ${trip.toLowerCase()}`,
+                name: `${enName(r)} hiking shuttle, ${EN_ORIGINS[o].replace(/^From/, 'from')}, ${EN_CARS[c]}, ${trip.toLowerCase()}`,
                 price: r[o][c][i],
                 priceCurrency: 'TWD',
-                itemOffered: { '@type': 'TaxiService', name: `${enName(r)} hiking shuttle (${EN_ORIGINS[o].toLowerCase()})`, serviceType: 'Hiking shuttle / trailhead transfer', description: `${EN_CARS[c]} whole vehicle, ${trip.toLowerCase()}, up to ${SEATS[c]} passengers` },
+                itemOffered: { '@type': 'TaxiService', name: `${enName(r)} hiking shuttle (${EN_ORIGINS[o].replace(/^From/, 'from')})`, serviceType: 'Hiking shuttle / trailhead transfer', description: `${EN_CARS[c]} whole vehicle, ${trip.toLowerCase()}, up to ${SEATS[c]} passengers` },
               }
             : null,
         ).filter(Boolean),
@@ -660,17 +665,336 @@ enHtml = region(enHtml, 'route-cards', ROUTES.map(enRouteCard).join('\n\n'));
 enHtml = region(enHtml, 'price-table', enPriceTable());
 enHtml = region(enHtml, 'about', `        <p class="footer__about">${esc(enAbout)}</p>`);
 enHtml = region(enHtml, 'jsonld', enJsonLd(enHtml));
+
+// ---- 英文路線頁 en/routes/<key>/：中文路線頁的英文版，讓「Hehuanshan shuttle from Taipei」這類英文搜尋有專屬頁面 ----
+// 文字取自 js/routes-en.js、價格取自 prices.js、照片與天數篩選取自 routes.js；共通問答與照片授權取自英文首頁。
+const enRouteUrl = (key) => `${EN_URL}routes/${key}/`;
+const enHomeFaq = pageFaq(enHtml);
+const EN_SHARED_FAQ = [
+  'What is the difference between one way, round trip and same-day return?',
+  'Will the driver wait if we come down late?',
+  'Can the 9-seat van really take 8 passengers and 8 big packs?',
+  'Do I need to arrange park and mountain permits and cabins myself?',
+  'What if I need to cancel or change dates?',
+  'Does the driver speak English?',
+];
+const enSharedFaq = EN_SHARED_FAQ.map((q) => {
+  const f = enHomeFaq.find((x) => x.q === q);
+  if (!f) throw new Error(`英文首頁常見問題找不到「${q}」，英文路線頁需要它`);
+  return f;
+});
+const enCreditsBlock = enHtml.slice(enHtml.indexOf('<details class="credits">'), enHtml.indexOf('</details>', enHtml.indexOf('<details class="credits">')));
+const enCredits = [...enCreditsBlock.matchAll(/<li>([^:<]+):\s*([\s\S]*?)<\/li>/g)].map((m) => ({ label: m[1].trim(), html: m[2].trim() }));
+
+function enFromPrice(r, o) {
+  const opts = Object.keys(CARS).flatMap((c) => (r[o][c] || []).map((p, i) => (p ? { c, i, p } : null)).filter(Boolean));
+  if (!opts.length) return '';
+  const best = opts.sort((a, b) => a.p - b.p)[0];
+  return `${EN_CARS[best.c]} ${EN_TRIPS[best.i].toLowerCase()} ${nt(best.p)}`;
+}
+
+function enPriceAnswer(r) {
+  return (
+    Object.keys(ORIGINS)
+      .map((o) => {
+        const parts = Object.keys(CARS)
+          .filter((c) => r[o][c])
+          .map((c) => `${EN_CARS[c]}: ` + EN_TRIPS.map((t, i) => (r[o][c][i] ? `${t.toLowerCase()} ${nt(r[o][c][i])}` : '')).filter(Boolean).join(', '));
+        return `${EN_ORIGINS[o]}, ${parts.join('; ')}.`;
+      })
+      .join(' ') + ' Prices are per vehicle. Round trip is two drives, there and back; same-day return means we drop you off and pick you up the same day.'
+  );
+}
+
+function enRoutePage(rt) {
+  const en = ROUTES_EN[rt.key];
+  if (!en?.scenery) throw new Error(`js/routes-en.js 沒有路線 ${rt.key} 的路線頁英文（scenery、audience、transport、labels、faq）`);
+  const route = PRICES.find((r) => r.key === rt.key);
+  const url = enRouteUrl(rt.key);
+  const short = en.name.replace(/ \(.*\)$/, '');
+  const zhName = (en.name.match(/\(([^)]*)\)$/) || [])[1] || rt.name;
+  const title = `${en.name} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`;
+  const desc =
+    `Private hiking shuttle to ${short} from Taipei or Taichung. ${en.sub}. Drop-off at ${en.trailhead}. ` +
+    (isPriced(route)
+      ? 'Per vehicle: ' + Object.keys(ORIGINS).map((o) => (enFromPrice(route, o) ? `${EN_ORIGINS[o].replace(/^From/, 'from')}, ${enFromPrice(route, o)}` : '')).filter(Boolean).join('; ') + '.'
+      : 'Priced per vehicle; ask us for a quote.') +
+    ' Ask on WhatsApp, LINE or with the online form.';
+  const faq = [...en.faq, ...(isPriced(route) ? [{ q: `How much is a hiking shuttle to ${short}?`, a: enPriceAnswer(route) }] : []), ...enSharedFaq];
+  const ask = `/en/?dest=${encodeURIComponent(en.dest)}#book`;
+  const image = rt.img ? URL + rt.img.src : URL + 'images/hero-sm.jpg';
+  const credit = rt.img && enCredits.find((c) => (en.imgAlt || '').toLowerCase().includes(c.label.toLowerCase()) || en.name.toLowerCase().includes(c.label.toLowerCase()));
+  if (rt.img && !credit) throw new Error(`英文路線頁 ${rt.key} 的照片在英文首頁頁尾找不到授權資料`);
+  const dayTags = en.dayTags || rt.dayTags.map((d) => DAY_EN[d] || d);
+  const waUrl = SITE.whatsapp ? 'https://wa.me/' + SITE.whatsapp.replace(/\D/g, '') : '';
+
+  const rows = Object.keys(ORIGINS).flatMap((o) =>
+    Object.keys(CARS).map((c) => {
+      const p = route[o][c];
+      const cells = EN_TRIPS.map((_, i) => `<td>${p?.[i] ? nt(p[i]) : isPriced(route) ? '—' : 'Ask us'}</td>`).join('');
+      return `            <tr><th scope="row">${EN_ORIGINS[o]} · ${EN_CARS[c]}<small>Up to ${SEATS[c]} passengers</small></th>${cells}</tr>`;
+    }),
+  );
+
+  const others = ROUTES.filter((x) => x.key !== rt.key)
+    .map((x) => {
+      const xr = PRICES.find((r) => r.key === x.key);
+      const from = isPriced(xr) ? 'from ' + (enFromPrice(xr, 'taipei') || enFromPrice(xr, 'taichung')) : 'Ask for a quote';
+      const thumb = x.img ? `<img src="/${x.img.src.replace(/\.webp$/, '-sm.webp')}" alt="" loading="lazy" width="480" height="320">` : '';
+      return `          <li><a href="/en/routes/${x.key}/">${thumb}<b>${esc(ROUTES_EN[x.key]?.name || x.name)}</b><span>${esc(from)}</span></a></li>`;
+    })
+    .join('\n');
+
+  const offers = Object.keys(ORIGINS).flatMap((o) =>
+    Object.keys(CARS).flatMap((c) =>
+      EN_TRIPS.map((trip, i) => route[o][c]?.[i] && { '@type': 'Offer', name: `${EN_ORIGINS[o]}, ${EN_CARS[c]}, ${trip.toLowerCase()}`, price: route[o][c][i], priceCurrency: 'TWD' }).filter(Boolean),
+    ),
+  );
+  const ld = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: SITE.brandEn, item: URL },
+          { '@type': 'ListItem', position: 2, name: 'English', item: EN_URL },
+          { '@type': 'ListItem', position: 3, name: `${short} hiking shuttle`, item: url },
+        ],
+      },
+      {
+        '@type': 'TaxiService',
+        '@id': url + '#service',
+        name: `${en.name} hiking shuttle`,
+        serviceType: 'Hiking shuttle / trailhead transfer',
+        description: desc,
+        url,
+        image,
+        inLanguage: 'en',
+        provider: { '@id': URL + '#business' },
+        areaServed: ['Taipei', 'New Taipei', 'Taichung'].map((n) => ({ '@type': 'City', name: n })),
+        ...(offers.length ? { offers } : {}),
+      },
+      { '@type': 'FAQPage', inLanguage: 'en', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+    ],
+  };
+
+  const facts = [['Trailhead', en.trailhead], ['Drive from Taipei', rt.drive && en.drive], ['Altitude', rt.alt], ['Trip length', dayTags.join(', ')]].filter((f) => f[1]);
+  const links = [...rt.links, { url: 'https://hike.taiwan.gov.tw/' }]
+    .filter((l, i, all) => all.findIndex((x) => x.url === l.url) === i)
+    .map((l) => ({ url: l.url, label: LINKS_EN[l.url] || l.label }));
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>${esc(title)}</title>
+  <meta name="description" content="${esc(desc)}">
+  <meta name="theme-color" content="#14231c">
+  <link rel="canonical" href="${url}">
+  <link rel="alternate" hreflang="zh-Hant-TW" href="${routeUrl(rt.key)}">
+  <link rel="alternate" hreflang="en" href="${url}">
+  <link rel="alternate" hreflang="x-default" href="${routeUrl(rt.key)}">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:site_name" content="${esc(SITE.brandEn)}">
+  <meta property="og:url" content="${url}">
+  <meta property="og:title" content="${esc(title)}">
+  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:image" content="${image}">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
+  <!-- build:font -->
+  <!-- /build:font -->
+  <link rel="stylesheet" href="/css/style.css">
+  <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-GTRGBHGVD0');
+  </script>
+</head>
+<body class="page">
+  <a class="skip" href="#main">Skip to main content</a>
+
+  <header class="header is-solid page-header">
+    <div class="wrap header__inner">
+      <a class="logo" href="/en/">
+        <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 12 8l5 8 3-4 10 14z" fill="currentColor"/><path d="M12 8l3 4.8-3 2.2-3-1.6z" fill="#fff" opacity=".9"/></svg>
+        <span class="logo__text"><b>${esc(SITE.brandEn)}</b><small>${esc(SITE.brand)} · Trailhead shuttle</small></span>
+      </a>
+      <nav class="nav page-nav" aria-label="Main menu">
+        <a href="/en/#routes">Routes</a>
+        <a href="/en/#pricing">Prices &amp; payment</a>
+        <a href="/en/#faq">FAQ</a>
+        <a href="${routeUrl(rt.key).replace(URL, '/')}" hreflang="zh-Hant-TW" lang="zh-Hant-TW">中文</a>
+      </nav>
+      <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">Ask on LINE</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="section route-page">
+      <div class="wrap">
+        <p class="crumbs"><a href="/en/">${esc(SITE.brandEn)}</a> / <a href="/en/#routes">Routes</a> / ${esc(short)}</p>
+        <div class="route-page__grid${rt.img ? '' : ' route-page__grid--plain'}">
+          <div>
+            <p class="route-page__labels">${en.labels.map((l) => `<span>${esc(l)}</span>`).join('')}</p>
+            <h1>${esc(short)} hiking shuttle <span lang="zh-Hant-TW">(${esc(zhName)})</span></h1>
+            <p class="route-page__sub">${esc(en.sub)}</p>
+            <p class="section__lead">${esc(en.scenery)}</p>
+            <dl class="route-page__facts">
+${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('\n')}
+            </dl>
+            <div class="route-page__cta">
+              <a class="btn btn--accent" href="${esc(ask)}">Ask about this route</a>
+              ${waUrl ? `<a class="btn btn--outline" href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+              <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">Ask on LINE</a>
+            </div>
+          </div>${
+            rt.img
+              ? `
+          <figure class="route-page__photo">
+            <img src="/${rt.img.src}"${srcset(rt.img.src, '(max-width: 760px) calc(100vw - 40px), 560px').replace(/(srcset="|, )(images\/)/g, '$1/$2')} alt="${esc(en.imgAlt || en.name)}" width="${rt.img.w}" height="${rt.img.h}" fetchpriority="high">
+            <figcaption>Photo: ${credit.html}</figcaption>
+          </figure>`
+              : ''
+          }
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tint section--tight">
+      <div class="wrap">
+        <h2>About this route</h2>
+        <div class="route-page__cols">
+          <div><h3>Scenery</h3><p>${esc(en.scenery)}</p></div>
+          <div><h3>Trip type</h3><p>${esc([...dayTags, ...en.labels.filter((l) => !dayTags.includes(l))].join(' · '))}</p></div>
+          <div><h3>Good for</h3><p>${esc(en.audience)}</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap">
+        <h2>Getting there</h2>
+        <dl class="route-page__transport">
+          <div><dt>Pick-up</dt><dd>Taipei Main Station, Taichung HSR Station, or your address</dd></div>
+          <div><dt>Drop-off</dt><dd>${esc(en.trailhead)}</dd></div>${rt.drive && en.drive ? `\n          <div><dt>Drive from Taipei</dt><dd>${esc(en.drive)} (a rough estimate in normal traffic)</dd></div>` : ''}
+          <div><dt>Good to know</dt><dd>${esc(en.transport)}</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section section--tint section--tight">
+      <div class="wrap">
+        <h2>${esc(short)} shuttle prices</h2>
+        <p class="section__lead">Prices are per vehicle, not per person, in New Taiwan dollars. Round trip is two drives, there and back. Same-day return means we drop you off and pick you up at the agreed time the same day. Your final quote depends on the pick-up place, times and stops; any extra cost is listed before you book.</p>
+        <div class="price">
+          <table class="price__table route-page__table">
+            <thead><tr><th scope="col">From · vehicle</th>${EN_TRIPS.map((t) => `<th scope="col">${t}</th>`).join('')}</tr></thead>
+            <tbody>
+${rows.join('\n')}
+            </tbody>
+          </table>
+        </div>
+        <p class="route-page__note route-page__pay"><b>Payment and cancellation</b>Pay the deposit by bank transfer or LINE Pay; overseas visitors can use PayPal. The balance is paid in New Taiwan dollars, in cash or by bank transfer. Tell us at least three days before departure for a full refund or a new date. If the mountain or road is closed by the authorities, you can cancel up to one day before. <a href="/en/#payment">Payment and cancellation details</a></p>
+        <p class="route-page__note">${isPriced(route) ? '"—" means we don\'t offer that trip type here; ask us for a quote. ' : 'This route is quoted per trip; ask us for a price. '}When you book, tell us your dates, number of hikers and pick-up place, or use the <a href="${esc(ask)}">online inquiry form</a>.</p>
+      </div>
+    </section>
+
+    <section class="section section--tight">
+      <div class="wrap wrap--narrow">
+        <h2>Before you hike</h2>
+        <p class="section__lead">We provide the transport. Park and mountain permits, cabins or campsites, hiking insurance and gear are yours to arrange; we can share where to apply when you ask for a quote. Check the official sites for the latest openings, trail conditions and closures before you go.</p>
+        <ul class="route-page__links">
+${links.map((l) => `          <li><a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a></li>`).join('\n')}
+        </ul>
+      </div>
+    </section>
+
+    <section class="section section--tint section--tight">
+      <div class="wrap wrap--narrow">
+        <h2>Questions</h2>
+        <div class="faq">
+${faq.map((f) => `          <details>\n            <summary>${esc(f.q)}</summary>\n            <p>${esc(f.a)}</p>\n          </details>`).join('\n')}
+        </div>
+      </div>
+    </section>
+
+    <section class="section section--tight route-page__end">
+      <div class="wrap">
+        <h2>Ready to go?</h2>
+        <p>Tell us your dates, number of hikers and pick-up place. We confirm the vehicle and your plan, then send a quote. Our driver speaks some basic English, and we confirm everything in writing.</p>
+        <a class="btn btn--accent btn--lg" href="${esc(ask)}">Ask about this route</a>
+      </div>
+    </section>
+
+    <section class="section section--tint section--tight">
+      <div class="wrap">
+        <h2>Other trailheads</h2>
+        <ul class="route-page__others">
+${others}
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <div class="dock is-visible">${waUrl ? `\n    <a class="btn btn--outline" href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
+    <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>
+    <a class="btn btn--accent" href="${esc(ask)}">Free quote</a>
+  </div>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <div>
+        <a class="logo logo--footer" href="/en/">
+          <svg class="logo__mark" viewBox="0 0 32 32" aria-hidden="true"><path d="M2 26 12 8l5 8 3-4 10 14z" fill="currentColor"/></svg>
+          <span class="logo__text"><b>${esc(SITE.brandEn)}</b><small>${esc(SITE.brand)} · Trailhead shuttle</small></span>
+        </a>
+        <p class="footer__about">${esc(enAbout)}</p>
+      </div>
+      <nav class="footer__nav" aria-label="Footer menu">
+        <a href="/en/">Home</a>
+        <a href="/en/#routes">Routes</a>
+        <a href="/en/#pricing">Prices</a>
+        <a href="/en/#book">Get a quote</a>
+        <a href="/en/#faq">FAQ</a>${SITE.instagramUrl ? `\n        <a href="${esc(SITE.instagramUrl)}" target="_blank" rel="noopener">Instagram</a>` : ''}${SITE.facebookUrl ? `\n        <a href="${esc(SITE.facebookUrl)}" target="_blank" rel="noopener">Facebook</a>` : ''}
+        <a href="${routeUrl(rt.key).replace(URL, '/')}" hreflang="zh-Hant-TW" lang="zh-Hant-TW">中文</a>
+      </nav>
+    </div>
+  </footer>
+</body>
+</html>
+`;
+}
+const enRouteHtml = Object.fromEntries(ROUTES.map((rt) => [rt.key, enRoutePage(rt)]));
+
 // 英文頁標題裡括號內的中文也要用標題字型
-const enHeading = [...enHtml.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>/g)].map((m) => m[1].replace(/<[^>]+>/g, '')).join('');
+const enHeading = [enHtml, ...Object.values(enRouteHtml)]
+  .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>|<p class="route-page__sub">([\s\S]*?)<\/p>/g)].map((m) => (m[1] ?? m[2]).replace(/<[^>]+>/g, '')))
+  .join('');
 const enGlyphs = [...new Set(enHeading + SITE.brand + ascii)].filter((ch) => ch === ' ' || ch.trim()).sort().join('');
 const enFontUrl = 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap&text=' + encodeURIComponent(enGlyphs);
-enHtml = region(enHtml, 'font', [
+const enFontTags = [
   '  <link rel="preconnect" href="https://fonts.googleapis.com">',
   '  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>',
   `  <link rel="preload" as="style" href="${esc(enFontUrl)}" onload="this.onload=null;this.rel='stylesheet'">`,
   `  <noscript><link rel="stylesheet" href="${esc(enFontUrl)}"></noscript>`,
-].join('\n'));
+].join('\n');
+enHtml = region(enHtml, 'font', enFontTags);
 write('en/index.html', versioned(enHtml));
+// 英文路線頁整個資料夾重新產生，拿掉的路線不會留下舊頁面
+rmSync(join(root, 'en/routes'), { recursive: true, force: true });
+for (const [key, page] of Object.entries(enRouteHtml)) {
+  mkdirSync(join(root, 'en/routes', key), { recursive: true });
+  write(`en/routes/${key}/index.html`, versioned(region(page, 'font', enFontTags)));
+}
 
 
 // ---- sitemap.xml ----
@@ -683,6 +1007,7 @@ write(
   <url><loc>${URL}card.html</loc><lastmod>${today}</lastmod></url>
   <url><loc>${EN_URL}</loc><lastmod>${today}</lastmod></url>
 ${routePages.map((x) => `  <url><loc>${routeUrl(x.rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+${ROUTES.map((rt) => `  <url><loc>${enRouteUrl(rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
 </urlset>
 `,
 );
@@ -725,6 +1050,9 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 ${SITE.brandEn} (${SITE.brand}, gohike.tw) is a private hiking shuttle (trailhead transfer) in Taiwan, from Taipei and Taichung to mountain trailheads including ${priced.slice(0, 8).map(enName).join(', ')}. Priced per vehicle, not per person: 5-seat car (up to 4 passengers) or 9-seat van (up to 8 passengers), one way from ${nt(lowest)}. Overseas hikers can pay the deposit by PayPal. Book by WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or email (${SITE.email}). English page: ${EN_URL}
 
+English route pages (trailhead, drive time, prices, FAQ):
+${ROUTES.map((rt) => `- [${ROUTES_EN[rt.key].name} hiking shuttle: ${ROUTES_EN[rt.key].sub}](${enRouteUrl(rt.key)})`).join('\n')}
+
 ## 頁面
 
 - [首頁：路線、價格、詢價表單、常見問題](${URL})
@@ -734,4 +1062,4 @@ ${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地�
 `,
 );
 
-console.log(`已更新：en/index.html、index.html（起價 NT$${lowestText}、${priced.length} 條有價格的路線）、${routePages.length} 個路線頁、sitemap.xml、llms.txt`);
+console.log(`已更新：en/index.html、${ROUTES.length} 個英文路線頁、index.html（起價 NT$${lowestText}、${priced.length} 條有價格的路線）、${routePages.length} 個路線頁、sitemap.xml、llms.txt`);

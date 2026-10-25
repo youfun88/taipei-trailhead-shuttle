@@ -44,6 +44,24 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 Go Hike (山行接駁, gohike.tw) is a private hiking shuttle (trailhead transfer) in Taiwan, from Taipei and Taichung to mountain trailheads including Yushan / Jade Mountain (玉山), Xueshan / Snow Mountain & Wuling Four Peaks (雪山・武陵四秀), Hehuanshan peaks (合歡山), Dabajian (大霸尖山), Nanhu Mountain (南湖大山), Qilai South Peak & Nanhua (奇萊南華), Jiaming Lake (嘉明湖), Songluo Lake (松蘿湖). Priced per vehicle, not per person: 5-seat car (up to 4 passengers) or 9-seat van (up to 8 passengers), one way from NT$5,000. Overseas hikers can pay the deposit by PayPal. Book by WhatsApp (+886910321666), LINE (ID 0910321666) or email (taipei.cars@gmail.com). English page: https://gohike.tw/en/
 
+English route pages (trailhead, drive time, prices, FAQ):
+- [Yushan / Jade Mountain (玉山) hiking shuttle: Taiwan's highest peak, 3,952 m](https://gohike.tw/en/routes/yushan/)
+- [Xueshan / Snow Mountain & Wuling Four Peaks (雪山・武陵四秀) hiking shuttle: Glacial cirques and the Black Forest, 3,886 m](https://gohike.tw/en/routes/xueshan/)
+- [Hehuanshan peaks (合歡山) hiking shuttle: Alpine grassland, sea of clouds, easy 3,000 m summits](https://gohike.tw/en/routes/hehuan/)
+- [Dabajian (大霸尖山) hiking shuttle: Taiwan's most recognizable barrel-shaped peak](https://gohike.tw/en/routes/dabajian/)
+- [Nanhu Mountain (南湖大山) hiking shuttle: Remote cirques in the Central Range, 3,742 m](https://gohike.tw/en/routes/nanhu/)
+- [Qilai South Peak & Nanhua (奇萊南華) hiking shuttle: Open grassy ridges, 3,358 m](https://gohike.tw/en/routes/qilai/)
+- [Jiaming Lake (嘉明湖) hiking shuttle: A blue lake high in the mountains](https://gohike.tw/en/routes/jiaming/)
+- [Songluo Lake (松蘿湖) hiking shuttle: A misty lake deep in the forest](https://gohike.tw/en/routes/songluo/)
+- [Jiali Mountain (加里山) hiking shuttle: Miaoli's classic mid-elevation hike](https://gohike.tw/en/routes/jiali/)
+- [Luoma traverse (羅馬縱走) hiking shuttle: A forest and ridge traverse](https://gohike.tw/en/routes/luoma/)
+- [Gaodao traverse (高島縱走) hiking shuttle: Cedar forest and mid-elevation ridges](https://gohike.tw/en/routes/gaodao/)
+- [Taman Mountain (塔曼山) hiking shuttle: A high forest walk in northern Taiwan](https://gohike.tw/en/routes/taman/)
+- [Beidelaman (北得拉曼) hiking shuttle: Giant trees and a forest trail challenge](https://gohike.tw/en/routes/beidelaman/)
+- [Junda Mountain (郡大山) hiking shuttle: Central Range ridge views](https://gohike.tw/en/routes/junda/)
+- [Xiakaluo Old Trail, one-way (霞喀羅古道 A 進 B 出) hiking shuttle: A historic trail, end to end](https://gohike.tw/en/routes/xiakaluo-ab/)
+- [Xiakaluo Old Trail, out and back (霞喀羅古道 養老進出) hiking shuttle: A walk on a historic forest trail](https://gohike.tw/en/routes/xiakaluo-yanglao/)
+
 ## 頁面
 
 - [首頁：路線、價格、詢價表單、常見問題](https://gohike.tw/)

@@ -28,6 +28,8 @@ const pages = [
   ...(existsSync(join(root, 'routes')) ? readdirSync(join(root, 'routes')).map((k) => `routes/${k}/index.html`) : []),
   // build.mjs 產生的英文頁
   ...(existsSync(join(root, 'en/index.html')) ? ['en/index.html'] : []),
+  // build.mjs 產生的英文路線頁
+  ...(existsSync(join(root, 'en/routes')) ? readdirSync(join(root, 'en/routes')).map((k) => `en/routes/${k}/index.html`) : []),
 ];
 let refCount = 0;
 let idCount = 0;
