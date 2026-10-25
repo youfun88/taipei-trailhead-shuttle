@@ -23,7 +23,7 @@ const ROUTES = sandbox.window.ROUTES;
 const ROUTES_EN = sandbox.window.ROUTES_EN || {};
 const LINKS_EN = sandbox.window.LINKS_EN || {};
 // 同一家店的所有名稱：AI 靠這些把「山行接駁」「Go Hike」「gohike.tw」認成同一個品牌
-const BRAND_NAMES = [SITE.brandEn, `${SITE.brand} ${SITE.brandEn}`, 'GoHike', 'gohike.tw'].filter(Boolean);
+const BRAND_NAMES = [SITE.brandEn, `${SITE.brand} ${SITE.brandEn}`, 'GoHike', `${SITE.brand} 包車旅遊`, 'gohike.tw'].filter(Boolean);
 
 const URL = 'https://gohike.tw/';
 const ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
