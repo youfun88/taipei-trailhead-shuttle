@@ -546,6 +546,7 @@ const EN_FAQ = [
   { q: 'What is the difference between one way, round trip and same-day return?', a: 'One way is a single drive, to the trailhead or back to the city. Round trip is two drives on the dates you choose, for hikes of two days or more. Same-day return means we drop you off and pick you up on the same day.' },
   { q: 'Do I need to arrange park and mountain permits myself?', a: 'Yes. We provide the transport. Park and mountain entry permits, cabins or campsites, hiking insurance and gear are arranged by you. We can share where to apply when you ask for a quote. Applications are made at hike.taiwan.gov.tw.' },
   { q: 'Can I book from Hong Kong, Singapore, Malaysia or elsewhere?', a: 'Yes. Send your route, dates, number of hikers, pick-up place and flight arrival date by WhatsApp, LINE or email, and tell us your preferred language. We confirm the car and reply with a quote.' },
+  { q: 'Does the driver speak English?', a: 'Our driver speaks some basic English, enough for pick-up times and places. For details, message us in English on WhatsApp, LINE or email, and we confirm everything in writing before the trip.' },
   { q: 'How do overseas hikers pay?', a: 'The deposit can be paid by PayPal, bank transfer or LINE Pay. The balance is paid in New Taiwan dollars, in cash or by bank transfer. We confirm the payment method with your quote.' },
   { q: 'What if I need to cancel or change dates?', a: 'Tell us at least three days before departure for a full refund or a date change. If the mountain or road is closed by the authorities, you can cancel up to one day before.' },
   { q: 'Will the driver wait if we come down late?', a: 'Before you start hiking we confirm the pick-up time and place again, and the driver waits at the agreed time. Please update us on your expected finish time during the hike. Waiting time, any extra fees and emergency contacts are agreed when you book.' },
@@ -689,7 +690,7 @@ function enPage() {
     <div class="en-cta">
           ${contact}
     </div>
-    <p><small>Our drivers are on mountain roads, so please message instead of calling.</small></p>
+    <p><small>Message us in English or Chinese; we confirm everything in writing. The driver speaks some basic English. Drivers are on mountain roads, so please message instead of calling.</small></p>
 
     <h2 id="how">How it works</h2>
     <ol class="en-steps">
