@@ -574,6 +574,11 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .route-page__transport { display: grid; gap: 12px; margin-top: 20px; max-width: 760px; }
 .route-page__transport div { display: flex; gap: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
 .route-page__transport dt { flex: none; width: 5em; color: var(--moss); font-weight: 700; }
+.route-page__h3 { margin-top: 36px; font-family: var(--serif); font-size: 1.25rem; font-weight: 900; color: var(--forest); }
+.route-page__h3 + .route-page__note { margin-top: 6px; max-width: 760px; }
+.route-page__guide dt { width: 6em; }
+.route-page__guide--en dt { width: 8.5em; }
+.route-page__transport dd { min-width: 0; overflow-wrap: anywhere; }
 .route-page__links { display: grid; gap: 8px; margin-top: 20px; }
 .route-page__links a { color: var(--forest); font-weight: 700; }
 .route-page__end { text-align: center; }
@@ -594,6 +599,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .route-page__cta .btn { flex: 1 1 140px; }
   .route-page__cols { grid-template-columns: 1fr; }
   .route-page__transport div { flex-direction: column; gap: 4px; }
+  .route-page__transport dt { width: auto; }
 }
 
 /* 我們的車：三張照片一排、同高；手機上大圖在上，另外兩張並排 */
