@@ -39,6 +39,9 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 - LINE ID：0910321666（https://line.me/ti/p/1fAToCMY_h）
 - 信箱：taipei.cars@gmail.com
+- WhatsApp：+886910321666
+- Instagram：https://www.instagram.com/taipei_cars/
+- Facebook 粉絲專頁：https://www.facebook.com/taipei.cars
 
 ## In English
 
@@ -67,6 +70,7 @@ English route pages (trailhead, drive time, prices, FAQ):
 - [首頁：路線、價格、詢價表單、常見問題](https://gohike.tw/)
 - [English: hiking shuttle routes, prices and booking](https://gohike.tw/en/)
 - [電子名片：一鍵存到手機通訊錄](https://gohike.tw/card.html)
+- [完整版給 AI 的資料：每條路線的介紹、價格與常見問題（中英文）](https://gohike.tw/llms-full.txt)
 - [玉山主峰登山接駁：挑戰台灣第一高峰，接送地點、價格與常見問題](https://gohike.tw/routes/yushan/)
 - [雪山主東峰・武陵四秀登山接駁：走進雪山圈谷，接送地點、價格與常見問題](https://gohike.tw/routes/xueshan/)
 - [合歡山群峰登山接駁：高山草原、雲海與群峰，接送地點、價格與常見問題](https://gohike.tw/routes/hehuan/)

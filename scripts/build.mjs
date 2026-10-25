@@ -136,6 +136,28 @@ const pageFaq = (html) =>
   }));
 const strip = (s) => s.replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
 
+// 首頁（中、英）共用的商家資料：只放網站上已經寫明的事實。地址、營業時間、評價都沒有公開，不要加。
+const OG_IMAGE = URL + 'images/og.jpg';
+const BUSINESS_IMAGES = [URL + 'images/car-tree.webp', URL + 'images/car-front.webp', OG_IMAGE];
+const LOGO = { '@type': 'ImageObject', '@id': URL + '#logo', url: URL + 'images/apple-touch-icon.png', width: 180, height: 180 };
+const PRICE_RANGE = `NT$${Math.min(...allPrices).toLocaleString('en-US')}–NT$${Math.max(...allPrices).toLocaleString('en-US')}`;
+const businessFacts = {
+  '@type': 'LocalBusiness',
+  '@id': URL + '#business',
+  name: SITE.brand,
+  alternateName: BRAND_NAMES,
+  url: URL,
+  logo: LOGO,
+  image: BUSINESS_IMAGES,
+  email: SITE.email,
+  priceRange: PRICE_RANGE,
+  currenciesAccepted: 'TWD',
+  paymentAccepted: 'Cash, Bank transfer, LINE Pay, PayPal',
+  address: { '@type': 'PostalAddress', addressCountry: 'TW' },
+  knowsLanguage: ['zh-Hant-TW', 'en'],
+  sameAs: [SITE.lineUrl, SITE.instagramUrl, SITE.facebookUrl].filter(Boolean),
+};
+
 function jsonLd(html) {
   // 常見問題直接從頁面上的問答抓，避免兩邊內容不一致
   const faq = pageFaq(html);
@@ -168,21 +190,21 @@ function jsonLd(html) {
   const graph = [
     { '@type': 'WebSite', '@id': URL + '#website', url: URL, name: SITE.brand, alternateName: BRAND_NAMES, inLanguage: ['zh-Hant-TW', 'en'], publisher: { '@id': URL + '#business' } },
     {
-      '@type': 'LocalBusiness',
-      '@id': URL + '#business',
-      name: SITE.brand,
-      alternateName: BRAND_NAMES,
-      description,
+      '@type': 'WebPage',
+      '@id': URL + '#webpage',
       url: URL,
-      image: URL + 'images/hero-sm.jpg',
-      email: SITE.email,
-      priceRange: `NT$${Math.min(...allPrices).toLocaleString('en-US')}–NT$${Math.max(...allPrices).toLocaleString('en-US')}`,
-      currenciesAccepted: 'TWD',
-      address: { '@type': 'PostalAddress', addressCountry: 'TW' },
+      name: html.match(/<title>([^<]*)<\/title>/)[1],
+      description,
+      inLanguage: 'zh-Hant-TW',
+      isPartOf: { '@id': URL + '#website' },
+      about: { '@id': URL + '#business' },
+      primaryImageOfPage: { '@type': 'ImageObject', url: OG_IMAGE, width: 1200, height: 630 },
+    },
+    {
+      ...businessFacts,
+      description,
       areaServed: ['台北市', '新北市', '台中市'].map((name) => ({ '@type': 'City', name })),
-      knowsLanguage: ['zh-Hant-TW', 'en'],
-      contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: URL + '#book', contactType: 'reservations', availableLanguage: 'zh-Hant-TW' },
-      sameAs: [SITE.lineUrl, SITE.instagramUrl, SITE.facebookUrl].filter(Boolean),
+      contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: URL + '#book', contactType: 'reservations', availableLanguage: ['zh-Hant-TW', 'en'] },
       hasOfferCatalog: { '@type': 'OfferCatalog', name: '登山接駁路線與價格', itemListElement: offers },
     },
     {
@@ -192,6 +214,33 @@ function jsonLd(html) {
     },
   ];
   return `  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')}</script>`;
+}
+
+// ---- 聯絡方式直接寫進 HTML：原本只靠 main.js 補上連結，搜尋引擎與 AI 不執行 JavaScript 時看不到 ----
+// 對應 config.js 有填的項目：加上 href、拿掉 hidden；main.js 之後照樣會再設定一次，不衝突。
+const CONTACT_LINKS = {
+  'data-line-direct': SITE.lineUrl,
+  'data-whatsapp-link': SITE.whatsapp ? 'https://wa.me/' + SITE.whatsapp.replace(/\D/g, '') : '',
+  'data-instagram-link': SITE.instagramUrl,
+  'data-facebook-link': SITE.facebookUrl,
+  'data-email-link': SITE.email ? 'mailto:' + SITE.email : '',
+};
+function staticContacts(page) {
+  const has = (attrs, k) => new RegExp(`\\s${k}(?=[\\s>=]|$)`).test(attrs);
+  page = page.replace(/<(a|p|div)\b([^>]*)>/g, (tag, name, attrs) => {
+    if (has(attrs, 'data-social') && (SITE.instagramUrl || SITE.facebookUrl)) return `<${name}${attrs.replace(/\shidden\b/, '')}>`;
+    if (/\sid="contactBox"/.test(attrs) && (SITE.lineUrl || SITE.whatsapp || SITE.email)) return `<${name}${attrs.replace(/\shidden\b/, '')}>`;
+    const key = Object.keys(CONTACT_LINKS).find((k) => has(attrs, k));
+    if (!key || !CONTACT_LINKS[key]) return tag;
+    let a = attrs.replace(/\shidden\b/, '');
+    if (name !== 'a') return `<${name}${a}>`;
+    const url = CONTACT_LINKS[key];
+    a = a.replace(/\s(href|target|rel)="[^"]*"/g, '');
+    return `<a${a} href="${esc(url)}"${url.startsWith('mailto:') ? '' : ' target="_blank" rel="noopener"'}>`;
+  });
+  if (SITE.lineId) page = page.replace(/(<(b|span) data-line-id>)[^<]*(<\/\2>)/g, (_, a, t, c) => a + esc(SITE.lineId) + c);
+  if (SITE.email) page = page.replace(/(<(b|span) data-email>)[^<]*(<\/\2>)/g, (_, a, t, c) => a + esc(SITE.email) + c);
+  return page;
 }
 
 // ---- 寫回 index.html ----
@@ -210,6 +259,7 @@ html = html.replace(/(<(b|span) data-price>)[^<]*(<\/\2>)/g, (_, a, tag, c) => a
 html = region(html, 'route-cards', ROUTES.map(routeCard).join('\n\n'));
 html = region(html, 'price-table', priceTable());
 html = region(html, 'about', `        <p class="footer__about">${esc(about)}</p>`);
+html = staticContacts(html);
 html = region(html, 'jsonld', jsonLd(html));
 
 // ---- 路線頁 routes/<key>/：js/routes.js 的每條路線一頁，讓「玉山 登山接駁」這類搜尋有專屬頁面 ----
@@ -251,7 +301,7 @@ function routePage({ rt, route, credit }) {
     '歡迎用 LINE 或線上表單詢價。';
   const faq = [...rt.faq, ...(isPriced(route) ? [{ q: `${route.name}登山接駁多少錢？`, a: priceAnswer(route) }] : []), ...sharedFaq];
   const ask = `/?dest=${encodeURIComponent(rt.dest)}#book`;
-  const image = rt.img ? URL + rt.img.src : URL + 'images/hero-sm.jpg';
+  const image = rt.img ? URL + rt.img.src : OG_IMAGE;
 
   const rows = Object.keys(ORIGINS).flatMap((o) =>
     Object.keys(CARS).map((c) => {
@@ -327,6 +377,7 @@ function routePage({ rt, route, credit }) {
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:image" content="${image}">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <!-- build:font -->
@@ -546,6 +597,10 @@ const enDescription =
   `${SITE.brandEn} (${SITE.brand}) is a private hiking shuttle in Taiwan from Taipei and Taichung to trailheads such as ` +
   `${priced.slice(0, 5).map((r) => enName(r).replace(/ \(.*\)$/, '')).join(', ')}, and back after your hike. ` +
   `Priced per vehicle (5-seat or 9-seat), one way from ${nt(lowest)}, with every route's price public. Ask on WhatsApp, LINE or with the online form.`;
+// meta description 要短（約 160 字元內），完整版留給結構化資料
+const enMetaDescription =
+  `Private hiking shuttle in Taiwan from Taipei and Taichung to trailheads like Yushan, Xueshan and Hehuanshan, and back after your hike. ` +
+  `Priced per vehicle, one way from ${nt(lowest)}.`;
 const enAbout =
   `${SITE.brandEn} (${SITE.brand}) is a hiking shuttle from Taipei and Taichung to trailheads including ${priced.slice(0, 8).map((r) => enName(r).replace(/ \(.*\)$/, '')).join(', ')}. ` +
   `We have a 5-seat car (up to 4 passengers) and a 9-seat van (up to 8 passengers), priced per vehicle. ` +
@@ -629,23 +684,22 @@ function enJsonLd(page) {
     ),
   );
   const graph = [
-    { '@type': 'WebPage', '@id': EN_URL + '#webpage', url: EN_URL, name: `${SITE.brandEn} (${SITE.brand}) | Hiking shuttle to Taiwan trailheads`, inLanguage: 'en', isPartOf: { '@id': URL + '#website' }, about: { '@id': URL + '#business' } },
     {
-      '@type': 'LocalBusiness',
-      '@id': URL + '#business',
-      name: SITE.brand,
-      alternateName: BRAND_NAMES,
+      '@type': 'WebPage',
+      '@id': EN_URL + '#webpage',
+      url: EN_URL,
+      name: page.match(/<title>([^<]*)<\/title>/)[1].replace(/&amp;/g, '&'),
+      description: enMetaDescription,
+      inLanguage: 'en',
+      isPartOf: { '@id': URL + '#website' },
+      about: { '@id': URL + '#business' },
+      primaryImageOfPage: { '@type': 'ImageObject', url: OG_IMAGE, width: 1200, height: 630 },
+    },
+    {
+      ...businessFacts,
       description: enDescription,
-      url: URL,
-      image: [URL + 'images/hero-sm.jpg', URL + 'images/car-tree.webp'],
-      email: SITE.email,
-      priceRange: `NT$${Math.min(...allPrices).toLocaleString('en-US')}–NT$${Math.max(...allPrices).toLocaleString('en-US')}`,
-      currenciesAccepted: 'TWD',
-      address: { '@type': 'PostalAddress', addressCountry: 'TW' },
       areaServed: ['Taipei', 'New Taipei', 'Taichung'].map((name) => ({ '@type': 'City', name })),
-      knowsLanguage: ['zh-Hant-TW', 'en'],
       contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: EN_URL + '#book', contactType: 'reservations', availableLanguage: ['zh-Hant-TW', 'en'] },
-      sameAs: [SITE.lineUrl, SITE.instagramUrl, SITE.facebookUrl].filter(Boolean),
       hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Hiking shuttle routes and prices', itemListElement: offers },
     },
     { '@type': 'FAQPage', '@id': EN_URL + '#faq', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
@@ -659,11 +713,12 @@ for (const rt of ROUTES) {
   const dest = ROUTES_EN[rt.key]?.dest;
   if (dest && !enHtml.includes(`<option>${esc(dest)}</option>`)) throw new Error(`en/index.html 的目的地選單沒有「${dest}」`);
 }
-enHtml = enHtml.replace(/(<meta name="description" content=")[^"]*(")/, (_, a, b) => a + esc(enDescription) + b);
+enHtml = enHtml.replace(/(<meta name="description" content=")[^"]*(")/, (_, a, b) => a + esc(enMetaDescription) + b);
 enHtml = enHtml.replace(/(<(b|span) data-price>)[^<]*(<\/\2>)/g, (_, a, tag, c) => a + lowestText + c);
 enHtml = region(enHtml, 'route-cards', ROUTES.map(enRouteCard).join('\n\n'));
 enHtml = region(enHtml, 'price-table', enPriceTable());
 enHtml = region(enHtml, 'about', `        <p class="footer__about">${esc(enAbout)}</p>`);
+enHtml = staticContacts(enHtml);
 enHtml = region(enHtml, 'jsonld', enJsonLd(enHtml));
 
 // ---- 英文路線頁 en/routes/<key>/：中文路線頁的英文版，讓「Hehuanshan shuttle from Taipei」這類英文搜尋有專屬頁面 ----
@@ -713,7 +768,8 @@ function enRoutePage(rt) {
   const url = enRouteUrl(rt.key);
   const short = en.name.replace(/ \(.*\)$/, '');
   const zhName = (en.name.match(/\(([^)]*)\)$/) || [])[1] || rt.name;
-  const title = `${en.name} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`;
+  // 標題控制在約 60 字元內，搜尋結果才不會被截斷；中文名稱留在 h1 與內文
+  const title = `${short} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`;
   const desc =
     `Private hiking shuttle to ${short} from Taipei or Taichung. ${en.sub}. Drop-off at ${en.trailhead}. ` +
     (isPriced(route)
@@ -722,7 +778,7 @@ function enRoutePage(rt) {
     ' Ask on WhatsApp, LINE or with the online form.';
   const faq = [...en.faq, ...(isPriced(route) ? [{ q: `How much is a hiking shuttle to ${short}?`, a: enPriceAnswer(route) }] : []), ...enSharedFaq];
   const ask = `/en/?dest=${encodeURIComponent(en.dest)}#book`;
-  const image = rt.img ? URL + rt.img.src : URL + 'images/hero-sm.jpg';
+  const image = rt.img ? URL + rt.img.src : OG_IMAGE;
   const credit = rt.img && enCredits.find((c) => (en.imgAlt || '').toLowerCase().includes(c.label.toLowerCase()) || en.name.toLowerCase().includes(c.label.toLowerCase()));
   if (rt.img && !credit) throw new Error(`英文路線頁 ${rt.key} 的照片在英文首頁頁尾找不到授權資料`);
   const dayTags = en.dayTags || rt.dayTags.map((d) => DAY_EN[d] || d);
@@ -756,9 +812,8 @@ function enRoutePage(rt) {
       {
         '@type': 'BreadcrumbList',
         itemListElement: [
-          { '@type': 'ListItem', position: 1, name: SITE.brandEn, item: URL },
-          { '@type': 'ListItem', position: 2, name: 'English', item: EN_URL },
-          { '@type': 'ListItem', position: 3, name: `${short} hiking shuttle`, item: url },
+          { '@type': 'ListItem', position: 1, name: SITE.brandEn, item: EN_URL },
+          { '@type': 'ListItem', position: 2, name: `${short} hiking shuttle`, item: url },
         ],
       },
       {
@@ -769,7 +824,6 @@ function enRoutePage(rt) {
         description: desc,
         url,
         image,
-        inLanguage: 'en',
         provider: { '@id': URL + '#business' },
         areaServed: ['Taipei', 'New Taipei', 'Taichung'].map((n) => ({ '@type': 'City', name: n })),
         ...(offers.length ? { offers } : {}),
@@ -804,6 +858,7 @@ function enRoutePage(rt) {
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:image" content="${image}">
   <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <!-- build:font -->
@@ -998,16 +1053,43 @@ for (const [key, page] of Object.entries(enRouteHtml)) {
 
 
 // ---- sitemap.xml ----
+// lastmod 只在頁面內容真的改變時才更新：scripts/lastmod.json 記錄每頁的內容指紋與日期。
+// 每次發布都填今天的話，搜尋引擎會學到「這個日期不可信」而忽略它。
+// 指紋不含 css/js 版本號與字型網址（那些改了不代表這頁的內容變了）。
 const today = new Date().toISOString().slice(0, 10);
+const LASTMOD_FILE = 'scripts/lastmod.json';
+const lastmodPrev = existsSync(join(root, LASTMOD_FILE)) ? JSON.parse(read(LASTMOD_FILE)) : {};
+const fingerprint = (page) =>
+  createHash('sha1')
+    .update(page.replace(/<!-- build:font -->[\s\S]*?<!-- \/build:font -->/g, '').replace(/\?v=[0-9a-f]+/g, ''))
+    .digest('hex')
+    .slice(0, 12);
+const sitemapPages = [
+  [URL, html],
+  [URL + 'card.html', cardHtml],
+  [EN_URL, enHtml],
+  ...routePages.map((x) => [routeUrl(x.rt.key), routeHtml[x.rt.key]]),
+  ...ROUTES.map((rt) => [enRouteUrl(rt.key), enRouteHtml[rt.key]]),
+];
+const lastmod = {};
+for (const [loc, page] of sitemapPages) {
+  const hash = fingerprint(page);
+  lastmod[loc] = lastmodPrev[loc]?.hash === hash ? lastmodPrev[loc] : { hash, date: today };
+}
+write(LASTMOD_FILE, JSON.stringify(lastmod, null, 2) + '\n');
+// 中英文互為翻譯的頁面，在 sitemap 也標出 hreflang（和頁面 <head> 一致）
+const pairs = { [URL]: EN_URL, ...Object.fromEntries(ROUTES.map((rt) => [routeUrl(rt.key), enRouteUrl(rt.key)])) };
+const zhOf = Object.fromEntries(Object.entries(pairs).map(([zh, en]) => [en, zh]));
+const alternates = (loc) => {
+  const zh = pairs[loc] ? loc : zhOf[loc];
+  if (!zh) return '';
+  return `\n    <xhtml:link rel="alternate" hreflang="zh-Hant-TW" href="${zh}"/>\n    <xhtml:link rel="alternate" hreflang="en" href="${pairs[zh]}"/>\n    <xhtml:link rel="alternate" hreflang="x-default" href="${zh}"/>\n  `;
+};
 write(
   'sitemap.xml',
   `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>${URL}</loc><lastmod>${today}</lastmod></url>
-  <url><loc>${URL}card.html</loc><lastmod>${today}</lastmod></url>
-  <url><loc>${EN_URL}</loc><lastmod>${today}</lastmod></url>
-${routePages.map((x) => `  <url><loc>${routeUrl(x.rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
-${ROUTES.map((rt) => `  <url><loc>${enRouteUrl(rt.key)}</loc><lastmod>${today}</lastmod></url>`).join('\n')}
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+${sitemapPages.map(([loc]) => `  <url><loc>${loc}</loc><lastmod>${lastmod[loc].date}</lastmod>${alternates(loc)}</url>`).join('\n')}
 </urlset>
 `,
 );
@@ -1045,6 +1127,7 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 - LINE ID：${SITE.lineId}（${SITE.lineUrl}）
 - 信箱：${SITE.email}
+- WhatsApp：${SITE.whatsapp}${SITE.instagramUrl ? `\n- Instagram：${SITE.instagramUrl}` : ''}${SITE.facebookUrl ? `\n- Facebook 粉絲專頁：${SITE.facebookUrl}` : ''}
 
 ## In English
 
@@ -1058,8 +1141,75 @@ ${ROUTES.map((rt) => `- [${ROUTES_EN[rt.key].name} hiking shuttle: ${ROUTES_EN[r
 - [首頁：路線、價格、詢價表單、常見問題](${URL})
 - [English: hiking shuttle routes, prices and booking](${EN_URL})
 - [電子名片：一鍵存到手機通訊錄](${URL}card.html)
+- [完整版給 AI 的資料：每條路線的介紹、價格與常見問題（中英文）](${URL}llms-full.txt)
 ${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地點、價格與常見問題](${routeUrl(x.rt.key)})`).join('\n')}
 `,
 );
 
-console.log(`已更新：en/index.html、${ROUTES.length} 個英文路線頁、index.html（起價 NT$${lowestText}、${priced.length} 條有價格的路線）、${routePages.length} 個路線頁、sitemap.xml、llms.txt`);
+// ---- llms-full.txt：llms.txt 的完整版，把每條路線的介紹、價格、問答和首頁常見問題都放進一個純文字檔，AI 一次讀完 ----
+const zhPriceLines = (r) =>
+  isPriced(r)
+    ? Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).filter((c) => r[o][c]).map((c) => `${ORIGINS[o]}・${CARS[c]}：` + TRIPS.map((t, i) => (r[o][c][i] ? `${t} ${money(r[o][c][i])}` : '')).filter(Boolean).join('、')))
+    : ['依行程報價，歡迎詢價'];
+const enPriceLines = (r) =>
+  isPriced(r)
+    ? Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).filter((c) => r[o][c]).map((c) => `${EN_ORIGINS[o]}, ${EN_CARS[c]}: ` + EN_TRIPS.map((t, i) => (r[o][c][i] ? `${t.toLowerCase()} ${nt(r[o][c][i])}` : '')).filter(Boolean).join(', ')))
+    : ['Quoted per trip; ask us for a price'];
+const qa = (list) => list.map((f) => `**${f.q}**\n${f.a}`).join('\n\n');
+const zhRouteFull = ({ rt, route }) =>
+  [
+    `### ${rt.name}登山接駁：${rt.sub}`,
+    `網址：${routeUrl(rt.key)}`,
+    [['登山口／接送點', rt.trailhead], ['台北車程', rt.drive], ['海拔', rt.alt], ['行程類型', rt.dayTags?.join('、')]].filter((f) => f[1]).map(([k, v]) => `- ${k}：${v}`).join('\n'),
+    [['景觀', rt.scenery], ['適合客群', rt.audience], ['交通與注意事項', rt.transport]].filter((f) => f[1]).map(([k, v]) => `${k}：${v}`).join('\n'),
+    '價格（整車，新台幣）：\n' + zhPriceLines(route).map((l) => `- ${l}`).join('\n'),
+    rt.faq?.length ? qa(rt.faq) : '',
+  ].filter(Boolean).join('\n\n');
+const enRouteFull = (rt) => {
+  const en = ROUTES_EN[rt.key];
+  if (!en) return '';
+  const route = PRICES.find((r) => r.key === rt.key);
+  return [
+    `### ${en.name} hiking shuttle: ${en.sub}`,
+    `URL: ${enRouteUrl(rt.key)}`,
+    [['Trailhead / drop-off', en.trailhead], ['Drive from Taipei', rt.drive && en.drive], ['Altitude', rt.alt], ['Trip length', (en.dayTags || rt.dayTags.map((d) => DAY_EN[d] || d)).join(', ')]].filter((f) => f[1]).map(([k, v]) => `- ${k}: ${v}`).join('\n'),
+    [['Scenery', en.scenery], ['Good for', en.audience], ['Getting there', en.transport]].filter((f) => f[1]).map(([k, v]) => `${k}: ${v}`).join('\n'),
+    'Prices (per vehicle, NT$):\n' + enPriceLines(route).map((l) => `- ${l}`).join('\n'),
+    en.faq?.length ? qa(en.faq) : '',
+  ].filter(Boolean).join('\n\n');
+};
+const llms = read('llms.txt');
+write(
+  'llms-full.txt',
+  `# ${SITE.brand} ${SITE.brandEn}（gohike.tw）完整資料 / full reference
+
+> ${about}
+>
+> ${enAbout}
+
+本檔由網站資料自動產生，內容和網站頁面一致。摘要版：${URL}llms.txt
+This file is generated from the same data as the website. Short version: ${URL}llms.txt
+
+${llms.slice(llms.indexOf('## 服務內容'), llms.indexOf('## In English')).trim()}
+
+## 常見問題
+
+${qa(homeFaq)}
+
+## 各路線介紹
+
+${routePages.map(zhRouteFull).join('\n\n')}
+
+## In English
+
+### Questions
+
+${qa(enHomeFaq)}
+
+## Routes in English
+
+${ROUTES.map(enRouteFull).filter(Boolean).join('\n\n')}
+`,
+);
+
+console.log(`已更新：en/index.html、${ROUTES.length} 個英文路線頁、index.html（起價 NT$${lowestText}、${priced.length} 條有價格的路線）、${routePages.length} 個路線頁、sitemap.xml、llms.txt、llms-full.txt`);

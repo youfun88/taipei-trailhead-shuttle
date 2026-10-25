@@ -29,8 +29,9 @@
 `scripts/build.mjs` 會依 `js/config.js` 和 `js/prices.js` 產生這些內容，不要手動改：
 
 - `index.html` 裡 `<!-- build:… -->` 標記之間的區塊：結構化資料（商家、價格、常見問題）、收費表、各路線價格問答、頁尾簡介
-- `sitemap.xml`：給搜尋引擎的網站地圖
-- `llms.txt`：給 AI 助理讀的服務、價格、聯絡方式摘要
+- `sitemap.xml`：給搜尋引擎的網站地圖（含中英文對照）。`lastmod` 只在頁面內容真的變了才更新，紀錄在 `scripts/lastmod.json`，跑完 build 請一起 commit
+- `llms.txt`：給 AI 助理讀的服務、價格、聯絡方式摘要；`llms-full.txt` 是完整版（每條路線的介紹、價格與問答，中英文）
+- 首頁的 LINE、WhatsApp、Email、IG、FB 連結：直接寫進 HTML，不執行 JavaScript 也看得到
 
 `robots.txt` 允許所有搜尋引擎與 AI 讀取。
 
