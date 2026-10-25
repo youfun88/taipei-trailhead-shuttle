@@ -4,6 +4,9 @@
   var SITE = window.SITE || {};
   var $ = function (sel, root) { return (root || document).querySelector(sel); };
   var $$ = function (sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); };
+  // 英文頁 en/ 和中文頁共用這支程式：t('中文', 'English') 依頁面語言選一個
+  var EN = document.documentElement.lang === 'en';
+  var t = function (zh, en) { return EN ? en : zh; };
 
   // ---- 套用 config.js 的設定 ----
   var lineUrl = (SITE.lineUrl || '').trim();
@@ -14,12 +17,14 @@
   var formKey = (SITE.web3formsKey || '').trim();
   var formEndpoint = formKey ? 'https://api.web3forms.com/submit' : '';
 
-  if (SITE.brand) {
+  if (EN) {
+    // 英文頁的品牌與標語寫在 HTML 裡，不用中文設定蓋掉
+  } else if (SITE.brand) {
     $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
     document.title = document.title.replace('山行接駁', SITE.brand);
   }
   if (SITE.owner) $$('[data-owner]').forEach(function (el) { el.textContent = SITE.owner; });
-  if (SITE.tagline) {
+  if (SITE.tagline && !EN) {
     $$('[data-tagline]').forEach(function (el) { el.textContent = SITE.tagline; });
   }
 
@@ -65,7 +70,7 @@
     if (!lineUrl) {
       $$('[data-line-link]').forEach(function (el) {
         el.href = 'tel:' + phone.replace(/[^\d+]/g, '');
-        el.textContent = '電話預約 ' + phone;
+        el.textContent = t('電話預約 ', 'Call to book ') + phone;
         el.classList.replace('btn--line', 'btn--accent');
       });
     }
@@ -118,7 +123,7 @@
     nav.classList.toggle('is-open', open);
     header.classList.toggle('is-menu', open);
     burger.setAttribute('aria-expanded', String(open));
-    burger.setAttribute('aria-label', open ? '關閉選單' : '開啟選單');
+    burger.setAttribute('aria-label', open ? t('關閉選單', 'Close menu') : t('開啟選單', 'Open menu'));
   }
   burger.addEventListener('click', function () { setMenu(!nav.classList.contains('is-open')); });
   nav.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
@@ -141,7 +146,7 @@
       r.hidden = !match || folded;
     });
     if (routesMore) {
-      routesMore.textContent = '看全部 ' + routes.length + ' 條路線';
+      routesMore.textContent = t('看全部 ' + routes.length + ' 條路線', 'See all ' + routes.length + ' routes');
       routesMore.hidden = routeFilter !== 'all' || showAllRoutes || shown <= ROUTE_LIMIT;
     }
   }
@@ -199,7 +204,7 @@
   var copyBtn = $('#copyBtn');
   var againBtn = $('#againBtn');
   var submitBtn = $('button[type="submit"]', form);
-  var submitLabel = formEndpoint ? '送出詢價' : '整理成詢價訊息';
+  var submitLabel = formEndpoint ? t('送出詢價', 'Send inquiry') : t('整理成詢價訊息', 'Prepare my message');
   submitBtn.textContent = submitLabel;
 
   // 出發日期不能選過去
@@ -234,28 +239,32 @@
   }
   function withWeek(value) {
     var d = new Date(value + 'T00:00:00');
-    return value.replace(/-/g, '/') + '（' + '日一二三四五六'.charAt(d.getDay()) + '）';
+    var zhDay = '日一二三四五六'.charAt(d.getDay());
+    return value.replace(/-/g, '/') + t('（' + zhDay + '）', ' (' + ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'][d.getDay()] + ' ' + zhDay + ')');
   }
 
   function buildMessage() {
     var f = form.elements;
+    // 訊息是傳給車主的：英文頁用中英對照的欄位名稱，車主和客人都看得懂
+    var L = function (zh, en) { return EN ? en + ' ' + zh + '：' : zh + '：'; };
     var lines = [
-      '【登山接駁詢價】',
-      '稱呼：' + f.name.value.trim(),
-      '希望聯絡方式：' + f.contact.value,
-      fullPhone(f) ? '電話：' + fullPhone(f) : '',
+      EN ? '【登山接駁詢價 Hiking shuttle inquiry】' : '【登山接駁詢價】',
+      EN ? '頁面語言：English' : '',
+      L('稱呼', 'Name') + f.name.value.trim(),
+      L('希望聯絡方式', 'Contact by') + f.contact.value,
+      fullPhone(f) ? L('電話', 'Phone') + fullPhone(f) : '',
       f.email.value.trim() ? 'Email：' + f.email.value.trim() : '',
-      '目的地：' + f.dest.value,
-      '去程日期：' + withWeek(f.date.value),
-      f.returnDate.value ? '回程日期：' + withWeek(f.returnDate.value) : '',
-      '接送需求：' + f.trip.value,
-      '行程天數：' + f.days.value,
-      '人數：' + f.people.value,
-      '車型：' + f.car.value,
-      '上車地點：' + f.pickup.value,
-      f.flight.value ? '航班抵達日期：' + withWeek(f.flight.value) : '',
-      '偏好語言：' + f.lang.value,
-      f.note.value.trim() ? '其他需求：' + f.note.value.trim() : '',
+      L('目的地', 'Destination') + f.dest.value,
+      L('去程日期', 'Date') + withWeek(f.date.value),
+      f.returnDate.value ? L('回程日期', 'Return date') + withWeek(f.returnDate.value) : '',
+      L('接送需求', 'Trip') + f.trip.value,
+      L('行程天數', 'Days') + f.days.value,
+      L('人數', 'Hikers') + f.people.value,
+      L('車型', 'Vehicle') + f.car.value,
+      L('上車地點', 'Pick-up') + f.pickup.value,
+      f.flight.value ? L('航班抵達日期', 'Flight arrives') + withWeek(f.flight.value) : '',
+      L('偏好語言', 'Language') + f.lang.value,
+      f.note.value.trim() ? L('其他需求', 'Notes') + f.note.value.trim() : '',
     ];
     return lines.filter(Boolean).join('\n');
   }
@@ -264,10 +273,10 @@
   function showResult(title, warn) {
     resultTitle.textContent = title;
     result.classList.toggle('result--warn', !!warn);
-    copyBtn.textContent = '複製訊息';
+    copyBtn.textContent = t('複製訊息', 'Copy message');
     // 個人 LINE 帳號無法預先帶入訊息：按鈕會先複製訊息再開啟聊天，客人貼上即可。
     sendLine.href = lineUrl || 'https://line.me/R/share?text=' + encodeURIComponent(resultText.textContent);
-    sendLineLabel.textContent = lineUrl ? '複製訊息並開啟 LINE' : '用 LINE 傳送';
+    sendLineLabel.textContent = lineUrl ? t('複製訊息並開啟 LINE', 'Copy message and open LINE') : t('用 LINE 傳送', 'Send by LINE');
     // WhatsApp 可以預先帶入訊息
     var sendWa = $('#sendWa');
     if (sendWa && whatsapp) {
@@ -280,7 +289,7 @@
   // 寄出成功：收起表單，換成確認畫面，並把畫面帶到那裡
   function showSent(name) {
     form.classList.add('is-sent');
-    showResult('謝謝你，' + name + '！我們已經收到你的詢價，會盡快與你聯絡。');
+    showResult(t('謝謝你，' + name + '！我們已經收到你的詢價，會盡快與你聯絡。', 'Thank you, ' + name + '! We received your inquiry and will reply soon.'));
     form.scrollIntoView({ behavior: 'smooth', block: 'center' });
     result.focus({ preventScroll: true });
   }
@@ -299,7 +308,7 @@
     if (f._honey && f._honey.value) return Promise.resolve(true);
     var body = {
       access_key: formKey,
-      subject: '登山接駁詢價：' + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
+      subject: t('登山接駁詢價：', '登山接駁詢價（英文頁）：') + f.dest.value + '・' + f.date.value.replace(/-/g, '/'),
       from_name: 'gohike.tw 詢價表單',
       '稱呼': f.name.value.trim(),
       '希望聯絡方式': f.contact.value,
@@ -318,6 +327,7 @@
       '其他需求': f.note.value.trim() || '（無）',
       '完整訊息': msg,
     };
+    if (EN) body['頁面語言'] = 'English';
     return fetch(formEndpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
@@ -337,19 +347,19 @@
     var phoneVal = f.phone.value.trim();
     var emailVal = f.email.value.trim();
     var method = f.contact.value;
-    if (!f.name.value.trim()) { missing.push(f.name); problems.push('稱呼'); }
+    if (!f.name.value.trim()) { missing.push(f.name); problems.push(t('稱呼', 'your name')); }
     // 電話或 Email 擇一；選了 Email 聯絡就要有 Email，選 WhatsApp 就要有電話
-    if (method === 'Email' && !emailVal) { missing.push(f.email); problems.push('Email（你選了用 Email 聯絡）'); }
-    else if (method === 'WhatsApp' && !phoneVal) { missing.push(f.phone); problems.push('手機號碼（你選了用 ' + method + ' 聯絡）'); }
-    else if (!phoneVal && !emailVal) { missing.push(f.phone, f.email); problems.push('手機號碼或 Email 擇一'); }
-    if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { missing.push(f.email); problems.push('Email 格式不正確'); }
-    if (!f.dest.value) { missing.push(f.dest); problems.push('目的地'); }
-    if (!f.date.value) { missing.push(f.date); problems.push('去程日期'); }
+    if (method === 'Email' && !emailVal) { missing.push(f.email); problems.push(t('Email（你選了用 Email 聯絡）', 'email (you chose to be contacted by email)')); }
+    else if (method === 'WhatsApp' && !phoneVal) { missing.push(f.phone); problems.push(t('手機號碼（你選了用 ' + method + ' 聯絡）', 'mobile number (you chose ' + method + ')')); }
+    else if (!phoneVal && !emailVal) { missing.push(f.phone, f.email); problems.push(t('手機號碼或 Email 擇一', 'a mobile number or an email')); }
+    if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { missing.push(f.email); problems.push(t('Email 格式不正確', 'a valid email address')); }
+    if (!f.dest.value) { missing.push(f.dest); problems.push(t('目的地', 'destination')); }
+    if (!f.date.value) { missing.push(f.date); problems.push(t('去程日期', 'date')); }
 
     $$('.is-invalid', form).forEach(function (el) { el.classList.remove('is-invalid'); });
     if (missing.length) {
       missing.forEach(function (el) { el.classList.add('is-invalid'); });
-      errorBox.textContent = '請再確認：' + problems.join('、') + '。';
+      errorBox.textContent = t('請再確認：' + problems.join('、') + '。', 'Please check: ' + problems.join(', ') + '.');
       errorBox.hidden = false;
       result.hidden = true;
       missing[0].focus();
@@ -362,15 +372,15 @@
 
     if (!formEndpoint) {
       showResult(lineUrl
-        ? '訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：'
-        : '訊息整理好了，傳給我們就完成詢價：');
+        ? t('訊息整理好了。按下方按鈕會複製訊息並開啟 LINE，在聊天室貼上送出就完成詢價：', 'Your message is ready. The button below copies it and opens LINE. Paste it in the chat and send:')
+        : t('訊息整理好了，傳給我們就完成詢價：', 'Your message is ready. Send it to us to finish your inquiry:'));
       result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return;
     }
 
     sending = true;
     submitBtn.disabled = true;
-    submitBtn.textContent = '寄送中…';
+    submitBtn.textContent = t('寄送中…', 'Sending…');
     result.hidden = true;
     sendEmail(f, msg).then(function (ok) {
       sending = false;
@@ -379,7 +389,7 @@
       if (ok) {
         showSent(f.name.value.trim());
       } else {
-        showResult('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我們' + (email ? '，或寄到 ' + email : '') + '：', true);
+        showResult(t('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我們' + (email ? '，或寄到 ' + email : '') + '：', 'Your inquiry was not sent. Please send this message to us by LINE or WhatsApp' + (email ? ', or email it to ' + email : '') + ':'), true);
         result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       }
     });
@@ -392,7 +402,7 @@
 
   function copyMessage() {
     var text = resultText.textContent;
-    var done = function () { copyBtn.textContent = '已複製 ✓'; };
+    var done = function () { copyBtn.textContent = t('已複製 ✓', 'Copied ✓'); };
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(done, fallback);
     } else {
@@ -404,7 +414,7 @@
       var sel = window.getSelection();
       sel.removeAllRanges();
       sel.addRange(range);
-      try { document.execCommand('copy'); done(); } catch (err) { copyBtn.textContent = '請長按上方文字複製'; }
+      try { document.execCommand('copy'); done(); } catch (err) { copyBtn.textContent = t('請長按上方文字複製', 'Press and hold the text above to copy'); }
     }
   }
 
