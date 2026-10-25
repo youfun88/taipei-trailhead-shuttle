@@ -289,6 +289,24 @@ function fromPrice(r, o) {
   return `${CARS[best.c]}${TRIPS[best.i]} ${money(best.p)}`;
 }
 
+// 路線頁「登山口交通與申請」：routes.js／routes-en.js 的 guide（下車地點、下車之後、管制、申請、季節…），一項一列
+const GUIDE_CHECKED = { zh: '2026 年 10 月', en: 'October 2026' };
+function guideSection(guide, heading, lead, mod) {
+  if (!guide?.length) return '';
+  return `
+        <h3 class="route-page__h3">${esc(heading)}</h3>
+        <p class="route-page__note">${esc(lead)}</p>
+        <dl class="route-page__transport route-page__guide${mod}">
+${guide.map((g) => `          <div><dt>${esc(g.k)}</dt><dd>${esc(g.v)}</dd></div>`).join('\n')}
+        </dl>`;
+}
+// 中英文的 guide 要一一對應，避免某一版漏掉資訊
+for (const rt of ROUTES) {
+  const zh = rt.guide || [], en = ROUTES_EN[rt.key]?.guide || [];
+  if (zh.length !== en.length) throw new Error(`路線 ${rt.key} 的 guide 中文 ${zh.length} 項、英文 ${en.length} 項，要一樣多`);
+  if ((rt.faq || []).length !== (ROUTES_EN[rt.key]?.faq || []).length) throw new Error(`路線 ${rt.key} 的 faq 中英文題數不同`);
+}
+
 function routePage({ rt, route, credit }) {
   const name = rt.name;
   const url = routeUrl(rt.key);
@@ -460,7 +478,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
           <div><dt>出發地</dt><dd>台北車站、台中高鐵站，也可以到府接送</dd></div>
           <div><dt>接送位置</dt><dd>${esc(rt.trailhead)}</dd></div>${rt.drive ? `\n          <div><dt>台北車程</dt><dd>${esc(rt.drive)}（一般路況下的概估）</dd></div>` : ''}
           <div><dt>注意事項</dt><dd>${esc(rt.transport)}</dd></div>
-        </dl>
+        </dl>${guideSection(rt.guide, `${name}登山口交通與申請`, `以下是${GUIDE_CHECKED.zh}整理的公開資訊。管制、接駁與申請規則常有變動，出發前請以官方公告為準。`, '')}
       </div>
     </section>
 
@@ -942,7 +960,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
           <div><dt>Pick-up</dt><dd>Taipei Main Station, Taichung HSR Station, or your address</dd></div>
           <div><dt>Drop-off</dt><dd>${esc(en.trailhead)}</dd></div>${rt.drive && en.drive ? `\n          <div><dt>Drive from Taipei</dt><dd>${esc(en.drive)} (a rough estimate in normal traffic)</dd></div>` : ''}
           <div><dt>Good to know</dt><dd>${esc(en.transport)}</dd></div>
-        </dl>
+        </dl>${guideSection(en.guide, `${short}: trailhead access and permits`, `Public information checked in ${GUIDE_CHECKED.en}. Road controls, shuttles and permit rules change often, so check the official notices before you go.`, ' route-page__guide--en')}
       </div>
     </section>
 
