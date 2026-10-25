@@ -674,6 +674,7 @@ function enPage() {
     .en details { margin-top: 16px; }
     .en summary { cursor: pointer; font-weight: 700; padding: 8px 0; }
     .en-faq h3 { margin-top: 22px; }
+    .en-photo { border-radius: 16px; margin: 6px 0 14px; width: 100%; height: auto; }
     .en-foot { margin-top: 56px; font-size: 14px; color: var(--muted); }
     @media (max-width: 560px) { .en td { white-space: normal; } .en th, .en td { padding: 10px 6px; } .en table { font-size: 14.5px; } }
   </style>
@@ -714,9 +715,10 @@ ${detail}
     <p>Trailheads not listed, or a different drop-off and pick-up point: just ask.</p>
 
     <h2 id="vehicles">Vehicles</h2>
+    <img class="en-photo" src="/images/car-tree.webp" srcset="/images/car-tree-sm.webp 700w, /images/car-tree.webp 1400w" sizes="(max-width: 900px) calc(100vw - 40px), 820px" alt="Our black Volkswagen Caravelle 9-seat van" width="1400" height="933" loading="lazy">
     <ul class="dots">
       <li>5-seat car: up to 4 passengers.</li>
-      <li>9-seat van (Volkswagen Caravelle or similar): up to 8 passengers. If everyone carries a large pack, tell us the number and size so we can suggest the right vehicle.</li>
+      <li>9-seat van: our black Volkswagen Caravelle (pictured), up to 8 passengers. If everyone carries a large pack, tell us the number and size so we can suggest the right vehicle.</li>
     </ul>
 
     <h2 id="included">What is and isn't included</h2>

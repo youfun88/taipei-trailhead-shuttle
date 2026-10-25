@@ -595,3 +595,15 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
   .route-page__cols { grid-template-columns: 1fr; }
   .route-page__transport div { flex-direction: column; gap: 4px; }
 }
+
+/* 我們的車：三張照片一排、同高；手機上大圖在上，另外兩張並排 */
+.car-gallery { display: grid; grid-template-columns: 1.6fr 1fr 0.7fr; gap: 14px; margin-top: 28px; }
+.car-gallery figure { margin: 0; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); height: clamp(260px, 30vw, 380px); }
+.car-gallery img { width: 100%; height: 100%; object-fit: cover; }
+.car-gallery__main img { object-position: 70% 60%; }
+.car-gallery__tall img { object-position: 50% 55%; }
+@media (max-width: 760px) {
+  .car-gallery { grid-template-columns: 1fr 1fr; }
+  .car-gallery__main { grid-column: 1 / span 2; }
+  .car-gallery figure { height: 240px; }
+}
