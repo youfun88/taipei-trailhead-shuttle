@@ -387,6 +387,7 @@
       submitBtn.disabled = false;
       submitBtn.textContent = submitLabel;
       if (ok) {
+        if (typeof gtag === 'function') gtag('event', 'generate_lead', { method: 'form', page: location.pathname });
         showSent(f.name.value.trim());
       } else {
         showResult(t('詢價沒有寄出去。請把下面這則訊息用 LINE 傳給我們' + (email ? '，或寄到 ' + email : '') + '：', 'Your inquiry was not sent. Please send this message to us by LINE or WhatsApp' + (email ? ', or email it to ' + email : '') + ':'), true);
