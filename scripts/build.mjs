@@ -411,6 +411,7 @@ function routePage({ rt, route, credit }) {
     gtag('config', 'G-GTRGBHGVD0');
     document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href]'); if (!a) return; var h = a.getAttribute('href') || ''; var m = /line\.me/.test(h) ? 'line' : /wa\.me|whatsapp/.test(h) ? 'whatsapp' : /^mailto:/.test(h) ? 'email' : /^tel:/.test(h) ? 'phone' : ''; if (m) gtag('event', 'contact_click', { method: m, page: location.pathname }); }, true);
   </script>
+  <script src="/js/lead-log.js" defer></script>
 </head>
 <body class="page">
   <a class="skip" href="#main">跳到主要內容</a>
@@ -893,6 +894,7 @@ function enRoutePage(rt) {
     gtag('config', 'G-GTRGBHGVD0');
     document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href]'); if (!a) return; var h = a.getAttribute('href') || ''; var m = /line\.me/.test(h) ? 'line' : /wa\.me|whatsapp/.test(h) ? 'whatsapp' : /^mailto:/.test(h) ? 'email' : /^tel:/.test(h) ? 'phone' : ''; if (m) gtag('event', 'contact_click', { method: m, page: location.pathname }); }, true);
   </script>
+  <script src="/js/lead-log.js" defer></script>
 </head>
 <body class="page">
   <a class="skip" href="#main">Skip to main content</a>
