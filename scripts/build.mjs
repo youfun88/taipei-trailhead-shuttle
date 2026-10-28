@@ -23,7 +23,7 @@ const ROUTES = sandbox.window.ROUTES;
 const ROUTES_EN = sandbox.window.ROUTES_EN || {};
 const LINKS_EN = sandbox.window.LINKS_EN || {};
 // 同一家店的所有名稱：AI 靠這些把「山行接駁」「Go Hike」「gohike.tw」認成同一個品牌
-const BRAND_NAMES = [SITE.brandEn, `${SITE.brand} ${SITE.brandEn}`, 'GoHike', `${SITE.brand} 包車旅遊`, 'gohike.tw'].filter(Boolean);
+const BRAND_NAMES = [SITE.brandEn, `${SITE.brand} ${SITE.brandEn}`, 'GoHike', `${SITE.brand} ${SITE.tagline}`, `${SITE.brand} 包車旅遊`, 'gohike.tw'].filter(Boolean);
 
 const URL = 'https://gohike.tw/';
 const ORIGINS = { taipei: '台北出發', taichung: '台中出發' };
@@ -307,6 +307,59 @@ for (const rt of ROUTES) {
   if ((rt.faq || []).length !== (ROUTES_EN[rt.key]?.faq || []).length) throw new Error(`路線 ${rt.key} 的 faq 中英文題數不同`);
 }
 
+// ---- 路線頁「快速解答」：routes.js／routes-en.js 的 answers（問句當 H2，答案一段一段寫），也會進 FAQPage 結構化資料 ----
+// 答案裡可以用 {{price:taipei}}、{{price:taichung}}（這個出發地的整車價格，來自 prices.js）、{{brand}}、{{line}}。
+// 只寫網站上已有的事實，或查得到官方出處的公開資訊（出處放在 links）。
+const originPrice = (r, o, lang) =>
+  Object.keys(CARS)
+    .filter((c) => r[o][c])
+    .map((c) =>
+      lang === 'en'
+        ? `${EN_CARS_[c]} ` + EN_TRIPS_.map((t, i) => (r[o][c][i] ? `${t.toLowerCase()} ${'NT$' + Number(r[o][c][i]).toLocaleString('en-US')}` : '')).filter(Boolean).join(', ')
+        : CARS[c] + TRIPS.map((t, i) => (r[o][c][i] ? `${t} ${money(r[o][c][i])}` : '')).filter(Boolean).join('、'),
+    )
+    .join(lang === 'en' ? '; ' : '；') || (lang === 'en' ? 'ask us for a quote' : '請詢價');
+const EN_CARS_ = { five: '5-seat', nine: '9-seat' };
+const EN_TRIPS_ = ['One way', 'Round trip', 'Same-day return'];
+function fillAnswer(text, route, lang) {
+  return text
+    .replace(/\{\{price:(taipei|taichung)\}\}/g, (_, o) => originPrice(route, o, lang))
+    .replace(/\{\{brand\}\}/g, lang === 'en' ? `${SITE.brandEn} (${SITE.brand})` : SITE.brand)
+    .replace(/\{\{line\}\}/g, SITE.lineId);
+}
+const answerList = (answers, route, lang) =>
+  (answers || []).map((x) => ({ q: x.q, paras: x.a.map((t) => fillAnswer(t, route, lang)), links: x.links || [] }));
+const answerFaq = (list) => list.map((x) => ({ q: x.q, a: x.paras.join(' ') }));
+function answersSection(list, lang) {
+  if (!list.length) return '';
+  const zh = lang !== 'en';
+  return `
+    <section class="section section--tight route-page__qa" id="answers">
+      <div class="wrap wrap--narrow">
+        <p class="eyebrow">${zh ? '交通與價格快速解答' : 'Quick answers'}</p>
+${list
+  .map(
+    (x) => `        <h2 class="route-page__q">${esc(x.q)}</h2>
+${x.paras.map((t) => `        <p>${esc(t)}</p>`).join('\n')}${
+      x.links.length
+        ? `\n        <p class="route-page__note">${zh ? '官方資訊：' : 'Official source: '}${x.links.map((l) => `<a href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label)}</a>`).join(zh ? '、' : ', ')}</p>`
+        : ''
+    }`,
+  )
+  .join('\n')}
+      </div>
+    </section>
+`;
+}
+// 路線頁開頭的一段直接回答：從哪出發、送到哪、開多久、多少錢、怎麼預約
+function zhLeadAnswer(rt, route) {
+  const price = isPriced(route)
+    ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('、') + '，整車計價（五人座最多 4 位乘客、九人座最多 8 位乘客）。'
+    : '整車計價，依行程報價。';
+  return `${SITE.brand}從台北車站、台中高鐵站或指定地址出發，專車送到${rt.name}的接送點：${rt.trailhead}，下山時在約好的時間接回。` +
+    (rt.drive ? `台北出發車程${rt.drive}。` : '') + price + `用 LINE（ID ${SITE.lineId}）、WhatsApp 或線上表單詢價。`;
+}
+
 function routePage({ rt, route, credit }) {
   const name = rt.name;
   const url = routeUrl(rt.key);
@@ -317,7 +370,9 @@ function routePage({ rt, route, credit }) {
       ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('，') + '，整車計價。'
       : '整車計價，歡迎詢價。') +
     '歡迎用 LINE 或線上表單詢價。';
+  const answers = answerList(rt.answers, route, 'zh');
   const faq = [...rt.faq, ...(isPriced(route) ? [{ q: `${route.name}登山接駁多少錢？`, a: priceAnswer(route) }] : []), ...sharedFaq];
+  const faqLd = [...answerFaq(answers), ...faq];
   const ask = `/?dest=${encodeURIComponent(rt.dest)}#book`;
   const image = rt.img ? URL + rt.img.src : OG_IMAGE;
 
@@ -365,7 +420,7 @@ function routePage({ rt, route, credit }) {
         areaServed: ['台北市', '新北市', '台中市'].map((n) => ({ '@type': 'City', name: n })),
         ...(offers.length ? { offers } : {}),
       },
-      { '@type': 'FAQPage', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+      { '@type': 'FAQPage', '@id': url + '#faq', inLanguage: 'zh-Hant-TW', mainEntity: faqLd.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     ],
   };
 
@@ -441,7 +496,7 @@ function routePage({ rt, route, credit }) {
             <p class="route-page__labels">${rt.labels.map((l) => `<span>${esc(l)}</span>`).join('')}</p>
             <h1>${esc(name)}登山接駁</h1>
             <p class="route-page__sub">${esc(rt.sub)}</p>
-            <p class="section__lead">${esc(rt.scenery)}</p>
+            <p class="route-page__answer"><b>快速回答</b>${esc(zhLeadAnswer(rt, route))}</p>
             <dl class="route-page__facts">
 ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('\n')}
             </dl>
@@ -461,7 +516,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
         </div>
       </div>
     </section>
-
+${answersSection(answers, 'zh')}
     <section class="section section--tint section--tight">
       <div class="wrap">
         <h2>路線特色</h2>
@@ -513,7 +568,7 @@ ${links.map((l) => `          <li><a href="${esc(l.url)}" target="_blank" rel="n
 
     <section class="section section--tint section--tight">
       <div class="wrap wrap--narrow">
-        <h2>常見問題</h2>
+        <h2 id="faq">常見問題</h2>
         <div class="faq">
 ${faq.map((f) => `          <details>\n            <summary>${esc(f.q)}</summary>\n            <p>${esc(f.a)}</p>\n          </details>`).join('\n')}
         </div>
@@ -619,8 +674,8 @@ const enDescription =
   `Priced per vehicle (5-seat or 9-seat), one way from ${nt(lowest)}, with every route's price public. Ask on WhatsApp, LINE or with the online form.`;
 // meta description 要短（約 160 字元內），完整版留給結構化資料
 const enMetaDescription =
-  `Private hiking shuttle in Taiwan from Taipei and Taichung to trailheads like Yushan, Xueshan and Hehuanshan, and back after your hike. ` +
-  `Priced per vehicle, one way from ${nt(lowest)}.`;
+  `Private hiking shuttle from Taipei and Taichung to Yushan, Xueshan, Hehuanshan and other Taiwan trailheads. ` +
+  `Per vehicle, one way from ${nt(lowest)}.`;
 const enAbout =
   `${SITE.brandEn} (${SITE.brand}) is a hiking shuttle from Taipei and Taichung to trailheads including ${priced.slice(0, 8).map((r) => enName(r).replace(/ \(.*\)$/, '')).join(', ')}. ` +
   `We have a 5-seat car (up to 4 passengers) and a 9-seat van (up to 8 passengers), priced per vehicle. ` +
@@ -781,6 +836,14 @@ function enPriceAnswer(r) {
   );
 }
 
+function enLeadAnswer(rt, en, route, short) {
+  const prices = Object.keys(ORIGINS).map((o) => enFromPrice(route, o) && `${EN_ORIGINS[o].replace(/^From/, 'from')}, ${enFromPrice(route, o)}`).filter(Boolean);
+  return `${SITE.brandEn} (${SITE.brand}) drives you from Taipei Main Station, Taichung HSR Station or your address to ${short}: drop-off at ${en.trailhead}, and picks you up at the agreed time after your hike. ` +
+    (rt.drive && en.drive ? `${en.drive} from Taipei. ` : '') +
+    (prices.length ? `Starting prices: ${prices.join('; ')}, per vehicle (5-seat up to 4 passengers, 9-seat up to 8). ` : 'Priced per vehicle; ask us for a quote. ') +
+    `Book on WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or the online form.`;
+}
+
 function enRoutePage(rt) {
   const en = ROUTES_EN[rt.key];
   if (!en?.scenery) throw new Error(`js/routes-en.js 沒有路線 ${rt.key} 的路線頁英文（scenery、audience、transport、labels、faq）`);
@@ -788,15 +851,25 @@ function enRoutePage(rt) {
   const url = enRouteUrl(rt.key);
   const short = en.name.replace(/ \(.*\)$/, '');
   const zhName = (en.name.match(/\(([^)]*)\)$/) || [])[1] || rt.name;
-  // 標題控制在約 60 字元內，搜尋結果才不會被截斷；中文名稱留在 h1 與內文
-  const title = `${short} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`;
+  // 標題控制在約 60 字元內，搜尋結果才不會被截斷；中文名稱留在 h1 與內文。名稱取「/」前的主名，例如 Xueshan
+  const titleName = short.split(' / ')[0];
+  const longTitle = `${titleName} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`;
+  const title = longTitle.length <= 65 ? longTitle : `${titleName} shuttle from Taipei, Taichung | ${SITE.brandEn}`;
+  const routeMin = Math.min(...Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => (route[o][c] || []).filter(Boolean))));
+  const cheapest = Number.isFinite(routeMin) ? [`from ${nt(routeMin)}`] : [];
+  // meta description 約 160 字元內；完整說明（desc）留給結構化資料
+  const metaDesc =
+    `Private hiking shuttle to ${titleName} from Taipei or Taichung, drop-off at ${en.trailhead.replace(/ \(.*?\)/g, '').replace(/, [^,]*$/, '')}. ` +
+    (cheapest.length ? `Per vehicle, ${cheapest[0]}.` : 'Priced per vehicle.') + ' Book on WhatsApp or LINE.';
   const desc =
     `Private hiking shuttle to ${short} from Taipei or Taichung. ${en.sub}. Drop-off at ${en.trailhead}. ` +
     (isPriced(route)
       ? 'Per vehicle: ' + Object.keys(ORIGINS).map((o) => (enFromPrice(route, o) ? `${EN_ORIGINS[o].replace(/^From/, 'from')}, ${enFromPrice(route, o)}` : '')).filter(Boolean).join('; ') + '.'
       : 'Priced per vehicle; ask us for a quote.') +
     ' Ask on WhatsApp, LINE or with the online form.';
+  const answers = answerList(en.answers, route, 'en');
   const faq = [...en.faq, ...(isPriced(route) ? [{ q: `How much is a hiking shuttle to ${short}?`, a: enPriceAnswer(route) }] : []), ...enSharedFaq];
+  const faqLd = [...answerFaq(answers), ...faq];
   const ask = `/en/?dest=${encodeURIComponent(en.dest)}#book`;
   const image = rt.img ? URL + rt.img.src : OG_IMAGE;
   const credit = rt.img && enCredits.find((c) => (en.imgAlt || '').toLowerCase().includes(c.label.toLowerCase()) || en.name.toLowerCase().includes(c.label.toLowerCase()));
@@ -848,7 +921,7 @@ function enRoutePage(rt) {
         areaServed: ['Taipei', 'New Taipei', 'Taichung'].map((n) => ({ '@type': 'City', name: n })),
         ...(offers.length ? { offers } : {}),
       },
-      { '@type': 'FAQPage', inLanguage: 'en', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
+      { '@type': 'FAQPage', '@id': url + '#faq', inLanguage: 'en', mainEntity: faqLd.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
     ],
   };
 
@@ -863,7 +936,7 @@ function enRoutePage(rt) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>${esc(title)}</title>
-  <meta name="description" content="${esc(desc)}">
+  <meta name="description" content="${esc(metaDesc)}">
   <meta name="theme-color" content="#14231c">
   <link rel="canonical" href="${url}">
   <link rel="alternate" hreflang="zh-Hant-TW" href="${routeUrl(rt.key)}">
@@ -875,7 +948,7 @@ function enRoutePage(rt) {
   <meta property="og:site_name" content="${esc(SITE.brandEn)}">
   <meta property="og:url" content="${url}">
   <meta property="og:title" content="${esc(title)}">
-  <meta property="og:description" content="${esc(desc)}">
+  <meta property="og:description" content="${esc(metaDesc)}">
   <meta property="og:image" content="${image}">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -924,7 +997,7 @@ function enRoutePage(rt) {
             <p class="route-page__labels">${en.labels.map((l) => `<span>${esc(l)}</span>`).join('')}</p>
             <h1>${esc(short)} hiking shuttle <span lang="zh-Hant-TW">(${esc(zhName)})</span></h1>
             <p class="route-page__sub">${esc(en.sub)}</p>
-            <p class="section__lead">${esc(en.scenery)}</p>
+            <p class="route-page__answer"><b>Short answer</b>${esc(enLeadAnswer(rt, en, route, short))}</p>
             <dl class="route-page__facts">
 ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div>`).join('\n')}
             </dl>
@@ -945,7 +1018,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
         </div>
       </div>
     </section>
-
+${answersSection(answers, 'en')}
     <section class="section section--tint section--tight">
       <div class="wrap">
         <h2>About this route</h2>
@@ -997,7 +1070,7 @@ ${links.map((l) => `          <li><a href="${esc(l.url)}" target="_blank" rel="n
 
     <section class="section section--tint section--tight">
       <div class="wrap wrap--narrow">
-        <h2>Questions</h2>
+        <h2 id="faq">Questions</h2>
         <div class="faq">
 ${faq.map((f) => `          <details>\n            <summary>${esc(f.q)}</summary>\n            <p>${esc(f.a)}</p>\n          </details>`).join('\n')}
         </div>
@@ -1088,7 +1161,6 @@ const fingerprint = (page) =>
     .slice(0, 12);
 const sitemapPages = [
   [URL, html],
-  [URL + 'card.html', cardHtml],
   [EN_URL, enHtml],
   ...routePages.map((x) => [routeUrl(x.rt.key), routeHtml[x.rt.key]]),
   ...ROUTES.map((rt) => [enRouteUrl(rt.key), enRouteHtml[rt.key]]),
@@ -1162,7 +1234,6 @@ ${ROUTES.map((rt) => `- [${ROUTES_EN[rt.key].name} hiking shuttle: ${ROUTES_EN[r
 
 - [首頁：路線、價格、詢價表單、常見問題](${URL})
 - [English: hiking shuttle routes, prices and booking](${EN_URL})
-- [電子名片：一鍵存到手機通訊錄](${URL}card.html)
 - [完整版給 AI 的資料：每條路線的介紹、價格與常見問題（中英文）](${URL}llms-full.txt)
 ${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地點、價格與常見問題](${routeUrl(x.rt.key)})`).join('\n')}
 `,
@@ -1185,6 +1256,7 @@ const zhRouteFull = ({ rt, route }) =>
     [['登山口／接送點', rt.trailhead], ['台北車程', rt.drive], ['海拔', rt.alt], ['行程類型', rt.dayTags?.join('、')]].filter((f) => f[1]).map(([k, v]) => `- ${k}：${v}`).join('\n'),
     [['景觀', rt.scenery], ['適合客群', rt.audience], ['交通與注意事項', rt.transport]].filter((f) => f[1]).map(([k, v]) => `${k}：${v}`).join('\n'),
     '價格（整車，新台幣）：\n' + zhPriceLines(route).map((l) => `- ${l}`).join('\n'),
+    rt.answers?.length ? qa(answerFaq(answerList(rt.answers, route, 'zh'))) : '',
     rt.faq?.length ? qa(rt.faq) : '',
   ].filter(Boolean).join('\n\n');
 const enRouteFull = (rt) => {
@@ -1197,6 +1269,7 @@ const enRouteFull = (rt) => {
     [['Trailhead / drop-off', en.trailhead], ['Drive from Taipei', rt.drive && en.drive], ['Altitude', rt.alt], ['Trip length', (en.dayTags || rt.dayTags.map((d) => DAY_EN[d] || d)).join(', ')]].filter((f) => f[1]).map(([k, v]) => `- ${k}: ${v}`).join('\n'),
     [['Scenery', en.scenery], ['Good for', en.audience], ['Getting there', en.transport]].filter((f) => f[1]).map(([k, v]) => `${k}: ${v}`).join('\n'),
     'Prices (per vehicle, NT$):\n' + enPriceLines(route).map((l) => `- ${l}`).join('\n'),
+    en.answers?.length ? qa(answerFaq(answerList(en.answers, route, 'en'))) : '',
     en.faq?.length ? qa(en.faq) : '',
   ].filter(Boolean).join('\n\n');
 };

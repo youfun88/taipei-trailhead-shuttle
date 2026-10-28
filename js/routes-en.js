@@ -469,6 +469,112 @@ const ROUTE_GUIDE_EN = {
     ],
   },
 };
+// Quick answers at the top of English route pages (question as H2, also in FAQPage structured data).
+// English version of ROUTE_ANSWERS in routes.js. Same rules: only facts already on the site, plus official
+// bus information checked in October 2026 (source in links). {{price:taipei}}, {{price:taichung}}, {{brand}}, {{line}} are filled in by the build.
+const EXTRA_COST_EN = {
+  q: 'Is there an extra charge for an early start or for waiting?',
+  a: [
+    'The prices on this site are per-vehicle reference prices for each departure city, vehicle and trip type. The site does not list a fixed early-morning surcharge or waiting fee. Your final quote depends on the pick-up place, times, stops and number of days.',
+    'Waiting time, any possible extra cost and the emergency contact are agreed when you book, and any extra cost is listed before the booking is confirmed.',
+  ],
+};
+const NTBUS_LINKS_EN = [
+  { label: 'Nantou Bus: Cingjing Farm to Wuling Pass and Hehuanshan (6658A) timetable and booking (Chinese)', url: 'http://www.ntbus.com.tw/cj-m.html' },
+  { label: 'Nantou Bus: Taichung to Puli to Cingjing Farm connection (Chinese)', url: 'http://www.ntbus.com.tw/cjfm.html' },
+];
+const ROUTE_ANSWERS_EN = {
+  yushan: [
+    {
+      q: 'How do I get from Taipei to the Yushan trailhead?',
+      a: [
+        'Yushan (Jade Mountain) is climbed from Tataka (塔塔加) in Xinyi, Nantou. Taipei to Tataka is about 4.5 to 5 hours. Highway 21 from Caopingtou to Tataka is closed every night from 17:30 to 07:00, so an early-morning arrival has to come via Highway 18 from Alishan.',
+        'Regular vehicles can only go as far as Tataka Visitor Center and the Shangdongpu (上東埔) parking area; private cars cannot pass the Tataka checkpoint. From the Paiyun Hiking Service Center at Shangdongpu to the Yushan trailhead is about 2.5 km, a 40 to 50 minute walk, or take the paid local shuttle.',
+        'Without a car, {{brand}} runs private hiking shuttles from Taipei Main Station or your address to the part of Tataka open to vehicles, and picks you up after the hike. By public transport, Yuanlin Bus 6739 stops at Shangdongpu, but there are only a few buses a day, mostly after 10 am.',
+      ],
+      links: [{ label: 'Yushan National Park: road status', url: 'https://www.ysnp.gov.tw/Highway/C001300' }],
+    },
+    {
+      q: 'How much is a private shuttle from Taipei or Taichung to Yushan?',
+      a: [
+        'Prices are per vehicle, not per person. From Taipei: {{price:taipei}}. From Taichung: {{price:taichung}}. The 5-seat car takes up to 4 passengers and the 9-seat van up to 8. Round trip is two drives, there and back.',
+      ],
+    },
+    EXTRA_COST_EN,
+  ],
+  xueshan: [
+    {
+      q: 'How do I get from Taipei to the Xueshan trailhead?',
+      a: [
+        'The Xueshan (Snow Mountain) trailhead is inside Wuling Farm (武陵農場) in Heping, Taichung. By road from Taipei: Freeway 5, Yilan, Highway 7, Qilan, then Highway 7A to Wuling; Wuling Farm lists about 3.5 hours. Everyone pays at the farm gate (NT$160 per adult, NT$50 per car, cash only). Normally cars can drive on to the Xueshan trailhead lot or the Wuling Lodge lot.',
+        'Without a car, {{brand}} drives you from Taipei Main Station or your address to the Xueshan trailhead area at Wuling Farm and picks you up at the agreed time. We confirm the exact drop-off point you can reach before the trip.',
+        'By public transport, Kuo-Kuang bus 1751 (from Yilan) or 1764 (from Luodong) takes about 2 hours 40 minutes to Wuling, with only two or three buses a day. You get off at the gate to buy tickets, and there is still a stretch of road from the farm to the trailhead.',
+      ],
+      links: [{ label: 'Wuling Farm: getting there (Chinese)', url: 'https://www.wuling-farm.com.tw/tw/stay/traffic.php' }],
+    },
+    {
+      q: 'How much is a private shuttle from Taipei or Taichung to Xueshan?',
+      a: [
+        'Prices are per vehicle, not per person. From Taipei: {{price:taipei}}. From Taichung: {{price:taichung}}.',
+        'The 5-seat car takes up to 4 passengers and the 9-seat van up to 8. Round trip is two drives, for example a 2-day main peak trip. Same-day return means we drop you off and pick you up the same day, for example an East Peak day hike.',
+      ],
+    },
+    EXTRA_COST_EN,
+    {
+      q: 'What happens if the road or mountain is closed, or it snows?',
+      a: [
+        'Tell us at least three days before departure for a full refund or a new date. If the mountain or road is closed by the authorities, you can cancel up to one day before.',
+        'Vehicles are controlled at Wuling Farm during the February cherry blossom season: multi-day teams register their vehicle with Shei-Pa 3 days before entry, and single-day teams get no vehicle pass. In winter, Highway 7A from Nanshan to Shengguang often needs snow chains or closes as a precaution. We check road conditions before the trip, and if the car cannot reach the planned point, we discuss another meeting point, a different time or a new date with you.',
+      ],
+      links: [{ label: 'Shei-Pa National Park', url: 'https://www.spnp.gov.tw/' }],
+    },
+  ],
+  hehuan: [
+    {
+      q: 'How do I get from Taipei to Hehuanshan without a car?',
+      a: [
+        'There are two ways: a private shuttle, or high-speed rail plus buses.',
+        'Private shuttle: {{brand}} picks you up at Taipei Main Station or your address and drives you to the parking point for the peak you are hiking, about 4 hours from Taipei, then picks you up after the hike. You choose the pick-up time.',
+        'Public transport: take High Speed Rail to Taichung. From HSR Taichung Station (or Taichung Gancheng Station), Nantou Bus runs connecting services to Puli and on to Cingjing Farm (清境農場), changing route at Puli. At the Cingjing Farm Guest House stop (國民賓館), change to Nantou Bus 6658A to Wuling Pass (武嶺), Songxue Lodge (松雪樓) and Xiaofengkou (小風口).',
+      ],
+      links: NTBUS_LINKS_EN,
+    },
+    {
+      q: 'What are the limits of the Hehuanshan bus?',
+      a: [
+        'Under the current Nantou Bus timetable, 6658A runs three times a day. The first bus reaches Wuling Pass a little after 9 am and the last bus back leaves Xiaofengkou at 15:50, so it does not work for sunrise or a long day hike.',
+        'Seats are booked online, from 7 days before until noon the day before, up to 4 people per booking; without a booking you queue on the day. It is a mid-size bus with no luggage space, and it may not run in thick fog, heavy rain, snow or ice. Check the current timetable before you go.',
+        'A private shuttle runs on your schedule and stops where your hike starts. It is priced per vehicle, not per seat.',
+      ],
+      links: NTBUS_LINKS_EN,
+    },
+    {
+      q: 'How do I get to Hehuanshan from Taichung?',
+      a: [
+        'Hehuanshan is on Highway 14A in Ren-ai, Nantou. Where you get off depends on the peak: Wuling Pass or Kunyang for the Main Peak, Xiaofengkou for North Peak, and Songxue Lodge or Hehuan Villa for East Peak and Shimen Mountain.',
+        'By private shuttle, {{brand}} picks you up at Taichung HSR Station or your address and drives you to that point. By bus, take Nantou Bus from Taichung via Puli to Cingjing Farm, then 6658A, as described above.',
+      ],
+      links: NTBUS_LINKS_EN,
+    },
+    {
+      q: 'How much is a private shuttle from Taipei or Taichung to Hehuanshan?',
+      a: [
+        'Prices are per vehicle, not per person. From Taipei: {{price:taipei}}. From Taichung: {{price:taichung}}.',
+        'The 5-seat car takes up to 4 passengers and the 9-seat van up to 8. For trip types not in the price table, such as up and down on the same day, ask us for a quote.',
+      ],
+    },
+    EXTRA_COST_EN,
+    {
+      q: 'What about road closures, snow and the carpool rule?',
+      a: [
+        'When there is snow or ice on Highway 14A, some stretches are open only to cars with snow chains, and on icy nights the road may close from 17:00 to 07:00. From October 24, 2026, on every holiday of 3 or more days, cars between Cuifeng and Dayuling need at least 3 people from 00:00 to 08:00.',
+        'We check road conditions before the trip. If the road is controlled, we discuss another meeting point or a new date with you. If the mountain or road is closed by the authorities, you can cancel up to one day before.',
+      ],
+      links: [{ label: 'Highway Bureau (road closures and controls)', url: 'https://www.thb.gov.tw/' }],
+    },
+  ],
+};
+for (const [key, list] of Object.entries(ROUTE_ANSWERS_EN)) window.ROUTES_EN[key].answers = list;
 for (const [key, g] of Object.entries(ROUTE_GUIDE_EN)) {
   const en = window.ROUTES_EN[key];
   const { faq = [], card, ...rest } = g;
