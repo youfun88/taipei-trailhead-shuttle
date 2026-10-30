@@ -455,7 +455,8 @@ function routePage({ rt, route, credit }) {
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <!-- build:font -->
   <!-- /build:font -->
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- build:css -->
+  <!-- /build:css -->
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0"></script>
@@ -646,15 +647,21 @@ const versioned = (page) =>
     const hash = createHash('sha1').update(readFileSync(join(root, file))).digest('hex').slice(0, 8);
     return `${a}${file}?v=${hash}${c}`;
   });
-html = versioned(html);
-cardHtml = versioned(cardHtml);
+// ---- 樣式表直接內嵌進頁面：少一次會擋住首次繪製的請求，手機版 LCP（首屏大標題）可以早一點畫出來 ----
+// css/style.css 仍是唯一的原始檔（404.html 等手寫頁面照舊外連）；這裡只去掉註解與多餘空白。
+const inlineCss =
+  '  <style>' +
+  read('css/style.css').replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s+/g, ' ').replace(/\s*([{};])\s*/g, '$1').trim() +
+  '</style>';
+html = versioned(region(html, 'css', inlineCss));
+cardHtml = versioned(region(cardHtml, 'css', inlineCss));
 write('index.html', html);
 write('card.html', cardHtml);
 // 路線頁整個資料夾重新產生，prices.js 拿掉的路線不會留下舊頁面
 rmSync(join(root, 'routes'), { recursive: true, force: true });
 for (const [key, page] of Object.entries(routeHtml)) {
   mkdirSync(join(root, 'routes', key), { recursive: true });
-  write(`routes/${key}/index.html`, versioned(region(page, 'font', fontTags)));
+  write(`routes/${key}/index.html`, versioned(region(region(page, 'font', fontTags), 'css', inlineCss)));
 }
 
 // ---- 英文頁 en/：中文首頁的完整英文版，給海外山友，也讓用英文問 AI「Taiwan hiking shuttle」時找得到我們 ----
@@ -851,10 +858,16 @@ function enRoutePage(rt) {
   const url = enRouteUrl(rt.key);
   const short = en.name.replace(/ \(.*\)$/, '');
   const zhName = (en.name.match(/\(([^)]*)\)$/) || [])[1] || rt.name;
-  // 標題控制在約 60 字元內，搜尋結果才不會被截斷；中文名稱留在 h1 與內文。名稱取「/」前的主名，例如 Xueshan
+  // 標題控制在 60 字元內，搜尋結果才不會被截斷；中文名稱留在 h1 與內文。名稱取「/」前的主名，例如 Xueshan
   const titleName = short.split(' / ')[0];
-  const longTitle = `${titleName} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`;
-  const title = longTitle.length <= 65 ? longTitle : `${titleName} shuttle from Taipei, Taichung | ${SITE.brandEn}`;
+  // 依序取第一個不超過 60 字元的寫法：路線名放最前面，品牌放最後
+  const titleOptions = [
+    `${titleName} hiking shuttle from Taipei & Taichung | ${SITE.brandEn}`,
+    `${titleName} shuttle from Taipei & Taichung | ${SITE.brandEn}`,
+    `${titleName} hiking shuttle, Taipei/Taichung | ${SITE.brandEn}`,
+    `${titleName} hiking shuttle | ${SITE.brandEn}`,
+  ];
+  const title = titleOptions.find((t) => t.length <= 60) || titleOptions[titleOptions.length - 1];
   const routeMin = Math.min(...Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => (route[o][c] || []).filter(Boolean))));
   const cheapest = Number.isFinite(routeMin) ? [`from ${nt(routeMin)}`] : [];
   // meta description 約 160 字元內；完整說明（desc）留給結構化資料
@@ -956,7 +969,8 @@ function enRoutePage(rt) {
   <link rel="apple-touch-icon" href="/images/apple-touch-icon.png">
   <!-- build:font -->
   <!-- /build:font -->
-  <link rel="stylesheet" href="/css/style.css">
+  <!-- build:css -->
+  <!-- /build:css -->
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
   <!-- Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0"></script>
@@ -1138,25 +1152,25 @@ const enFontTags = [
   `  <noscript><link rel="stylesheet" href="${esc(enFontUrl)}"></noscript>`,
 ].join('\n');
 enHtml = region(enHtml, 'font', enFontTags);
-write('en/index.html', versioned(enHtml));
+write('en/index.html', versioned(region(enHtml, 'css', inlineCss)));
 // 英文路線頁整個資料夾重新產生，拿掉的路線不會留下舊頁面
 rmSync(join(root, 'en/routes'), { recursive: true, force: true });
 for (const [key, page] of Object.entries(enRouteHtml)) {
   mkdirSync(join(root, 'en/routes', key), { recursive: true });
-  write(`en/routes/${key}/index.html`, versioned(region(page, 'font', enFontTags)));
+  write(`en/routes/${key}/index.html`, versioned(region(region(page, 'font', enFontTags), 'css', inlineCss)));
 }
 
 
 // ---- sitemap.xml ----
 // lastmod 只在頁面內容真的改變時才更新：scripts/lastmod.json 記錄每頁的內容指紋與日期。
 // 每次發布都填今天的話，搜尋引擎會學到「這個日期不可信」而忽略它。
-// 指紋不含 css/js 版本號與字型網址（那些改了不代表這頁的內容變了）。
+// 指紋不含 css/js 版本號、內嵌樣式與字型網址（那些改了不代表這頁的內容變了）。
 const today = new Date().toISOString().slice(0, 10);
 const LASTMOD_FILE = 'scripts/lastmod.json';
 const lastmodPrev = existsSync(join(root, LASTMOD_FILE)) ? JSON.parse(read(LASTMOD_FILE)) : {};
 const fingerprint = (page) =>
   createHash('sha1')
-    .update(page.replace(/<!-- build:font -->[\s\S]*?<!-- \/build:font -->/g, '').replace(/\?v=[0-9a-f]+/g, ''))
+    .update(page.replace(/<!-- build:(font|css) -->[\s\S]*?<!-- \/build:\1 -->/g, '').replace(/\?v=[0-9a-f]+/g, ''))
     .digest('hex')
     .slice(0, 12);
 const sitemapPages = [

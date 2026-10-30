@@ -32,6 +32,7 @@
 - `sitemap.xml`：給搜尋引擎的網站地圖（含中英文對照）。`lastmod` 只在頁面內容真的變了才更新，紀錄在 `scripts/lastmod.json`，跑完 build 請一起 commit
 - `llms.txt`：給 AI 助理讀的服務、價格、聯絡方式摘要；`llms-full.txt` 是完整版（每條路線的介紹、價格與問答，中英文）
 - 首頁的 LINE、WhatsApp、Email、IG、FB 連結：直接寫進 HTML，不執行 JavaScript 也看得到
+- 首頁、英文頁、名片頁與路線頁 `<!-- build:css -->` 之間的 `<style>`：`css/style.css` 直接內嵌，少一次擋住畫面的請求（手機版 LCP 較快）。樣式請改 `css/style.css`，再跑一次 build
 
 `robots.txt` 允許所有搜尋引擎與 AI 讀取。
 
