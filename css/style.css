@@ -21,6 +21,8 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 [hidden] { display: none !important; }
+/* 有 JavaScript 時，main.js 執行前先收起第 7 條以後的路線卡和第 2、3 類常見問題（main.js 之後會用 hidden 接手），避免載入時多排版一次、多抓圖片 */
+.js-fold .routes > .route:nth-child(n + 7), .js-fold #faq-trip, .js-fold #faq-abroad { display: none; }
 
 html { scroll-behavior: smooth; scroll-padding-top: calc(var(--header-h) + 12px); -webkit-text-size-adjust: 100%; }
 body {

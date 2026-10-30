@@ -459,12 +459,13 @@ function routePage({ rt, route, credit }) {
   <!-- /build:css -->
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-GTRGBHGVD0');
+    // gtag.js 等使用者第一次互動、或載入完成且閒置後才下載，避免拖慢首屏（事件先排進 dataLayer，載入後一起送出）
+    (function (w, d) { var done = 0, ev = ['pointerdown', 'keydown', 'touchstart', 'scroll']; function load() { if (done) return; done = 1; ev.forEach(function (e) { w.removeEventListener(e, load, true); }); var s = d.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0'; d.head.appendChild(s); } ev.forEach(function (e) { w.addEventListener(e, load, { capture: true, passive: true }); }); w.addEventListener('load', function () { setTimeout(function () { w.requestIdleCallback ? w.requestIdleCallback(load, { timeout: 3000 }) : load(); }, 4000); }); })(window, document);
     document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href]'); if (!a) return; var h = a.getAttribute('href') || ''; var m = /line\.me/.test(h) ? 'line' : /wa\.me|whatsapp/.test(h) ? 'whatsapp' : /^mailto:/.test(h) ? 'email' : /^tel:/.test(h) ? 'phone' : ''; if (m) gtag('event', 'contact_click', { method: m, page: location.pathname }); }, true);
   </script>
   <script src="/js/lead-log.js" defer></script>
@@ -973,12 +974,13 @@ function enRoutePage(rt) {
   <!-- /build:css -->
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
   <!-- Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
     gtag('config', 'G-GTRGBHGVD0');
+    // gtag.js 等使用者第一次互動、或載入完成且閒置後才下載，避免拖慢首屏（事件先排進 dataLayer，載入後一起送出）
+    (function (w, d) { var done = 0, ev = ['pointerdown', 'keydown', 'touchstart', 'scroll']; function load() { if (done) return; done = 1; ev.forEach(function (e) { w.removeEventListener(e, load, true); }); var s = d.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=G-GTRGBHGVD0'; d.head.appendChild(s); } ev.forEach(function (e) { w.addEventListener(e, load, { capture: true, passive: true }); }); w.addEventListener('load', function () { setTimeout(function () { w.requestIdleCallback ? w.requestIdleCallback(load, { timeout: 3000 }) : load(); }, 4000); }); })(window, document);
     document.addEventListener('click', function (e) { var a = e.target.closest && e.target.closest('a[href]'); if (!a) return; var h = a.getAttribute('href') || ''; var m = /line\.me/.test(h) ? 'line' : /wa\.me|whatsapp/.test(h) ? 'whatsapp' : /^mailto:/.test(h) ? 'email' : /^tel:/.test(h) ? 'phone' : ''; if (m) gtag('event', 'contact_click', { method: m, page: location.pathname }); }, true);
   </script>
   <script src="/js/lead-log.js" defer></script>
@@ -1164,13 +1166,21 @@ for (const [key, page] of Object.entries(enRouteHtml)) {
 // ---- sitemap.xml ----
 // lastmod 只在頁面內容真的改變時才更新：scripts/lastmod.json 記錄每頁的內容指紋與日期。
 // 每次發布都填今天的話，搜尋引擎會學到「這個日期不可信」而忽略它。
-// 指紋不含 css/js 版本號、內嵌樣式與字型網址（那些改了不代表這頁的內容變了）。
+// 指紋不含 css/js 版本號、內嵌樣式、字型網址、沒有屬性的內嵌 <script>（GA 載入等）與 rel=expect（那些改了不代表這頁的內容變了）。
 const today = new Date().toISOString().slice(0, 10);
 const LASTMOD_FILE = 'scripts/lastmod.json';
 const lastmodPrev = existsSync(join(root, LASTMOD_FILE)) ? JSON.parse(read(LASTMOD_FILE)) : {};
 const fingerprint = (page) =>
   createHash('sha1')
-    .update(page.replace(/<!-- build:(font|css) -->[\s\S]*?<!-- \/build:\1 -->/g, '').replace(/\?v=[0-9a-f]+/g, ''))
+    .update(
+      page
+        .replace(/<!-- build:(font|css) -->[\s\S]*?<!-- \/build:\1 -->/g, '')
+        .replace(/<script>[\s\S]*?<\/script>/g, '')
+        .replace(/<script async src="https:\/\/www\.googletagmanager\.com\/[^"]*"><\/script>/g, '')
+        .replace(/<link rel="expect"[^>]*>/g, '')
+        .replace(/\?v=[0-9a-f]+/g, '')
+        .replace(/\n\s*\n/g, '\n'),
+    )
     .digest('hex')
     .slice(0, 12);
 const sitemapPages = [

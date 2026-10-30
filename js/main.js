@@ -7,6 +7,8 @@
   // 英文頁 en/ 和中文頁共用這支程式：t('中文', 'English') 依頁面語言選一個
   var EN = document.documentElement.lang === 'en';
   var t = function (zh, en) { return EN ? en : zh; };
+  // 內容和 HTML 已經一樣就不改，避免載入時整頁重新排版
+  var setText = function (el, v) { v = String(v); if (el.textContent !== v) el.textContent = v; };
 
   // ---- 套用 config.js 的設定 ----
   var lineUrl = (SITE.lineUrl || '').trim();
@@ -20,12 +22,12 @@
   if (EN) {
     // 英文頁的品牌與標語寫在 HTML 裡，不用中文設定蓋掉
   } else if (SITE.brand) {
-    $$('[data-brand]').forEach(function (el) { el.textContent = SITE.brand; });
+    $$('[data-brand]').forEach(function (el) { setText(el, SITE.brand); });
     document.title = document.title.replace('山行接駁', SITE.brand);
   }
-  if (SITE.owner) $$('[data-owner]').forEach(function (el) { el.textContent = SITE.owner; });
+  if (SITE.owner) $$('[data-owner]').forEach(function (el) { setText(el, SITE.owner); });
   if (SITE.tagline && !EN) {
-    $$('[data-tagline]').forEach(function (el) { el.textContent = SITE.tagline; });
+    $$('[data-tagline]').forEach(function (el) { setText(el, SITE.tagline); });
   }
 
   // ---- 收費表：出發地、車型各一組切換（表格內容由 scripts/build.mjs 產生）----
@@ -58,14 +60,14 @@
       el.rel = 'noopener';
     });
     $$('[data-line-direct]').forEach(function (el) { el.hidden = false; });
-    if (lineId) $$('[data-line-id]').forEach(function (el) { el.textContent = lineId; });
+    if (lineId) $$('[data-line-id]').forEach(function (el) { setText(el, lineId); });
   }
   if (phone) {
     $$('[data-phone-link]').forEach(function (el) {
       el.href = 'tel:' + phone.replace(/[^\d+]/g, '');
       el.hidden = false;
     });
-    $$('[data-phone]').forEach(function (el) { el.textContent = phone; });
+    $$('[data-phone]').forEach(function (el) { setText(el, phone); });
     // 還沒設定 LINE 連結時，頁首按鈕改成直接撥電話
     if (!lineUrl) {
       $$('[data-line-link]').forEach(function (el) {
@@ -80,7 +82,7 @@
       el.href = 'mailto:' + email;
       el.hidden = false;
     });
-    $$('[data-email]').forEach(function (el) { el.textContent = email; });
+    $$('[data-email]').forEach(function (el) { setText(el, email); });
   }
   if (whatsapp) {
     $$('[data-whatsapp-link]').forEach(function (el) {
@@ -103,7 +105,7 @@
   });
   if (lineUrl || whatsapp || email) $('#contactBox').hidden = false;
 
-  $('#year').textContent = new Date().getFullYear();
+  setText($('#year'), new Date().getFullYear());
 
   // ---- 頁首：捲動後變實色、手機選單 ----
   var header = $('#header');
@@ -146,7 +148,7 @@
       r.hidden = !match || folded;
     });
     if (routesMore) {
-      routesMore.textContent = t('看全部 ' + routes.length + ' 條路線', 'See all ' + routes.length + ' routes');
+      setText(routesMore, t('看全部 ' + routes.length + ' 條路線', 'See all ' + routes.length + ' routes'));
       routesMore.hidden = routeFilter !== 'all' || showAllRoutes || shown <= ROUTE_LIMIT;
     }
   }
@@ -192,6 +194,8 @@
     });
   });
   if (faqTabs.length) showFaq(faqTabs[0]);
+  // 首屏前 HTML 用 .js-fold 先收起第 7 條以後的路線和第 2、3 類常見問題（見 index.html、style.css），這裡改由 hidden 接手
+  document.documentElement.classList.remove('js-fold');
 
   // ---- 詢價表單 ----
   var form = $('#quoteForm');
@@ -205,7 +209,7 @@
   var againBtn = $('#againBtn');
   var submitBtn = $('button[type="submit"]', form);
   var submitLabel = formEndpoint ? t('送出詢價', 'Send inquiry') : t('整理成詢價訊息', 'Prepare my message');
-  submitBtn.textContent = submitLabel;
+  setText(submitBtn, submitLabel);
 
   // 出發日期不能選過去
   var today = new Date();
