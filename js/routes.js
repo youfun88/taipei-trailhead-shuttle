@@ -24,6 +24,7 @@ window.ROUTES = [
   },
   {
     key: 'xueshan', name: '雪山主東峰・武陵四秀', sub: '走進雪山圈谷',
+    seoTitle: '雪山登山口接駁車・武陵四秀包車｜台北、台中出發｜山行接駁',
     days: 'two multi', dayTags: ['兩天', '三天'], alt: '3,886 m', drive: '約 3.5 小時',
     trailhead: '武陵農場（台中和平）', dest: '雪山／武陵四秀（武陵農場）',
     img: { src: 'images/xueshan.webp', alt: '雪山圈谷的雪季景色', w: 880, h: 585 },
@@ -37,6 +38,7 @@ window.ROUTES = [
   },
   {
     key: 'hehuan', name: '合歡山群峰', sub: '高山草原、雲海與群峰',
+    seoTitle: '合歡山接駁車・登山包車｜台北、台中出發｜山行接駁',
     days: 'day two', dayTags: ['當日來回', '兩天'], alt: '3,417 m', drive: '約 4 小時',
     trailhead: '武嶺・昆陽・小風口（南投仁愛）', dest: '合歡山群峰',
     img: { src: 'images/hehuan.webp', alt: '合歡山的高山箭竹草原步道', w: 880, h: 587 },

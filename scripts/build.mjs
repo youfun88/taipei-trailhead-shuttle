@@ -363,7 +363,8 @@ function zhLeadAnswer(rt, route) {
 function routePage({ rt, route, credit }) {
   const name = rt.name;
   const url = routeUrl(rt.key);
-  const title = `${name}登山接駁｜台北、台中出發｜${SITE.brand}`;
+  // seoTitle（js/routes.js）可以換掉預設標題，用在有明確關鍵字搜尋量的路線
+  const title = rt.seoTitle || `${name}登山接駁｜台北、台中出發｜${SITE.brand}`;
   const desc =
     `${name}登山接駁包車：${rt.sub}。台北、台中出發，接送地點：${rt.trailhead}。` +
     (isPriced(route)
