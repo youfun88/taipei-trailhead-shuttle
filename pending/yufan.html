@@ -37,7 +37,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 });
 </script>
 <h1>Developer review · SEO / AEO / GEO</h1>
-<p>Search and AI-visibility changes for Yufan to approve: titles, descriptions, schema, internal links, llms.txt, sitemap, keywords. Content changes go to the owner at <a href="/pending/">/pending</a>. Not linked from the site and not indexed. The GX10 job applies approved changes at its next run (every 4 hours).</p>
+<p>Search and AI-visibility changes for Yufan to approve: titles, descriptions, schema, internal links, llms.txt, sitemap, keywords. Content changes go to the owner at <a href="/pending/">/pending</a>. Not linked from the site and not indexed. The GX10 job applies approved changes at its next run (every 8 hours).</p>
 <p class="updated">Updated 2026-11-01.</p>
 
 <!-- Item markup (copy for each draft; data-item must equal the board title exactly):
@@ -48,7 +48,17 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<p class="empty">Nothing yet.</p>
+<div class="item" data-item="[Yufan] Hehuan and Xueshan route titles: target shuttle keywords">
+<h3>1. [Yufan] Hehuan and Xueshan route titles: target shuttle keywords</h3>
+<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30). No route title contains these terms. 合歡山接駁車 140/mo, 合歡山接駁車費用 70, 合歡山小車接駁 50. 武陵農場雪山登山口接駁車 70, 雪山登山口接駁車 30, 雪山登山接駁 20. <code>gsc</code> shows no clicks for these two pages in 2026-10-01 to 10-28. The AI-check questions 台北出發雪山登山口接駁包車推薦 and 台中到合歡山登山接駁哪家好？ did not name or cite Go Hike.</p>
+<p><b>Change</b> (branch <code>seo/hehuan-xueshan-titles</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, set by a new <code>seoTitle</code> field in js/routes.js that scripts/build.mjs reads; H1 and page text unchanged):</p>
+<ul>
+<li>/routes/hehuan/: 合歡山群峰登山接駁｜台北、台中出發｜山行接駁 → 合歡山接駁車・登山包車｜台北、台中出發｜山行接駁</li>
+<li>/routes/xueshan/: 雪山主東峰・武陵四秀登山接駁｜台北、台中出發｜山行接駁 → 雪山登山口接駁車・武陵四秀包車｜台北、台中出發｜山行接駁</li>
+</ul>
+<p><b>Trade-off:</b> some 合歡山接駁車 searches want the 清境 local bus (南投客運 6658A). The Hehuan page already answers that under 沒有車可以去合歡山嗎？. Yushan is left out on purpose: 玉山登山口接駁車 is the local shuttle, which Go Hike doesn't run, so it goes to the owner as a Q&amp;A on /pending instead.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/hehuan-xueshan-titles">Diff</a><a href="/routes/hehuan/">Live Hehuan</a><a href="/routes/xueshan/">Live Xueshan</a></div>
+</div>
 
 <script>
 (function(){
