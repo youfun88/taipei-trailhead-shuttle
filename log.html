@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><title>網站更新紀錄 Change log | 山行接駁 Go Hike</title>
+<style>
+body{font-family:system-ui,-apple-system,"PingFang TC",sans-serif;max-width:760px;margin:40px auto;padding:0 16px;color:#222;line-height:1.6;background:#faf8f4}
+a{color:#1d4f91}h1{font-size:24px}h2{font-size:18px;margin-top:32px}p,li{color:#444}
+.item{background:#fff;border:1px solid #e3ddd2;border-radius:10px;padding:16px;margin:16px 0}
+.item h3{font-size:17px;margin:0 0 6px;color:#222}
+.links a{display:inline-block;min-height:44px;line-height:44px;margin-right:16px}
+.form label{display:block;font-size:14px;margin:10px 0 4px;color:#333}
+.form textarea,.form input{width:100%;box-sizing:border-box;font:inherit;padding:10px;border:1px solid #c9c2b5;border-radius:8px;background:#fff}
+.form textarea{min-height:96px}
+.form input{min-height:44px}
+.btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.btns button{min-height:44px;padding:0 18px;font:inherit;font-weight:600;border-radius:22px;border:1px solid #1d4f91;cursor:pointer}
+.approve{background:#1d4f91;color:#fff}.changes{background:#fff;color:#1d4f91}
+.btns button:disabled{opacity:.5;cursor:default}
+.status{min-height:1.5em;margin-top:8px;font-size:14px}
+.status.ok{color:#166534}.status.err{color:#b91c1c}
+ol.q li{margin:0 0 12px}
+</style>
+</head>
+<body><h1>網站更新紀錄 · Change log</h1>
+<p>山行接駁 Go Hike 網站的每一次更新，最新的在最上面。Every change to the site, newest first. Waiting for approval: <a href="/pending/">/pending</a> (owner) · <a href="/pending/yufan.html">/pending/yufan</a> (developer). Not linked from the site and not indexed.</p>
+<!-- New runs: add a <div class="item"> right below this line. -->
+<div class="item"><h3>2026-10-30</h3><ul>
+<li>Perf: defer GA, no hero re-layout on slow networks, lighter desktop LCP <code style="color:#888">ca10fc7</code></li>
+<li>Speed up mobile LCP: inline CSS, defer scripts, shorter EN titles <code style="color:#888">948d953</code></li>
+</ul></div>
+<div class="item"><h3>2026-10-28</h3><ul>
+<li>AEO/GEO: answer-first route pages, question headings, bus comparison <code style="color:#888">cccaff3</code></li>
+<li>Lead tracking to admin.shiptolive.com: LINE/WhatsApp clicks and sent quote forms <code style="color:#888">0d5f86e</code></li>
+<li>Homepage: descriptive alt text on the two banner photos (zh + en) <code style="color:#888">7b7820b</code></li>
+</ul></div>
+<div class="item"><h3>2026-10-26</h3><ul>
+<li>Track LINE/WhatsApp/email/phone clicks and form leads in GA; redirect two removed article URLs <code style="color:#888">53cddce</code></li>
+</ul></div>
+<div class="item"><h3>2026-10-25</h3><ul>
+<li>Merge route logistics guide; drop closed Tunyuan trailhead from Qilai form value <code style="color:#888">39ec0d1</code></li>
+<li>Route pages: add trailhead logistics, permits and AI-style FAQs <code style="color:#888">f1b5b85</code></li>
+<li>SEO/AI pass: schema, og image, static contacts, honest sitemap, llms-full.txt <code style="color:#888">725bfba</code></li>
+<li>Add 山行接駁 包車旅遊 (IG/FB display name) to schema alternateName <code style="color:#888">889f20c</code></li>
+<li>Add English route pages at /en/routes/&lt;key&gt;/ <code style="color:#888">2a56a32</code></li>
+<li>Fit phones: contact box stacks, price table tightens, booking column can shrink <code style="color:#888">3f2315e</code></li>
+<li>English page: full translation of the Chinese homepage <code style="color:#888">64acd35</code></li>
+<li>Add &#x27;Our vehicle&#x27; section with photos of the Caravelle van <code style="color:#888">8c3ebe0</code></li>
+<li>English page: driver speaks some basic English <code style="color:#888">dd3a192</code></li>
+<li>Add English page and one brand name for AI search <code style="color:#888">0dda259</code></li>
+</ul></div>
+<div class="item"><h3>2026-10-23</h3><ul>
+<li>手機版優化：路線先顯示 6 條、卡片精簡、標題斷行；名片加上 WhatsApp、IG、FB <code style="color:#888">95bb699</code></li>
+<li>修正詢價區 WhatsApp 標籤與內容重疊 <code style="color:#888">c0b8dce</code></li>
+<li>加上 WhatsApp 詢價按鈕（詢價區、手機底部按鈕、路線頁） <code style="color:#888">30472a8</code></li>
+<li>加上 Instagram 連結（詢價區、頁尾、路線頁、結構化資料） <code style="color:#888">5116405</code></li>
+<li>加上 Facebook 粉絲專頁連結（詢價區、頁尾、路線頁、結構化資料） <code style="color:#888">a23130e</code></li>
+<li>加快載入、改善可讀性與路線頁：小圖、404 頁、LINE 按鈕對比、路線頁手機底部按鈕 <code style="color:#888">2915f8c</code></li>
+<li>Revert &quot;依汪鑫確認稿的回覆更新：「—」改為「詢價」、移除嘉明湖與霞喀羅 A 進 B 出、加里山一天來回、其他服務、登山交通攻略文章&quot; <code style="color:#888">044b54e</code></li>
+<li>依汪鑫確認稿的回覆更新：「—」改為「詢價」、移除嘉明湖與霞喀羅 A 進 B 出、加里山一天來回、其他服務、登山交通攻略文章 <code style="color:#888">b2e8c5f</code></li>
+<li>讓網站更吸睛，並把付款方式放到明顯位置 <code style="color:#888">faef1ce</code></li>
+<li>補上確認稿遺漏處：收費說明不再提打電話、路線頁登山須知加上可提供入山證與山屋申請資訊 <code style="color:#888">33e1518</code></li>
+<li>依汪鑫確認稿更新網站：新常見問題（訂金、付款、取消、等待、道路管制）、新主視覺文案、移除每人分攤價與電話 <code style="color:#888">70a4e24</code></li>
+</ul></div>
+</body></html>

@@ -1,5 +1,7 @@
 # 歡迎搜尋引擎與 AI 助理讀取本站內容
 User-agent: *
 Allow: /
+Disallow: /pending
+Disallow: /log
 
 Sitemap: https://gohike.tw/sitemap.xml
