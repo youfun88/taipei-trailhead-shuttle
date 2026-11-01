@@ -90,7 +90,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </script>
 <h1>Developer review · SEO / AEO / GEO</h1>
 <p>Search and AI-visibility changes for Yufan to approve: titles, descriptions, schema, internal links, llms.txt, sitemap, keywords. Content changes go to the owner at <a href="/pending/">/pending</a>. Not linked from the site and not indexed. The GX10 job applies approved changes at its next run (every 8 hours).</p>
-<p class="updated">Updated 2026-11-01.</p>
+<p class="updated">Updated 2026-11-02.</p>
 
 <!-- Item markup (copy for each draft; data-item must equal the board title exactly):
 <div class="item" data-item="TITLE">
@@ -110,6 +110,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </ul>
 <p><b>Trade-off:</b> some 合歡山接駁車 searches want the 清境 local bus (南投客運 6658A). The Hehuan page already answers that under 沒有車可以去合歡山嗎？. Yushan is left out on purpose: 玉山登山口接駁車 is the local shuttle, which Go Hike doesn't run, so it goes to the owner as a Q&amp;A on /pending instead.</p>
 <div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/hehuan-xueshan-titles">Diff</a><a href="/routes/hehuan/">Live Hehuan</a><a href="/routes/xueshan/">Live Xueshan</a></div>
+</div>
+<div class="item" data-item="[Yufan] Xiakaluo A-B route title: target 霞喀羅古道接駁費用">
+<h3>2. [Yufan] Xiakaluo A-B route title: target 霞喀羅古道接駁費用</h3>
+<p><b>Finding:</b> report <code>gsc</code> (2026-10-02 to 10-29). /routes/xiakaluo-ab/ has 29 impressions and 1 click (3.4% CTR) at position 6.8. Its queries include 霞喀羅古道接駁費用 (7 impressions, 0 clicks, position 9.6) and 霞喀羅古道a進b出 (3 impressions, 0 clicks, position 4.7). The current title doesn't say the page has the cost. The numbers are small, so treat this as a low-risk test.</p>
+<p><b>Change</b> (branch <code>seo/xiakaluo-ab-title</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
+<ul>
+<li>/routes/xiakaluo-ab/: 霞喀羅古道（A 進 B 出）登山接駁｜台北、台中出發｜山行接駁 → 霞喀羅古道接駁費用・A 進 B 出包車｜台北、台中出發｜山行接駁</li>
+</ul>
+<p><b>Merge note:</b> this branch adds the same <code>seoTitle</code> line to scripts/build.mjs as <code>seo/hehuan-xueshan-titles</code>, so either can merge first. Rebuild after the second merge; sitemap.xml and scripts/lastmod.json may need regenerating.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/xiakaluo-ab-title">Diff</a><a href="/routes/xiakaluo-ab/">Live page</a></div>
 </div>
 
 <script>
