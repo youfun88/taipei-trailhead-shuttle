@@ -194,6 +194,7 @@ window.ROUTES = [
   },
   {
     key: 'xiakaluo-ab', name: '霞喀羅古道（A 進 B 出）', sub: '一次走訪山林古道',
+    seoTitle: '霞喀羅古道接駁費用・A 進 B 出包車｜台北、台中出發｜山行接駁',
     days: 'day', dayTags: ['當日來回'],
     trailhead: '養老・石鹿（新竹尖石、五峰）', dest: '霞喀羅古道（A 進 B 出）',
     card: { scenery: '歷史古道、溪谷，秋季部分區段可賞楓', audience: '喜歡古道文化、有長距離步行經驗的團體', transport: '起點送、終點接，不必回原點取車' },
