@@ -270,6 +270,11 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .policy svg { width: 32px; height: 32px; fill: none; stroke: #ffb27f; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .policy h4 { margin: 12px 0 0; font-size: 1.08rem; }
 .policy__grid p { margin-top: 6px; font-size: .92rem; color: rgba(255, 255, 255, .84); }
+.policy__grid--two { grid-template-columns: repeat(2, 1fr); }
+.policy--services { margin-top: 0; }
+.policy--services h3 { margin: 12px 0 0; font-size: 1.08rem; }
+.policy__lead { margin-top: 10px; color: rgba(255, 255, 255, .84); }
+.policy__cta { margin-top: 22px; }
 
 /* ---------- 為什麼 ---------- */
 .band { position: relative; isolation: isolate; padding: clamp(80px, 11vw, 140px) 0; color: #fff; }
