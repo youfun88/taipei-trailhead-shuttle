@@ -121,6 +121,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 <p><b>Merge note:</b> this branch adds the same <code>seoTitle</code> line to scripts/build.mjs as <code>seo/hehuan-xueshan-titles</code>, so either can merge first. Rebuild after the second merge; sitemap.xml and scripts/lastmod.json may need regenerating.</p>
 <div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/xiakaluo-ab-title">Diff</a><a href="/routes/xiakaluo-ab/">Live page</a></div>
 </div>
+<div class="item" data-item="[Yufan] Junda route title: add 郡大林道">
+<h3>3. [Yufan] Junda route title: add 郡大林道</h3>
+<p><b>Finding:</b> report <code>gsc</code> (2026-10-02 to 10-29). Four 郡大林道 queries reach page one with 0 clicks: 郡大林道 (4 impressions, position 6.8), 郡大林道 申請 (1, position 5), 郡大林道開放 (1, position 7), 郡大林道開放時間 (1, position 5). The page answers them (林道 section, official Nantou Forestry link), but its title only says 郡大山. The numbers are small, so treat this as a low-risk test.</p>
+<p><b>Change</b> (branch <code>seo/junda-title</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
+<ul>
+<li>/routes/junda/: 郡大山登山接駁｜台北、台中出發｜山行接駁 → 郡大山・郡大林道登山接駁｜台北、台中出發｜山行接駁</li>
+</ul>
+<p><b>Merge note:</b> this branch adds the same <code>seoTitle</code> line to scripts/build.mjs as the two branches above, so any of them can merge first. Rebuild after the last merge.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/junda-title">Diff</a><a href="/routes/junda/">Live page</a></div>
+</div>
 
 <script>
 (function(){
