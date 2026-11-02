@@ -65,6 +65,7 @@ window.ROUTES = [
   },
   {
     key: 'nanhu', name: '南湖大山', sub: '深入中央山脈高山圈谷',
+    seoTitle: '南湖大山接駁・勝光登山口｜台北、台中出發｜山行接駁',
     days: 'multi', dayTags: ['三天以上'], alt: '3,742 m', drive: '約 3 小時',
     trailhead: '勝光（台中和平）', dest: '南湖大山（勝光登山口）',
     img: { src: 'images/nanhu.webp', alt: '南湖大山', w: 880, h: 587 },
@@ -78,6 +79,7 @@ window.ROUTES = [
   },
   {
     key: 'qilai', name: '奇萊南華', sub: '高山草原與開闊山稜',
+    seoTitle: '奇萊南華接駁・雲天宮登山口（原屯原）｜台北、台中出發｜山行接駁',
     days: 'two', dayTags: ['兩天'], alt: '3,358 m', drive: '約 4.5 小時',
     trailhead: '屯原（南投仁愛）', dest: '奇萊南華',
     img: { src: 'images/qilai.webp', alt: '奇萊南峰的草原稜線', w: 880, h: 587 },
