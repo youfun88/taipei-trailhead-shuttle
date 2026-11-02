@@ -103,36 +103,15 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Hehuan and Xueshan route titles: target shuttle keywords">
-<h3>1. [Yufan] Hehuan and Xueshan route titles: target shuttle keywords</h3>
-<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30). No route title contains these terms. 合歡山接駁車 140/mo, 合歡山接駁車費用 70, 合歡山小車接駁 50. 武陵農場雪山登山口接駁車 70, 雪山登山口接駁車 30, 雪山登山接駁 20. <code>gsc</code> shows no clicks for these two pages in 2026-10-01 to 10-28. The AI-check questions 台北出發雪山登山口接駁包車推薦 and 台中到合歡山登山接駁哪家好？ did not name or cite Go Hike.</p>
-<p><b>Change</b> (branch <code>seo/hehuan-xueshan-titles</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, set by a new <code>seoTitle</code> field in js/routes.js that scripts/build.mjs reads; H1 and page text unchanged):</p>
+<div class="item" data-item="[Yufan] Homepage title: add 登山包車">
+<h3>1. [Yufan] Homepage title: add 登山包車</h3>
+<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30). 登山包車 has 50 searches a month and difficulty 0. No title on the site says it for the whole service; the homepage says 百岳包車. The homepage is the page Google shows most (<code>gsc</code> 2026-10-02 to 10-29: 111 impressions, 37 clicks, position 3.5), and 百岳 doesn't cover its non-百岳 routes such as 松蘿湖 and 霞喀羅古道.</p>
+<p><b>Change</b> (branch <code>seo/home-title-baoche</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
 <ul>
-<li>/routes/hehuan/: 合歡山群峰登山接駁｜台北、台中出發｜山行接駁 → 合歡山接駁車・登山包車｜台北、台中出發｜山行接駁</li>
-<li>/routes/xueshan/: 雪山主東峰・武陵四秀登山接駁｜台北、台中出發｜山行接駁 → 雪山登山口接駁車・武陵四秀包車｜台北、台中出發｜山行接駁</li>
+<li>/: 山行接駁｜登山接駁・百岳包車｜台北、台中出發 → 山行接駁｜登山接駁・登山包車・百岳包車｜台北、台中出發</li>
 </ul>
-<p><b>Trade-off:</b> some 合歡山接駁車 searches want the 清境 local bus (南投客運 6658A). The Hehuan page already answers that under 沒有車可以去合歡山嗎？. Yushan is left out on purpose: 玉山登山口接駁車 is the local shuttle, which Go Hike doesn't run, so it goes to the owner as a Q&amp;A on /pending instead.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/hehuan-xueshan-titles">Diff</a><a href="/routes/hehuan/">Live Hehuan</a><a href="/routes/xueshan/">Live Xueshan</a></div>
-</div>
-<div class="item" data-item="[Yufan] Xiakaluo A-B route title: target 霞喀羅古道接駁費用">
-<h3>2. [Yufan] Xiakaluo A-B route title: target 霞喀羅古道接駁費用</h3>
-<p><b>Finding:</b> report <code>gsc</code> (2026-10-02 to 10-29). /routes/xiakaluo-ab/ has 29 impressions and 1 click (3.4% CTR) at position 6.8. Its queries include 霞喀羅古道接駁費用 (7 impressions, 0 clicks, position 9.6) and 霞喀羅古道a進b出 (3 impressions, 0 clicks, position 4.7). The current title doesn't say the page has the cost. The numbers are small, so treat this as a low-risk test.</p>
-<p><b>Change</b> (branch <code>seo/xiakaluo-ab-title</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
-<ul>
-<li>/routes/xiakaluo-ab/: 霞喀羅古道（A 進 B 出）登山接駁｜台北、台中出發｜山行接駁 → 霞喀羅古道接駁費用・A 進 B 出包車｜台北、台中出發｜山行接駁</li>
-</ul>
-<p><b>Merge note:</b> this branch adds the same <code>seoTitle</code> line to scripts/build.mjs as <code>seo/hehuan-xueshan-titles</code>, so either can merge first. Rebuild after the second merge; sitemap.xml and scripts/lastmod.json may need regenerating.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/xiakaluo-ab-title">Diff</a><a href="/routes/xiakaluo-ab/">Live page</a></div>
-</div>
-<div class="item" data-item="[Yufan] Junda route title: add 郡大林道">
-<h3>3. [Yufan] Junda route title: add 郡大林道</h3>
-<p><b>Finding:</b> report <code>gsc</code> (2026-10-02 to 10-29). Four 郡大林道 queries reach page one with 0 clicks: 郡大林道 (4 impressions, position 6.8), 郡大林道 申請 (1, position 5), 郡大林道開放 (1, position 7), 郡大林道開放時間 (1, position 5). The page answers them (林道 section, official Nantou Forestry link), but its title only says 郡大山. The numbers are small, so treat this as a low-risk test.</p>
-<p><b>Change</b> (branch <code>seo/junda-title</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
-<ul>
-<li>/routes/junda/: 郡大山登山接駁｜台北、台中出發｜山行接駁 → 郡大山・郡大林道登山接駁｜台北、台中出發｜山行接駁</li>
-</ul>
-<p><b>Merge note:</b> this branch adds the same <code>seoTitle</code> line to scripts/build.mjs as the two branches above, so any of them can merge first. Rebuild after the last merge.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/junda-title">Diff</a><a href="/routes/junda/">Live page</a></div>
+<p><b>Trade-off:</b> the title grows from 22 to 27 characters. 百岳包車 stays, so nothing already matched is dropped. The homepage has a 33% CTR, so compare it in <code>gsc</code> after a month.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/home-title-baoche">Diff</a><a href="/">Live page</a></div>
 </div>
 
 <script>

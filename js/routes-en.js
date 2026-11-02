@@ -495,6 +495,18 @@ const ROUTE_ANSWERS_EN = {
       links: [{ label: 'Yushan National Park: road status', url: 'https://www.ysnp.gov.tw/Highway/C001300' }],
     },
     {
+      q: 'How do I take the shuttle to the Yushan trailhead, and how much is it?',
+      a: [
+        'The Yushan trailhead shuttle runs from the Paiyun Hiking Service Center (排雲登山服務中心) at Shangdongpu to the trailhead at Tataka Saddle (塔塔加鞍部). Yushan National Park lists NT$150 per person each way, 06:30 to 17:00. Hiking teams check in at the service center first, then take the shuttle or walk to the trailhead.',
+        'To book, call 0989-104-222 or 049-2702213; the park\'s transport page also lists Dongpu Lodge (東埔山莊) at 0933-239236. This shuttle is not run by the park or by {{brand}}. It is managed by the National Taiwan University Experimental Forest (臺大實驗林對高岳營林區) and operated by 宴林企業有限公司. Fares and hours can change, so call to confirm before you go.',
+        'The Shangdongpu parking lot is at Highway 18 km 107.7 and takes cars and tour buses. Without a car, {{brand}} takes you from Taipei or Taichung to the part of Tataka open to vehicles. From there, take this shuttle or walk to the trailhead.',
+      ],
+      links: [
+        { label: 'Yushan National Park: getting to the Tataka trailhead (Chinese)', url: 'https://www.ysnp.gov.tw/Trail/7fa5c242-df1a-4a8e-bcab-32dc55b1f7b6?Tab=4' },
+        { label: 'Yushan National Park: Paiyun Hiking Service Center, shuttle details (Chinese)', url: 'https://www.ysnp.gov.tw/TouristCenter/c7d09dbf-4611-40ff-9ad8-6c108eae472d' },
+      ],
+    },
+    {
       q: 'How much is a private shuttle from Taipei or Taichung to Yushan?',
       a: [
         'Prices are per vehicle, not per person. From Taipei: {{price:taipei}}. From Taichung: {{price:taichung}}. The 5-seat car takes up to 4 passengers and the 9-seat van up to 8. Round trip is two drives, there and back.',
@@ -511,6 +523,19 @@ const ROUTE_ANSWERS_EN = {
         'By public transport, Kuo-Kuang bus 1751 (from Yilan) or 1764 (from Luodong) takes about 2 hours 40 minutes to Wuling, with only two or three buses a day. You get off at the gate to buy tickets, and there is still a stretch of road from the farm to the trailhead.',
       ],
       links: [{ label: 'Wuling Farm: getting there (Chinese)', url: 'https://www.wuling-farm.com.tw/tw/stay/traffic.php' }],
+    },
+    {
+      q: 'Is there a shuttle from Wuling Farm to the Xueshan trailhead?',
+      a: [
+        'A Wuling Farm sightseeing bus passes the Xueshan trailhead. It is run by the farm, not by {{brand}}. The farm lists the North Valley sightseeing bus (北谷遊園巴士), Xueshan line: from Wuling Guesthouse (武陵賓館) to the Xueshan trailhead and Wuling Tea House (武陵茶莊), then back to the guesthouse, NT$200 per person. It leaves at 09:00 and 14:30 on weekdays, and at 08:00, 10:00, 13:00 and 15:00 on weekends and during the summer holidays. It is a guided tour, and the notice does not say whether you can ride one way and get off at the trailhead, so call first if you are starting a hike.',
+        'For the Wuling Four Peaks, the farm also runs a shuttle from the Guesthouse (國民賓館) to Wuling Lodge (武陵山莊, the Taoshan Waterfall trailhead), NT$300 per person.',
+        'Book either one at least 30 minutes before departure: (04)2590-1259 ext. 2106. Times and fares follow the latest farm notice (the farm page was last updated 2025-09-24). Cherry blossom season works differently: the 2026 notice listed only two shuttle lines inside the farm, Taoziyuan to Jinghua Bridge and bus stop to guesthouse, and neither goes to the Xueshan trailhead. Check each year\'s notice.',
+        'To go straight from Taipei or Taichung to the Xueshan trailhead area without changing at the farm, you can book a {{brand}} private shuttle, priced per vehicle. We confirm the exact drop-off and pick-up points you can reach before the trip.',
+      ],
+      links: [
+        { label: 'Wuling Farm: North Valley sightseeing bus (Chinese)', url: 'https://www.wuling-farm.com.tw/tw/travel/index.php?num=27' },
+        { label: 'Wuling Farm: 2026 cherry blossom traffic notice (Chinese)', url: 'https://www.wuling-farm.com.tw/admin_wuling/tw/news/show.php?num=589' },
+      ],
     },
     {
       q: 'How much is a private shuttle from Taipei or Taichung to Xueshan?',
@@ -547,6 +572,17 @@ const ROUTE_ANSWERS_EN = {
         'A private shuttle runs on your schedule and stops where your hike starts. It is priced per vehicle, not per seat.',
       ],
       links: NTBUS_LINKS_EN,
+    },
+    {
+      q: 'How do I take the Cingjing to Hehuanshan shuttle bus, and how much is it?',
+      a: [
+        'The bus from Cingjing to Hehuanshan is Nantou Bus 6658A. It runs from the Cingjing Farm Guest House stop (國民賓館, the bus transfer point at the entrance to the Tongyi shopping area parking lot) to Wuling Pass and Songxue Lodge, ending at Xiaofengkou. It is a Nantou Bus service, not run by {{brand}}.',
+        'Under the current timetable there are three buses a day: from the Guest House at 08:20, 11:10 and 14:30, and back from Xiaofengkou at 09:40, 12:30 and 15:50. Adult fares are NT$78 to Wuling Pass, NT$83 to Songxue Lodge and NT$95 to Xiaofengkou; half fares are NT$39, NT$41 and NT$48 (fare table in effect since July 2019). Pay the driver when you board, with no change given, or tap an EasyCard or iPASS.',
+        'Booking is online only, not by phone. It opens 7 days before departure and closes at noon the day before; around weekends and holidays it closes at noon on the last working day, so Saturday to Monday buses close on Friday at noon. Each person can book up to 4 seats at a time, and a no-show suspends the booking account. Without a booking you can queue on the day for a spare seat, or wait for the next bus if it is full.',
+        'If you are going for the snow, note that Nantou Bus says 6658A may not run in thick fog, heavy rain, snow or ice. Check Nantou Bus and the Highway Bureau for the latest notices before you go.',
+        'To go straight from Taipei or Taichung to the parking point for your hike, on your own schedule, you can book a {{brand}} private shuttle, priced per vehicle.',
+      ],
+      links: [...NTBUS_LINKS_EN, { label: 'Nantou Bus: Hehuanshan bus online booking (Chinese)', url: 'https://ntbus.welcometw.com/tour/listAll?category=5bM' }],
     },
     {
       q: 'How do I get to Hehuanshan from Taichung?',
