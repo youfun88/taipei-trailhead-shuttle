@@ -98,7 +98,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </script>
 <h1>Developer review · SEO / AEO / GEO</h1>
 <p>Search and AI-visibility changes for Yufan to approve: titles, descriptions, schema, internal links, llms.txt, sitemap, keywords. Content changes go to the owner at <a href="/pending/">/pending</a>. Not linked from the site and not indexed. The GX10 job applies approved changes at its next run (every 8 hours).</p>
-<p class="updated">Updated 2026-11-02.</p>
+<p class="updated">Updated 2026-11-03.</p>
 
 <!-- Item markup (copy for each draft; data-item must equal the board title exactly):
 <div class="item" data-item="TITLE">
@@ -108,15 +108,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Homepage title: add 登山包車">
-<h3>1. [Yufan] Homepage title: add 登山包車</h3>
-<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30). 登山包車 has 50 searches a month and difficulty 0. No title on the site says it for the whole service; the homepage says 百岳包車. The homepage is the page Google shows most (<code>gsc</code> 2026-10-02 to 10-29: 111 impressions, 37 clicks, position 3.5), and 百岳 doesn't cover its non-百岳 routes such as 松蘿湖 and 霞喀羅古道.</p>
-<p><b>Change</b> (branch <code>seo/home-title-baoche</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
+<div class="item" data-item="[Yufan] Nanhu and Qilai route titles: add the trailhead names">
+<h3>1. [Yufan] Nanhu and Qilai route titles: add the trailhead names</h3>
+<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30): 勝光登山口接駁 30/mo, 勝光登山口接駁費用 20, 屯原登山口接駁 30, 雲天宮登山口接駁 20. Neither title names a trailhead. <code>gsc</code> 2026-10-03 to 10-30: /routes/qilai/ 23 impressions, 1 click, position 6.3; 奇萊南華接駁 2 impressions at position 6.5; /routes/nanhu/ 4 impressions, 1 click, position 7.</p>
+<p><b>Change</b> (branch <code>seo/nanhu-qilai-titles</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
 <ul>
-<li>/:<span class="ba was"><b>Before</b>山行接駁｜登山接駁・百岳包車｜台北、台中出發</span><span class="ba now"><b>After</b>山行接駁｜登山接駁・登山包車・百岳包車｜台北、台中出發</span></li>
+<li>/routes/nanhu/:<span class="ba was"><b>Before</b>南湖大山登山接駁｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>南湖大山接駁・勝光登山口｜台北、台中出發｜山行接駁</span></li>
+<li>/routes/qilai/:<span class="ba was"><b>Before</b>奇萊南華登山接駁｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>奇萊南華接駁・雲天宮登山口（原屯原）｜台北、台中出發｜山行接駁</span></li>
 </ul>
-<p><b>Trade-off:</b> the title grows from 22 to 27 characters. 百岳包車 stays, so nothing already matched is dropped. The homepage has a 33% CTR, so compare it in <code>gsc</code> after a month.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/home-title-baoche">Diff</a><a href="/">Live page</a></div>
+<p><b>Trade-off:</b> both drop the word 登山接駁 for 接駁, because the route name plus 登山口 says the same thing in less space. 屯原 is written as the former entry since the live page says it has been closed since 2023 and hikers now start at 雲天宮. English titles are unchanged; the keywords are Chinese only.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/nanhu-qilai-titles">Diff</a><a href="/routes/nanhu/">Nanhu</a><a href="/routes/qilai/">Qilai</a></div>
 </div>
 
 <script>
