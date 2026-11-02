@@ -182,6 +182,7 @@ window.ROUTES = [
   // ---- C. 特殊交通與古道接駁 ----
   {
     key: 'junda', name: '郡大山', sub: '欣賞中央山脈高山稜線',
+    seoTitle: '郡大山・郡大林道登山接駁｜台北、台中出發｜山行接駁',
     days: 'day', dayTags: ['單日百岳'], alt: '3,265 m',
     trailhead: '郡大林道（南投信義）', dest: '郡大山',
     card: { scenery: '高山稜線、箭竹草坡與山岳景觀', audience: '有中高海拔經驗、想單日完成百岳的登山者', transport: '郡大林道有路況與車型限制，請先確認' },
