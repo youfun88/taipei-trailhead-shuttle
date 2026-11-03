@@ -108,7 +108,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<p>Nothing yet.</p>
+<div class="item" data-item="[Yufan] Yushan route title: add 接駁車 and 塔塔加">
+<h3>1. [Yufan] Yushan route title: add 接駁車 and 塔塔加</h3>
+<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30): 玉山登山口接駁車 110/mo and 玉山登山口 接 駁 車 110 (difficulty 0) are the site's top keywords; 塔塔加登山口接駁車 20, 塔塔加到玉山登山口接駁車 30, 玉山登山口接駁車時間 30. The Chinese Yushan title has neither 接駁車 nor 塔塔加. <code>gsc</code> 2026-10-03 to 10-30: /routes/yushan/ is not in the report's top 10 pages; /en/routes/yushan/ is (38 impressions, position 13.3).</p>
+<p><b>Change</b> (branch <code>seo/yushan-title</code>; <code>&lt;title&gt;</code> and <code>og:title</code> only, H1 and page text unchanged):</p>
+<ul>
+<li>/routes/yushan/:<span class="ba was"><b>Before</b>玉山主峰登山接駁｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>玉山接駁車・塔塔加登山包車｜台北、台中出發｜山行接駁</span></li>
+</ul>
+<p><b>Trade-off:</b> the title does not say 玉山登山口接駁車 word for word. Go Hike drops off at Tataka and does not run the Paiyun to trailhead leg (owner, 2026-11-02; now stated on the page), so a title naming the trailhead shuttle would promise a service it doesn't run. The page's Q&A on the park's trailhead shuttle still matches that query. 主峰 is dropped to keep the title short.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/yushan-title">Diff</a><a href="/routes/yushan/">Yushan</a></div>
+</div>
 
 <script>
 (function(){
