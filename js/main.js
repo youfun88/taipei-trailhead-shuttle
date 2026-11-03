@@ -257,6 +257,7 @@
       L('稱呼', 'Name') + f.name.value.trim(),
       L('希望聯絡方式', 'Contact by') + f.contact.value,
       fullPhone(f) ? L('電話', 'Phone') + fullPhone(f) : '',
+      f.lineId && f.lineId.value.trim() ? 'LINE ID：' + f.lineId.value.trim() : '',
       f.email.value.trim() ? 'Email：' + f.email.value.trim() : '',
       L('目的地', 'Destination') + f.dest.value,
       L('去程日期', 'Date') + withWeek(f.date.value),
@@ -317,6 +318,7 @@
       '稱呼': f.name.value.trim(),
       '希望聯絡方式': f.contact.value,
       '電話': fullPhone(f) || '（未填）',
+      'LINE ID': (f.lineId && f.lineId.value.trim()) || '（未填）',
       'Email': f.email.value.trim() || '（未填）',
       '目的地': f.dest.value,
       '去程日期': f.date.value.replace(/-/g, '/'),
@@ -341,6 +343,18 @@
       .catch(function () { return false; });
   }
 
+  // 選 LINE 才顯示 LINE ID 欄位；選 Email 時 Email 欄位標成必填
+  function syncContact() {
+    var method = form.elements.contact.value;
+    $$('[data-line-id-field]', form).forEach(function (el) { el.hidden = method !== 'LINE'; });
+    $$('[data-email-req]', form).forEach(function (el) { el.hidden = method !== 'Email'; });
+    $$('[data-email-opt]', form).forEach(function (el) { el.hidden = method === 'Email'; });
+    if (method !== 'LINE' && form.elements.lineId) form.elements.lineId.value = '';
+  }
+  $$('input[name="contact"]', form).forEach(function (el) { el.addEventListener('change', syncContact); });
+  form.addEventListener('reset', function () { setTimeout(syncContact, 0); });
+  syncContact();
+
   var sending = false;
   form.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -352,10 +366,9 @@
     var emailVal = f.email.value.trim();
     var method = f.contact.value;
     if (!f.name.value.trim()) { missing.push(f.name); problems.push(t('稱呼', 'your name')); }
-    // 電話或 Email 擇一；選了 Email 聯絡就要有 Email，選 WhatsApp 就要有電話
+    // 手機號碼必填（車主 2026-11-03 要求）；選了 Email 聯絡就要有 Email
+    if (!phoneVal) { missing.push(f.phone); problems.push(t('手機號碼', 'mobile number')); }
     if (method === 'Email' && !emailVal) { missing.push(f.email); problems.push(t('Email（你選了用 Email 聯絡）', 'email (you chose to be contacted by email)')); }
-    else if (method === 'WhatsApp' && !phoneVal) { missing.push(f.phone); problems.push(t('手機號碼（你選了用 ' + method + ' 聯絡）', 'mobile number (you chose ' + method + ')')); }
-    else if (!phoneVal && !emailVal) { missing.push(f.phone, f.email); problems.push(t('手機號碼或 Email 擇一', 'a mobile number or an email')); }
     if (emailVal && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) { missing.push(f.email); problems.push(t('Email 格式不正確', 'a valid email address')); }
     if (!f.dest.value) { missing.push(f.dest); problems.push(t('目的地', 'destination')); }
     if (!f.date.value) { missing.push(f.date); problems.push(t('去程日期', 'date')); }

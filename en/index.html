@@ -600,7 +600,7 @@
         <div class="book__intro">
           <p class="eyebrow">Free quote</p>
           <h2>Tell us which mountain you're going to</h2>
-          <p class="section__lead">Fill in the form and send it. We confirm the vehicle and pick-up plan, then send you a quote. Leave a phone number or an email, either one is fine. International numbers work too. You can also message us on LINE, WhatsApp or by email. Our driver is often on mountain roads, so please message instead of calling. Message us in English or Chinese; we confirm everything in writing. The driver speaks some basic English.</p>
+          <p class="section__lead">Fill in the form and send it. We confirm the vehicle and pick-up plan, then send you a quote. A mobile number is required, and international numbers work. If you choose email, add your email too; if you choose LINE, you can add your LINE ID. You can also message us on LINE, WhatsApp or by email. Our driver is often on mountain roads, so please message instead of calling. Message us in English or Chinese; we confirm everything in writing. The driver speaks some basic English.</p>
           <ol class="book__steps">
             <li><b>1</b>Fill in your trip</li>
             <li><b>2</b>Send your inquiry</li>
@@ -639,7 +639,7 @@
               </div>
             </fieldset>
             <div class="field field--full">
-              <label for="phone">Mobile number <i>Phone or email</i></label>
+              <label for="phone">Mobile number <i>Required</i></label>
               <div class="tel">
                 <select name="cc" aria-label="Country code">
                   <option value="+886">Taiwan +886</option>
@@ -648,11 +648,15 @@
                   <option value="+65">Singapore +65</option>
                   <option value="">Other (add your country code)</option>
                 </select>
-                <input type="tel" id="phone" name="phone" autocomplete="tel-national" inputmode="tel" placeholder="e.g. 9123 4567">
+                <input type="tel" id="phone" name="phone" autocomplete="tel-national" inputmode="tel" required placeholder="e.g. 9123 4567">
               </div>
             </div>
+            <label class="field field--full" data-line-id-field hidden>
+              <span>LINE ID</span>
+              <input type="text" name="lineId" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. gohike123">
+            </label>
             <label class="field field--full">
-              <span>Email <i>Phone or email</i></span>
+              <span>Email <i data-email-req hidden>Required</i><small data-email-opt>Required if you choose email</small></span>
               <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="e.g. hiker@example.com">
             </label>
             <label class="field field--full">
@@ -941,6 +945,6 @@
   </nav>
 
   <script src="/js/config.js?v=5a4d1b94" defer></script>
-  <script src="/js/main.js?v=beded341" defer></script>
+  <script src="/js/main.js?v=035f0e28" defer></script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+<!doctype html><html><body><pre id="o"></pre><script>
+var out=[];var fr=document.createElement('iframe');fr.src='/en/index.html';document.body.appendChild(fr);
+fr.onload=function(){setTimeout(function(){var d=fr.contentDocument,f=d.getElementById('quoteForm'),E=f.elements;
+var vis=function(s){var e=d.querySelector(s);return e&&!e.hidden&&getComputedStyle(e).display!=='none';};
+out.push('init LINE: lineId visible='+vis('[data-line-id-field]')+' emailReq='+vis('[data-email-req]'));
+E.name.value='測試';E.dest.value=E.dest.options[1].value;E.date.value='2027-01-10';
+f.dispatchEvent(new Event('submit',{cancelable:true}));out.push('no phone: '+d.getElementById('formError').textContent);
+var em=f.querySelector('input[value=Email]');em.checked=true;em.dispatchEvent(new Event('change'));
+out.push('Email: lineId visible='+vis('[data-line-id-field]')+' emailReq='+vis('[data-email-req]'));
+E.phone.value='0912345678';f.dispatchEvent(new Event('submit',{cancelable:true}));out.push('email missing: '+d.getElementById('formError').textContent);
+var ln=f.querySelector('input[value=LINE]');ln.checked=true;ln.dispatchEvent(new Event('change'));E.lineId.value='abc123';
+window.fetch=fr.contentWindow.fetch=function(){return Promise.resolve({ok:true,json:function(){return Promise.resolve({success:true})}})};
+f.dispatchEvent(new Event('submit',{cancelable:true}));
+setTimeout(function(){out.push('errHidden='+d.getElementById('formError').hidden);out.push('msg: '+d.getElementById('resultText').textContent);document.getElementById('o').textContent=out.join('\n');document.title='done';},800);},800)};
+</script></body></html>
