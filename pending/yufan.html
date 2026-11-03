@@ -108,29 +108,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Nanhu and Qilai route titles: add the trailhead names">
-<h3>1. [Yufan] Nanhu and Qilai route titles: add the trailhead names</h3>
-<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30): 勝光登山口接駁 30/mo, 勝光登山口接駁費用 20, 屯原登山口接駁 30, 雲天宮登山口接駁 20. Neither title names a trailhead. <code>gsc</code> 2026-10-03 to 10-30: /routes/qilai/ 23 impressions, 1 click, position 6.3; 奇萊南華接駁 2 impressions at position 6.5; /routes/nanhu/ 4 impressions, 1 click, position 7.</p>
-<p><b>Change</b> (branch <code>seo/nanhu-qilai-titles</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged):</p>
-<ul>
-<li>/routes/nanhu/:<span class="ba was"><b>Before</b>南湖大山登山接駁｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>南湖大山接駁・勝光登山口｜台北、台中出發｜山行接駁</span></li>
-<li>/routes/qilai/:<span class="ba was"><b>Before</b>奇萊南華登山接駁｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>奇萊南華接駁・雲天宮登山口（原屯原）｜台北、台中出發｜山行接駁</span></li>
-</ul>
-<p><b>Trade-off:</b> both drop the word 登山接駁 for 接駁, because the route name plus 登山口 says the same thing in less space. 屯原 is written as the former entry since the live page says it has been closed since 2023 and hikers now start at 雲天宮. English titles are unchanged; the keywords are Chinese only.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/nanhu-qilai-titles">Diff</a><a href="/routes/nanhu/">Nanhu</a><a href="/routes/qilai/">Qilai</a></div>
-</div>
-
-<div class="item" data-item="[Yufan] English Hehuan and Yushan titles: match the queries they get">
-<h3>2. [Yufan] English Hehuan and Yushan titles: match the queries they get</h3>
-<p><b>Finding:</b> report <code>gsc</code> 2026-10-03 to 10-30: /en/routes/hehuan/ 49 impressions, 1 click, 2.0% CTR, position 8.4, with hehuanshan main peak (position 5), hehuanshan main peak trail (10), hehuanshan east peak trail (11). /en/routes/yushan/ 38 impressions, 2 clicks, 5.3% CTR, position 13.3, with taipei to yushan (2 impressions, position 8.5). Query counts are small, so treat this as a low-cost test.</p>
-<p><b>Change</b> (branch <code>seo/en-hehuan-yushan-titles</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged). <code>scripts/build.mjs</code> gains an English <code>seoTitle</code> override, as the Chinese pages already have.</p>
-<ul>
-<li>/en/routes/hehuan/:<span class="ba was"><b>Before</b>Hehuanshan peaks shuttle from Taipei &amp; Taichung | Go Hike</span><span class="ba now"><b>After</b>Hehuanshan Main/East Peak shuttle, Taipei/Taichung | Go Hike</span></li>
-<li>/en/routes/yushan/:<span class="ba was"><b>Before</b>Yushan hiking shuttle from Taipei &amp; Taichung | Go Hike</span><span class="ba now"><b>After</b>Taipei to Yushan hiking shuttle, or from Taichung | Go Hike</span></li>
-</ul>
-<p><b>Trade-off:</b> the Hehuan title names two peaks and leaves out North Peak, which has no query data in this report. Both titles stay within the build's 60-character limit.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-hehuan-yushan-titles">Diff</a><a href="/en/routes/hehuan/">Hehuan</a><a href="/en/routes/yushan/">Yushan</a></div>
-</div>
+<p>Nothing yet.</p>
 
 <script>
 (function(){
