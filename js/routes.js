@@ -13,6 +13,7 @@ window.ROUTES = [
     key: 'yushan', name: '玉山主峰', sub: '挑戰台灣第一高峰',
     days: 'two', dayTags: ['兩天'], alt: '3,952 m', drive: '約 4.5–5 小時',
     trailhead: '塔塔加（南投信義）', dest: '玉山（塔塔加登山口）',
+    seoTitle: '玉山接駁車・塔塔加登山包車｜台北、台中出發｜山行接駁',
     img: { src: 'images/yushan.webp', alt: '玉山主峰', w: 880, h: 587 },
     card: { scenery: '台灣最高峰、壯闊山稜與群峰景觀', audience: '有高山登山經驗的山友、海外百岳挑戰團', transport: '塔塔加接送；須留意登山口管制與當地接駁' },
     scenery: '海拔 3,952 公尺，台灣最高峰。站上主峰，可以欣賞中央山脈與周圍群峰的壯闊山景。',
