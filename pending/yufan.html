@@ -120,6 +120,18 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 <div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/nanhu-qilai-titles">Diff</a><a href="/routes/nanhu/">Nanhu</a><a href="/routes/qilai/">Qilai</a></div>
 </div>
 
+<div class="item" data-item="[Yufan] English Hehuan and Yushan titles: match the queries they get">
+<h3>2. [Yufan] English Hehuan and Yushan titles: match the queries they get</h3>
+<p><b>Finding:</b> report <code>gsc</code> 2026-10-03 to 10-30: /en/routes/hehuan/ 49 impressions, 1 click, 2.0% CTR, position 8.4, with hehuanshan main peak (position 5), hehuanshan main peak trail (10), hehuanshan east peak trail (11). /en/routes/yushan/ 38 impressions, 2 clicks, 5.3% CTR, position 13.3, with taipei to yushan (2 impressions, position 8.5). Query counts are small, so treat this as a low-cost test.</p>
+<p><b>Change</b> (branch <code>seo/en-hehuan-yushan-titles</code>; <code>&lt;title&gt;</code> and <code>og:title</code>, H1 and page text unchanged). <code>scripts/build.mjs</code> gains an English <code>seoTitle</code> override, as the Chinese pages already have.</p>
+<ul>
+<li>/en/routes/hehuan/:<span class="ba was"><b>Before</b>Hehuanshan peaks shuttle from Taipei &amp; Taichung | Go Hike</span><span class="ba now"><b>After</b>Hehuanshan Main/East Peak shuttle, Taipei/Taichung | Go Hike</span></li>
+<li>/en/routes/yushan/:<span class="ba was"><b>Before</b>Yushan hiking shuttle from Taipei &amp; Taichung | Go Hike</span><span class="ba now"><b>After</b>Taipei to Yushan hiking shuttle, or from Taichung | Go Hike</span></li>
+</ul>
+<p><b>Trade-off:</b> the Hehuan title names two peaks and leaves out North Peak, which has no query data in this report. Both titles stay within the build's 60-character limit.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-hehuan-yushan-titles">Diff</a><a href="/en/routes/hehuan/">Hehuan</a><a href="/en/routes/yushan/">Yushan</a></div>
+</div>
+
 <script>
 (function(){
   var API='https://admin.shiptolive.com/api/contact';
