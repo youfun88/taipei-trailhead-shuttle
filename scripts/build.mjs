@@ -869,7 +869,8 @@ function enRoutePage(rt) {
     `${titleName} hiking shuttle, Taipei/Taichung | ${SITE.brandEn}`,
     `${titleName} hiking shuttle | ${SITE.brandEn}`,
   ];
-  const title = titleOptions.find((t) => t.length <= 60) || titleOptions[titleOptions.length - 1];
+  // seoTitle（js/routes-en.js）可以換掉預設標題，用在有明確搜尋字詞的路線
+  const title = en.seoTitle || titleOptions.find((t) => t.length <= 60) || titleOptions[titleOptions.length - 1];
   const routeMin = Math.min(...Object.keys(ORIGINS).flatMap((o) => Object.keys(CARS).flatMap((c) => (route[o][c] || []).filter(Boolean))));
   const cheapest = Number.isFinite(routeMin) ? [`from ${nt(routeMin)}`] : [];
   // meta description 約 160 字元內；完整說明（desc）留給結構化資料
