@@ -7,6 +7,7 @@
 //   card      卡片上的三個重點：scenery 景色、audience 適合對象、transport 交通
 window.ROUTES_EN = {
   yushan: {
+    seoTitle: 'Taipei to Yushan hiking shuttle, or from Taichung | Go Hike',
     name: 'Yushan / Jade Mountain (玉山)', sub: "Taiwan's highest peak, 3,952 m",
     trailhead: 'Tataka (塔塔加), Xinyi, Nantou', drive: 'About 4.5–5 hours', dayTags: ['2 days'],
     imgAlt: 'Yushan main peak', dest: 'Yushan (Tataka trailhead 塔塔加)',
@@ -19,6 +20,7 @@ window.ROUTES_EN = {
     card: { scenery: 'The Xueshan cirque, the Black Forest and high ridges', audience: 'Experienced hikers planning two days or more', transport: 'Drop-off at Wuling Farm; vehicle access is restricted at some times of year' },
   },
   hehuan: {
+    seoTitle: 'Hehuanshan Main/East Peak shuttle, Taipei/Taichung | Go Hike',
     name: 'Hehuanshan peaks (合歡山)', sub: 'Alpine grassland, sea of clouds, easy 3,000 m summits',
     trailhead: 'Wuling Pass, Kunyang or Xiaofengkou (武嶺・昆陽・小風口), Nantou', drive: 'About 4 hours', dayTags: ['Day trip', '2 days'],
     imgAlt: 'Trail through alpine bamboo grass on Hehuanshan', dest: 'Hehuanshan peaks (合歡山)',
