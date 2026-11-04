@@ -92,7 +92,7 @@ function priceAnswer(r) {
       const parts = Object.keys(CARS)
         .filter((c) => r[o][c])
         .map((c) => CARS[c] + TRIPS.map((t, i) => (r[o][c][i] ? `${t} ${money(r[o][c][i])}` : '')).filter(Boolean).join('、'));
-      return `${ORIGINS[o]}：${parts.join('；')}。`;
+      return parts.length ? `${ORIGINS[o]}：${parts.join('；')}。` : '';
     })
     .join('') + '以上為整車價格；來回是去程、回程各一趟，一天來回是當天送上山、等下山再載回。';
 }
@@ -840,8 +840,9 @@ function enPriceAnswer(r) {
         const parts = Object.keys(CARS)
           .filter((c) => r[o][c])
           .map((c) => `${EN_CARS[c]}: ` + EN_TRIPS.map((t, i) => (r[o][c][i] ? `${t.toLowerCase()} ${nt(r[o][c][i])}` : '')).filter(Boolean).join(', '));
-        return `${EN_ORIGINS[o]}, ${parts.join('; ')}.`;
+        return parts.length ? `${EN_ORIGINS[o]}, ${parts.join('; ')}.` : '';
       })
+      .filter(Boolean)
       .join(' ') + ' Prices are per vehicle. Round trip is two drives, there and back; same-day return means we drop you off and pick you up the same day.'
   );
 }
