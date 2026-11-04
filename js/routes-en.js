@@ -45,6 +45,7 @@ window.ROUTES_EN = {
     card: { scenery: 'Wide alpine grass slopes, ridges and a sea of clouds', audience: 'Hikers moving up from longer hikes to the Baiyue (百岳)', transport: 'Drop-off at Tunyuan; check that the Nenggao road (能高越嶺) is open' },
   },
   jiaming: {
+    seoTitle: 'Jiaming Lake National Trail shuttle, Taipei/Taichung | Go Hike',
     name: 'Jiaming Lake (嘉明湖)', sub: 'A blue lake high in the mountains',
     trailhead: 'Xiangyang (向陽), Haiduan, Taitung', drive: 'About 7–8 hours', dayTags: ['3 days'],
     imgAlt: 'Blue water and grassland at Jiaming Lake', dest: 'Jiaming Lake (Xiangyang trailhead 向陽)',
