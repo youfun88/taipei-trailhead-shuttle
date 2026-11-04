@@ -108,15 +108,15 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] English Jiaming Lake title: add National Trail">
-<h3>1. [Yufan] English Jiaming Lake title: add National Trail</h3>
-<p><b>Finding:</b> report <code>gsc</code> 2026-10-04 to 10-31: /en/routes/jiaming/ 30 impressions, 1 click (3.3% CTR), position 6.4. Query <code>jiaming lake national trail</code> 2 impressions, position 9.5. The page already uses the trail's official English name, "Jiaming Lake National Trail" (in its permit and cabin links), but the title doesn't.</p>
-<p><b>Change</b> (branch <code>seo/en-jiaming-title</code>; <code>seoTitle</code> in js/routes-en.js, so <code>&lt;title&gt;</code> and <code>og:title</code> only; H1 and page text unchanged):</p>
+<div class="item" data-item="[Yufan] Yushan meta description: answer 塔塔加遊客中心 and 上東埔停車場 to the trailhead">
+<h3>1. [Yufan] Yushan meta description: answer 塔塔加遊客中心 and 上東埔停車場 to the trailhead</h3>
+<p><b>Finding:</b> report <code>keywords</code> (Google Taiwan, 2026-10-30): 塔塔加遊客中心到玉山登山口 50/mo (difficulty 0), 上東埔停車場到玉山登山口 50 (difficulty 23), 東埔山莊到玉山登山口 40. /routes/yushan/ already answers this (drop-off point, the walk or the paid shuttle from 排雲登山服務中心), but its meta description only says 接送地點：塔塔加, so a snippet gives a searcher no reason to click. <code>gsc</code> 2026-10-04 to 10-31: /routes/yushan/ is not in the top 10 pages.</p>
+<p><b>Change</b> (branch <code>seo/yushan-desc</code>; new optional <code>seoDesc</code> in js/routes.js replaces the first sentence of a route's description, prices still come from prices.js; <code>meta description</code> and <code>og:description</code> only, page text unchanged):</p>
 <ul>
-<li>/en/routes/jiaming/:<span class="ba was"><b>Before</b>Jiaming Lake hiking shuttle from Taipei &amp; Taichung | Go Hike</span><span class="ba now"><b>After</b>Jiaming Lake National Trail shuttle, Taipei/Taichung | Go Hike</span></li>
+<li>/routes/yushan/ description:<span class="ba was"><b>Before</b>玉山主峰登山接駁包車：挑戰台灣第一高峰。台北、台中出發，接送地點：塔塔加（南投信義）。台北出發五人座單程 $6,500起，台中出發五人座單程 $6,000起，整車計價。歡迎用 LINE 或線上表單詢價。</span><span class="ba now"><b>After</b>玉山登山接駁包車，台北、台中出發送到塔塔加。塔塔加遊客中心、上東埔停車場到玉山登山口怎麼走、接駁車怎麼搭，這頁有整理。台北出發五人座單程 $6,500起，台中出發五人座單程 $6,000起，整車計價。歡迎用 LINE 或線上表單詢價。</span></li>
 </ul>
-<p><b>Trade-off:</b> 62 characters, the same pattern as the live English Hehuan title. "hiking" is dropped to make room.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-jiaming-title">Diff</a><a href="/en/routes/jiaming/">Jiaming Lake (EN)</a></div>
+<p><b>Trade-off:</b> 117 characters, so Google may cut the end (the LINE line) on mobile. It names no fare or hours for the park's shuttle, since those change; the page has them with the source.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/yushan-desc">Diff</a><a href="/routes/yushan/">Yushan</a></div>
 </div>
 
 <script>
