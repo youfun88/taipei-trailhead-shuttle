@@ -108,7 +108,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<p>Nothing yet.</p>
+<div class="item" data-item="[Yufan] Hehuan meta description: 接駁車費用 and the drop-off points">
+<h3>1. [Yufan] Hehuan meta description: 接駁車費用 and the drop-off points</h3>
+<p><b>Finding:</b> report <code>keywords</code> 2026-10-30: 合歡山接駁車 140/month, 合歡山接駁車費用 70/month. <code>gsc</code> 2026-10-05 to 11-01: /routes/hehuan/ 46 impressions, 5 clicks (10.9% CTR), position 9.1. The title already has 合歡山接駁車, but the description opens with scenery (高山草原、雲海與群峰) and never says 費用 or which stop serves which peak.</p>
+<p><b>Change</b> (branch <code>seo/hehuan-desc</code>; <code>seoDesc</code> in js/routes.js; meta and og description only, page text unchanged; the facts are already on the page):</p>
+<ul>
+<li>/routes/hehuan/ description:<span class="ba was"><b>Before</b>合歡山群峰登山接駁包車：高山草原、雲海與群峰。台北、台中出發，接送地點：武嶺・昆陽・小風口（南投仁愛）。台北出發五人座單程 $6,000起，台中出發五人座單程 $5,000起，整車計價。歡迎用 LINE 或線上表單詢價。</span><span class="ba now"><b>After</b>合歡山接駁車費用和下車點：台北、台中出發包車，主峰在武嶺或昆陽下車，北峰在小風口，東峰在松雪樓一帶。台北出發五人座單程 $6,000起，台中出發五人座單程 $5,000起，整車計價。歡迎用 LINE 或線上表單詢價。</span></li>
+</ul>
+<p><b>Trade-off:</b> about 110 characters, so Google may still cut the end. Google sometimes writes its own snippet, so the effect is not guaranteed.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/hehuan-desc">Diff</a><a href="/routes/hehuan/">Hehuan</a></div>
+</div>
 
 <script>
 (function(){
