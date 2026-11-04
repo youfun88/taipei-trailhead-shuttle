@@ -365,8 +365,9 @@ function routePage({ rt, route, credit }) {
   const url = routeUrl(rt.key);
   // seoTitle（js/routes.js）可以換掉預設標題，用在有明確關鍵字搜尋量的路線
   const title = rt.seoTitle || `${name}登山接駁｜台北、台中出發｜${SITE.brand}`;
+  // seoDesc（js/routes.js）可以換掉描述的開頭（價格仍由 prices.js 產生），用在有明確關鍵字搜尋量的路線
   const desc =
-    `${name}登山接駁包車：${rt.sub}。台北、台中出發，接送地點：${rt.trailhead}。` +
+    (rt.seoDesc || `${name}登山接駁包車：${rt.sub}。台北、台中出發，接送地點：${rt.trailhead}。`) +
     (isPriced(route)
       ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('，') + '，整車計價。'
       : '整車計價，歡迎詢價。') +
