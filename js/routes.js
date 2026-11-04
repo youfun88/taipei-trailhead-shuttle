@@ -172,6 +172,7 @@ window.ROUTES = [
   },
   {
     key: 'beidelaman', name: '北得拉曼', sub: '巨木森林與山徑挑戰',
+    seoTitle: '北得拉曼巨木步道接駁・水田部落登山口｜台北、台中出發｜山行接駁',
     days: 'day', dayTags: ['當日來回'],
     trailhead: '新竹尖石山區', dest: '北得拉曼',
     card: { scenery: '巨木群、森林生態與中級山山徑', audience: '有基礎山徑經驗、喜歡巨木森林的登山客', transport: '出發前確認登山口位置；回程預留時間' },
