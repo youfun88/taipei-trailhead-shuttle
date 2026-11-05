@@ -1,138 +1,146 @@
 {
   "https://gohike.tw/": {
-    "hash": "cf9b77241c4d",
-    "date": "2026-11-03"
+    "hash": "bdd1fedd9f6f",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/": {
-    "hash": "39fdf4fead03",
-    "date": "2026-11-03"
+    "hash": "d8523043a0e2",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/yushan/": {
-    "hash": "2e91dc12e363",
-    "date": "2026-11-04"
+    "hash": "f2c04863acc7",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/xueshan/": {
-    "hash": "1148d86de8e4",
-    "date": "2026-11-03"
+    "hash": "1ee11862f460",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/hehuan/": {
-    "hash": "c00c5aa13075",
-    "date": "2026-11-04"
+    "hash": "9670a3b56437",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/dabajian/": {
-    "hash": "5f920ffbe1be",
-    "date": "2026-10-28"
+    "hash": "f3e0e0682723",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/nanhu/": {
-    "hash": "3665fc8973eb",
-    "date": "2026-11-02"
+    "hash": "8c983eb6588d",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/qilai/": {
-    "hash": "4b921dd4414b",
-    "date": "2026-11-02"
+    "hash": "28847b850ad8",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/jiaming/": {
-    "hash": "7892211a0d59",
-    "date": "2026-10-28"
+    "hash": "1c73d5c1405e",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/songluo/": {
-    "hash": "455c70473ff1",
-    "date": "2026-10-28"
+    "hash": "feea1093a981",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/jiali/": {
-    "hash": "25aa1200098a",
-    "date": "2026-10-28"
+    "hash": "289a4ca0d55b",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/luoma/": {
-    "hash": "7dac64f66337",
-    "date": "2026-10-28"
+    "hash": "9931e7918f19",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/gaodao/": {
-    "hash": "aff7c8b3b70e",
-    "date": "2026-10-28"
+    "hash": "7a73dfe0dac3",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/taman/": {
-    "hash": "7b0afcf9289d",
-    "date": "2026-10-28"
+    "hash": "ef99ed58b955",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/beidelaman/": {
-    "hash": "28faf433c0d9",
-    "date": "2026-11-04"
+    "hash": "e19e0953f37d",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/junda/": {
-    "hash": "b9034c9a84d6",
-    "date": "2026-11-02"
+    "hash": "5d5d62296bec",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/routes/xiakaluo-ab/": {
-    "hash": "9bd41c66bff8",
+    "hash": "3877a96822da",
     "date": "2026-11-05"
   },
   "https://gohike.tw/routes/xiakaluo-yanglao/": {
-    "hash": "398de30079a4",
-    "date": "2026-10-28"
+    "hash": "abb07da265ec",
+    "date": "2026-11-05"
+  },
+  "https://gohike.tw/routes/baigu/": {
+    "hash": "a7b35805e15c",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/yushan/": {
-    "hash": "be80d68afad6",
-    "date": "2026-11-03"
+    "hash": "227d62a128a3",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/xueshan/": {
-    "hash": "6b1bae9c967d",
-    "date": "2026-11-03"
+    "hash": "b9c55d3755f6",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/hehuan/": {
-    "hash": "d8f9d45fcd31",
-    "date": "2026-11-04"
+    "hash": "d45cd62ee7d5",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/dabajian/": {
-    "hash": "14f13ea8d8b7",
-    "date": "2026-10-28"
+    "hash": "df6cfc0e98f0",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/nanhu/": {
-    "hash": "588dc43df791",
-    "date": "2026-10-30"
+    "hash": "289010dc591e",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/qilai/": {
-    "hash": "47707db90ae0",
-    "date": "2026-10-30"
+    "hash": "e729b870d2da",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/jiaming/": {
-    "hash": "c52baa12a047",
-    "date": "2026-11-03"
+    "hash": "7a3cc2d7eb39",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/songluo/": {
-    "hash": "c254302fd978",
-    "date": "2026-10-28"
+    "hash": "bb14435def6b",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/jiali/": {
-    "hash": "d2b8c074c1b5",
-    "date": "2026-10-30"
+    "hash": "eb32969fcaf4",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/luoma/": {
-    "hash": "2739cac6d3eb",
-    "date": "2026-10-30"
+    "hash": "34418969ae1b",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/gaodao/": {
-    "hash": "b71a5a260789",
-    "date": "2026-10-30"
+    "hash": "2917b75568a0",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/taman/": {
-    "hash": "00269eece0d2",
-    "date": "2026-10-30"
+    "hash": "3f30615d7421",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/beidelaman/": {
-    "hash": "3be8307cafd9",
-    "date": "2026-10-28"
+    "hash": "4bf1f0294905",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/junda/": {
-    "hash": "914244193f4e",
-    "date": "2026-10-30"
+    "hash": "5bd56622b8f8",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/xiakaluo-ab/": {
-    "hash": "d47f88e04c13",
-    "date": "2026-10-30"
+    "hash": "570e40150ad2",
+    "date": "2026-11-05"
   },
   "https://gohike.tw/en/routes/xiakaluo-yanglao/": {
-    "hash": "ce2cc7e1b874",
-    "date": "2026-10-30"
+    "hash": "335eb451190c",
+    "date": "2026-11-05"
+  },
+  "https://gohike.tw/en/routes/baigu/": {
+    "hash": "338f5ce795cf",
+    "date": "2026-11-05"
   }
 }

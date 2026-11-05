@@ -98,6 +98,13 @@ window.ROUTES_EN = {
     trailhead: 'Yanglao (養老), Jianshi, Hsinchu', dayTags: ['Day trip'], dest: 'Xiakaluo Old Trail, out and back (霞喀羅古道 養老進出)',
     card: { scenery: 'Forest and a historic path; turn back wherever you like', audience: 'Hikers who want a taste of the old trail without the full traverse', transport: 'In and out at the same end; we confirm how far the car can reach at Yanglao' },
   },
+  baigu: {
+    name: 'Baigu Mountain (白姑大山)', sub: 'A multi-day hike in the Nantou mountains',
+    seoTitle: 'Baigu Mountain (白姑大山) hiking shuttle from Taipei | Go Hike',
+    seoDesc: 'Private hiking shuttle to Baigu Mountain from Taipei in a 9-seat van, drop-off about 200 m before the Last Farmhouse trailhead.',
+    trailhead: 'Last Farmhouse (最後農家) trailhead, Nantou', dayTags: ['2+ days'], dest: 'Baigu Mountain (白姑大山)',
+    card: { scenery: 'A long forest trail with distance markers', audience: 'Groups with multi-day hiking experience and a set plan', transport: '9-seat van from Taipei, to about 200 m before the Last Farmhouse trailhead' },
+  },
 };
 
 // 英文路線頁 en/routes/<key>/ 的完整說明（對應 routes.js 的 scenery、audience、transport、labels、faq）
@@ -214,6 +221,13 @@ const ROUTE_PAGES_EN = {
     labels: ['Historic trail', 'Out and back', 'Day shuttle'],
     faq: [{ q: 'What is the difference between Yanglao in-and-out and the one-way (A in, B out) route?', a: 'Yanglao in-and-out starts and ends at the same place: you walk in and come back the same way. One-way goes in at one end and out at the other, so it needs two pick-up points.' }],
   },
+  baigu: {
+    scenery: 'The Baigu Mountain trail has a distance marker every 100 m from the trailhead (numbered 00 to 86). It is a long route that needs a multi-day plan.',
+    audience: 'Groups with multi-day hiking experience who have already planned their route, gear and permits.',
+    transport: 'We drive your group from Taipei in a 9-seat van to about 200 m before the Last Farmhouse (最後農家) trailhead, and you walk the rest. The trip there and the trip back can be booked separately; on the way back we pick you up on the agreed date and time. We only list Taipei 9-seat prices for now; for Taichung or other vehicles, ask us. Mountain road conditions change, so we confirm how far the car can reach before you go.',
+    labels: ['Multi-day hike', 'From Taipei', '9-seat van'],
+    faq: [{ q: 'Where does the Baigu Mountain shuttle drop you off?', a: 'About 200 m before the Last Farmhouse (最後農家) trailhead; you walk the rest. Mountain road conditions change, so we confirm how far the car can reach before you go.' }],
+  },
 };
 for (const key of Object.keys(ROUTE_PAGES_EN)) Object.assign(window.ROUTES_EN[key], ROUTE_PAGES_EN[key]);
 
@@ -230,6 +244,7 @@ window.LINKS_EN = {
   'https://www.moi.gov.tw/News_Content.aspx?n=4&s=342927': 'Ministry of the Interior: Hehuanshan weekend carpool control, 2026-11-03 (Chinese)',
   'https://hsinchu.forest.gov.tw/ForestRoad/10003290': 'Forestry Agency, Hsinchu: Dalu Forest Road East (Chinese)',
   'https://99online.forest.gov.tw/': 'Jiujiu Cabin (九九山莊) booking',
+  'https://taichung.forest.gov.tw/news/0068637': 'Forestry Agency, Taichung: Baigu Mountain trail markers, 2021 (Chinese)',
   'https://hike.taiwan.gov.tw/open.aspx': 'Taiwan hiking permits portal: route open status',
   'https://www.forest.gov.tw/news/0077654': 'Forestry Agency: Nenggao Trail now starts at Yuntian Temple (Chinese)',
   'https://tconline.forest.gov.tw/room/': 'Tianchi Lodge (天池山莊) booking',
@@ -470,6 +485,15 @@ const ROUTE_GUIDE_EN = {
     ],
     faq: [
       { q: 'What should I know before hiking Xiakaluo from the Yanglao end?', a: 'The Yanglao end near 21K has closed several times for landslides, so check the Forestry Agency Hsinchu notices before you go. No mountain permit is needed, but there is no public transport and mid-size or large buses cannot enter.' },
+    ],
+  },
+  baigu: {
+    guide: [
+      { k: 'Distance markers', v: 'In November 2021 the Forestry Agency Taichung branch (then the Dongshi Forest District Office) and hiking clubs put up distance markers on the Baigu Mountain trail: one every 100 m from the trailhead, 86 in all, numbered 00 to 86. If you get lost or need help, give the number on the nearest marker, for example "45/86".' },
+      { k: 'Before you go', v: 'The trail was not built by the Forestry Agency. The Taichung branch asks hikers to prepare their gear and fitness and to read the notice at the trailhead. Trail conditions and permit rules change, so check the Taiwan hiking permits portal and the Forestry Agency for current notices before you go.' },
+    ],
+    faq: [
+      { q: 'How do I tell rescuers where I am on Baigu Mountain?', a: 'The trail has a distance marker every 100 m from the trailhead, numbered 00 to 86. The Forestry Agency Taichung branch suggests giving the number on the nearest marker, for example "45/86".' },
     ],
   },
 };

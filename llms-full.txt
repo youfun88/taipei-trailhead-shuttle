@@ -1,6 +1,6 @@
 # 山行接駁 Go Hike（gohike.tw）完整資料 / full reference
 
-> 山行接駁是台北、台中出發的登山接駁包車服務，接送玉山、雪山・武陵四秀、合歡山群峰、大霸尖山、南湖大山、奇萊南華、嘉明湖、松蘿湖、羅馬縱走、高島縱走、塔曼山、北得拉曼、郡大山、霞喀羅古道等登山口，提供五人座（最多 4 位乘客）與九人座（最多 8 位乘客）兩種車型，整車計價。詢價請用 LINE（ID 0910321666）、WhatsApp、Email（taipei.cars@gmail.com）或網站上的詢價表單。
+> 山行接駁是台北、台中出發的登山接駁包車服務，接送玉山、雪山・武陵四秀、合歡山群峰、大霸尖山、南湖大山、奇萊南華、嘉明湖、松蘿湖、羅馬縱走、高島縱走、塔曼山、北得拉曼、郡大山、霞喀羅古道、白姑大山等登山口，提供五人座（最多 4 位乘客）與九人座（最多 8 位乘客）兩種車型，整車計價。詢價請用 LINE（ID 0910321666）、WhatsApp、Email（taipei.cars@gmail.com）或網站上的詢價表單。
 >
 > Go Hike (山行接駁) is a hiking shuttle from Taipei and Taichung to trailheads including Yushan / Jade Mountain, Xueshan / Snow Mountain & Wuling Four Peaks, Hehuanshan peaks, Dabajian, Nanhu Mountain, Qilai South Peak & Nanhua, Jiaming Lake, Songluo Lake. We have a 5-seat car (up to 4 passengers) and a 9-seat van (up to 8 passengers), priced per vehicle. Ask on WhatsApp (+886910321666), LINE (ID 0910321666), email (taipei.cars@gmail.com) or with the form on this page.
 
@@ -37,6 +37,7 @@ This file is generated from the same data as the website. Short version: https:/
 | 郡大山 | — | — / $18,000 / $16,000 | — | — / $15,000 / $13,000 |
 | 霞喀羅古道（A 進 B 出） | — | — / $14,000 / $10,000 | — | — / $14,000 / $10,000 |
 | 霞喀羅古道（養老進出） | — | — / — / $8,000 | — | — / — / $8,000 |
+| 白姑大山 | — | $9,000 / $18,000 / — | — | — |
 
 A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
@@ -611,6 +612,26 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 **從養老端走霞喀羅古道，要注意什麼？**
 養老端 21K 附近近年多次坍方封閉，出發前請先看林業及自然保育署新竹分署的公告。走霞喀羅不用申請入山，但沒有大眾運輸，中、大型巴士也不能進入。
 
+### 白姑大山登山接駁：南投山區的多日登山
+
+網址：https://gohike.tw/routes/baigu/
+
+- 登山口／接送點：最後農家登山口（南投）
+- 行程類型：兩天以上
+
+景觀：白姑大山的登山步道從登山口起每 100 公尺有一面路程標示（編號 00～86），是一條需要多日規劃的長距離路線。
+適合客群：有多日登山經驗、已經規劃好行程、裝備和入山申請的隊伍。
+交通與注意事項：我們從台北出發，用九人座把隊伍送到最後農家登山口前約 200 公尺，下車後步行到登山口。去程、回程可以分開預約，回程依約定的日期和時間接回。目前只提供台北出發九人座的價格；台中出發或其他車型請直接詢價。山區道路狀況會變動，實際能到的位置出發前會再確認。
+
+價格（整車，新台幣）：
+- 台北出發・九人座：單程 $9,000、來回 $18,000
+
+**白姑大山的接駁送到哪裡？**
+送到最後農家登山口前約 200 公尺，下車後步行到登山口。山區道路狀況會變動，實際能到的位置出發前會再確認。
+
+**在白姑大山迷路了，要怎麼說明自己的位置？**
+步道從登山口起每 100 公尺有一面路程標示，編號 00～86。林保署臺中分署建議，迷途或遇到狀況時用標示上的編號回報位置，例如「45/86」。
+
 ## In English
 
 ### Questions
@@ -1181,3 +1202,23 @@ Yanglao in-and-out starts and ends at the same place: you walk in and come back 
 
 **What should I know before hiking Xiakaluo from the Yanglao end?**
 The Yanglao end near 21K has closed several times for landslides, so check the Forestry Agency Hsinchu notices before you go. No mountain permit is needed, but there is no public transport and mid-size or large buses cannot enter.
+
+### Baigu Mountain (白姑大山) hiking shuttle: A multi-day hike in the Nantou mountains
+
+URL: https://gohike.tw/en/routes/baigu/
+
+- Trailhead / drop-off: Last Farmhouse (最後農家) trailhead, Nantou
+- Trip length: 2+ days
+
+Scenery: The Baigu Mountain trail has a distance marker every 100 m from the trailhead (numbered 00 to 86). It is a long route that needs a multi-day plan.
+Good for: Groups with multi-day hiking experience who have already planned their route, gear and permits.
+Getting there: We drive your group from Taipei in a 9-seat van to about 200 m before the Last Farmhouse (最後農家) trailhead, and you walk the rest. The trip there and the trip back can be booked separately; on the way back we pick you up on the agreed date and time. We only list Taipei 9-seat prices for now; for Taichung or other vehicles, ask us. Mountain road conditions change, so we confirm how far the car can reach before you go.
+
+Prices (per vehicle, NT$):
+- From Taipei, 9-seat: one way NT$9,000, round trip NT$18,000
+
+**Where does the Baigu Mountain shuttle drop you off?**
+About 200 m before the Last Farmhouse (最後農家) trailhead; you walk the rest. Mountain road conditions change, so we confirm how far the car can reach before you go.
+
+**How do I tell rescuers where I am on Baigu Mountain?**
+The trail has a distance marker every 100 m from the trailhead, numbered 00 to 86. The Forestry Agency Taichung branch suggests giving the number on the nearest marker, for example "45/86".

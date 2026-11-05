@@ -877,7 +877,8 @@ function enRoutePage(rt) {
   const cheapest = Number.isFinite(routeMin) ? [`from ${nt(routeMin)}`] : [];
   // meta description 約 160 字元內；完整說明（desc）留給結構化資料
   const metaDesc =
-    `Private hiking shuttle to ${titleName} from Taipei or Taichung, drop-off at ${en.trailhead.replace(/ \(.*?\)/g, '').replace(/, [^,]*$/, '')}. ` +
+    // seoDesc（js/routes-en.js）可以換掉描述的開頭（價格仍自動產生）
+    (en.seoDesc ? en.seoDesc + ' ' : `Private hiking shuttle to ${titleName} from Taipei or Taichung, drop-off at ${en.trailhead.replace(/ \(.*?\)/g, '').replace(/, [^,]*$/, '')}. `) +
     (cheapest.length ? `Per vehicle, ${cheapest[0]}.` : 'Priced per vehicle.') + ' Book on WhatsApp or LINE.';
   const desc =
     `Private hiking shuttle to ${short} from Taipei or Taichung. ${en.sub}. Drop-off at ${en.trailhead}. ` +
