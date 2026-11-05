@@ -108,7 +108,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<p>Nothing yet.</p>
+<div class="item" data-item="[Yufan] English Hehuan meta description: which drop-off serves each peak">
+<h3>1. [Yufan] English Hehuan meta description: which drop-off serves each peak</h3>
+<p><b>Finding:</b> report <code>gsc</code> 2026-10-05 to 11-01: /en/routes/hehuan/ 63 impressions, 1 click (1.6% CTR), position 8.2, the most impressions of any English page and the lowest CTR. Queries "hehuanshan east peak trail" (position 11), "hehuanshan main peak trail" (10), "hehuanshan main peak" (5), all 0 clicks. <code>answerGaps.chatbots</code>: "How do I get from Taipei to Hehuanshan for hiking without a car?" answered without naming Go Hike. The description names the stops but not which peak each one is for.</p>
+<p><b>Change</b> (branch <code>seo/en-hehuan-desc</code>; <code>seoDesc</code> in js/routes-en.js; meta and og description only, page text unchanged; the peak-to-stop pairs are already in the page's own text). Same idea as the Chinese Hehuan description that went live today:</p>
+<ul>
+<li>/en/routes/hehuan/ description:<span class="ba was"><b>Before</b>Private hiking shuttle to Hehuanshan peaks from Taipei or Taichung, drop-off at Wuling Pass, Kunyang or Xiaofengkou. Per vehicle, from NT$5,000. Book on WhatsApp or LINE.</span><span class="ba now"><b>After</b>Hehuanshan hiking shuttle from Taipei or Taichung: drop-off at Wuling Pass or Kunyang for the Main Peak, Xiaofengkou for North Peak, Songxue Lodge for East Peak. Per vehicle, from NT$5,000. Book on WhatsApp or LINE.</span></li>
+</ul>
+<p><b>Trade-off:</b> about 205 characters, so Google will likely cut "Book on WhatsApp or LINE"; the price stays in view on desktop. Google sometimes writes its own snippet, so the effect is not guaranteed.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-hehuan-desc">Diff</a><a href="/en/routes/hehuan/">Hehuan (English)</a></div>
+</div>
 
 <script>
 (function(){
