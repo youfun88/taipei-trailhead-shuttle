@@ -21,6 +21,7 @@ window.ROUTES_EN = {
   },
   hehuan: {
     seoTitle: 'Hehuanshan Main/East Peak shuttle, Taipei/Taichung | Go Hike',
+    seoDesc: 'Hehuanshan hiking shuttle from Taipei or Taichung: drop-off at Wuling Pass or Kunyang for the Main Peak, Xiaofengkou for North Peak, Songxue Lodge for East Peak.',
     name: 'Hehuanshan peaks (合歡山)', sub: 'Alpine grassland, sea of clouds, easy 3,000 m summits',
     trailhead: 'Wuling Pass, Kunyang or Xiaofengkou (武嶺・昆陽・小風口), Nantou', drive: 'About 4 hours', dayTags: ['Day trip', '2 days'],
     imgAlt: 'Trail through alpine bamboo grass on Hehuanshan', dest: 'Hehuanshan peaks (合歡山)',
