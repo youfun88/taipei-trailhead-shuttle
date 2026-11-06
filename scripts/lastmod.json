@@ -1,11 +1,15 @@
 {
   "https://gohike.tw/": {
-    "hash": "9bcdfc16cf15",
+    "hash": "749b38b997b0",
     "date": "2026-11-06"
   },
   "https://gohike.tw/en/": {
-    "hash": "d8523043a0e2",
-    "date": "2026-11-05"
+    "hash": "023424749bcc",
+    "date": "2026-11-06"
+  },
+  "https://gohike.tw/wedding/": {
+    "hash": "6e98ed7cf681",
+    "date": "2026-11-06"
   },
   "https://gohike.tw/routes/yushan/": {
     "hash": "f2c04863acc7",

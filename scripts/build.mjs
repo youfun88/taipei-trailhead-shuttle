@@ -628,7 +628,9 @@ const routeHtml = Object.fromEntries(routePages.map((x) => [x.rt.key, routePage(
 
 // ---- 標題字型：只向 Google Fonts 要頁面上實際用到的字，檔案才會小 ----
 let cardHtml = read('card.html');
-const headingText = [html, cardHtml, ...Object.values(routeHtml)]
+// 婚紗包車頁（wedding/index.html）是手寫頁，這裡只內嵌字型和樣式、列進 sitemap
+let weddingHtml = read('wedding/index.html');
+const headingText = [html, cardHtml, weddingHtml, ...Object.values(routeHtml)]
   // 標題，以及路線頁用標題字型的副標
   .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>|<p class="route-page__sub">([\s\S]*?)<\/p>/g)].map((m) => (m[1] ?? m[2]).replace(/<[^>]+>/g, '')))
   .join('');
@@ -660,6 +662,8 @@ html = versioned(region(html, 'css', inlineCss));
 cardHtml = versioned(region(cardHtml, 'css', inlineCss));
 write('index.html', html);
 write('card.html', cardHtml);
+weddingHtml = versioned(region(region(weddingHtml, 'font', fontTags), 'css', inlineCss));
+write('wedding/index.html', weddingHtml);
 // 路線頁整個資料夾重新產生，prices.js 拿掉的路線不會留下舊頁面
 rmSync(join(root, 'routes'), { recursive: true, force: true });
 for (const [key, page] of Object.entries(routeHtml)) {
@@ -1191,6 +1195,7 @@ const fingerprint = (page) =>
 const sitemapPages = [
   [URL, html],
   [EN_URL, enHtml],
+  [URL + 'wedding/', weddingHtml],
   ...routePages.map((x) => [routeUrl(x.rt.key), routeHtml[x.rt.key]]),
   ...ROUTES.map((rt) => [enRouteUrl(rt.key), enRouteHtml[rt.key]]),
 ];
@@ -1230,7 +1235,7 @@ write(
 ## 服務內容
 
 - 登山接駁包車：從台北車站、台中高鐵站或指定地址出發，專車直達登山口；下山時在登山口接回市區。
-- 婚紗包車：拍婚紗也可以包車。九人座載新人、攝影師和造型團隊跑外拍景點，婚紗、器材和燈架都放得下，依拍攝行程與時數報價。
+- 婚紗包車：自助外拍或婚紗公司都可以包車。九人座商務車載新人、攝影師和造型團隊跑外拍景點，隨車備有更衣帳篷。台北出發，基本費 5 小時：台北地區 $2,500、基隆與桃園 $3,000、新北偏遠郊區 $3,000、宜蘭與新竹 $3,500、苗栗三義 $4,000、台中市區 $4,500；超時每小時 $500、半小時 $300；門票與停車費實報實銷。詳見 ${URL}wedding/
 - 機場接送：往返機場與台北、台中市區或飯店，依機場、地點與人數報價。
 - 行程：當日來回、兩天、三天以上都可以預約。
 - 車型：五人座（最多 4 位乘客）、九人座（Volkswagen Caravelle 或同級，最多 8 位乘客）。
