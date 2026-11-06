@@ -27,6 +27,7 @@ window.ROUTES = [
   {
     key: 'xueshan', name: '雪山主東峰・武陵四秀', sub: '走進雪山圈谷',
     seoTitle: '雪山登山口接駁車・武陵四秀包車｜台北、台中出發｜山行接駁',
+    seoDesc: '台北出發雪山登山口接駁包車，也可從台中出發：送到武陵農場（台中和平），雪山主東峰、武陵四秀都適用，可訂單程、來回或一天來回。',
     days: 'two multi', dayTags: ['兩天', '三天'], alt: '3,886 m', drive: '約 3.5 小時',
     trailhead: '武陵農場（台中和平）', dest: '雪山／武陵四秀（武陵農場）',
     img: { src: 'images/xueshan.webp', alt: '雪山圈谷的雪季景色', w: 880, h: 585 },
