@@ -98,7 +98,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </script>
 <h1>Developer review · SEO / AEO / GEO</h1>
 <p>Search and AI-visibility changes for Yufan to approve: titles, descriptions, schema, internal links, llms.txt, sitemap, keywords. Content changes go to the owner at <a href="/pending/">/pending</a>. Not linked from the site and not indexed. The GX10 job applies approved changes at its next run (every 8 hours).</p>
-<p class="updated">Updated 2026-11-06.</p>
+<p class="updated">Updated 2026-11-07.</p>
 
 <!-- Item markup (copy for each draft; data-item must equal the board title exactly):
 <div class="item" data-item="TITLE">
@@ -108,15 +108,15 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Qilai meta description: 交通 and the 屯原 to 雲天宮 trailhead change">
-<h3>1. [Yufan] Qilai meta description: 交通 and the 屯原 to 雲天宮 trailhead change</h3>
-<p><b>Finding:</b> report <code>gsc</code> 2026-10-06 to 11-02: /routes/qilai/ 45 impressions, 11.1% CTR, position 8.5. Queries 奇萊南華 交通 (position 9), 奇萊南華交通 (10), 奇萊南華路況 (7), 奇萊南華接駁 (6), all 0 clicks. <code>keywords</code> 2026-10-30: 屯原登山口接駁 30/mo, 雲天宮登山口接駁 20/mo. The description doesn't say 交通 or 屯原, and doesn't say the trailhead moved.</p>
-<p><b>Change</b> (branch <code>seo/qilai-desc</code>; <code>seoDesc</code> in js/routes.js; meta and og description only, page text unchanged; the move from 屯原 to 雲天宮 is already on the page, cited to 林業及自然保育署 forest.gov.tw/news/0077654):</p>
+<div class="item" data-item="[Yufan] Xueshan meta description: 台北出發雪山登山口接駁包車">
+<h3>1. [Yufan] Xueshan meta description: 台北出發雪山登山口接駁包車</h3>
+<p><b>Finding:</b> AI check 2026-11-06, question 台北出發雪山登山口接駁包車推薦: Go Hike not named by 3 of 4 assistants (citedInstead kkday.com, keepon.com.tw, tripool.app, ss333.com.tw). <code>plan</code> item 2 (short): make the Chinese Xueshan page answer the Taipei charter question. The page already has the prices and the Q&amp;A near the top, but its description leads with 走進雪山圈谷 and never says 雪山登山口 or 包車 together with 台北出發.</p>
+<p><b>Change</b> (branch <code>seo/xueshan-desc</code>; <code>seoDesc</code> in js/routes.js; meta and og description only, page text unchanged; every fact is already on the page and in js/prices.js):</p>
 <ul>
-<li><strong>/routes/qilai/ description:</strong><span class="ba was"><b>Before</b>奇萊南華登山接駁包車：高山草原與開闊山稜。台北、台中出發，接送地點：雲天宮登山口（南投仁愛）。台北出發五人座單程 $6,000起，…</span><span class="ba now"><b>After</b>奇萊南華交通與接駁：2026 年起登山口從屯原改到雲天宮（南投仁愛）。台北、台中出發包車，送到雲天宮登山口。台北出發五人座單程 $6,000起，…</span></li>
+<li><strong>/routes/xueshan/ description:</strong><span class="ba was"><b>Before</b>雪山主東峰・武陵四秀登山接駁包車：走進雪山圈谷。台北、台中出發，接送地點：武陵農場（台中和平）。台北出發五人座單程 $5,500起，…</span><span class="ba now"><b>After</b>台北出發雪山登山口接駁包車，也可從台中出發：送到武陵農場（台中和平），雪山主東峰、武陵四秀都適用，可訂單程、來回或一天來回。台北出發五人座單程 $5,500起，…</span></li>
 </ul>
-<p><b>Trade-off:</b> drops the scenery phrase 高山草原與開闊山稜 from the snippet (still on the page). Google sometimes writes its own snippet, so the effect is not guaranteed.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/qilai-desc">Diff</a><a href="/routes/qilai/">奇萊南華</a></div>
+<p><b>Trade-off:</b> drops 走進雪山圈谷 from the snippet (still on the page). Google sometimes writes its own snippet. The rest of plan item 2 (entry fee, night surcharge, drop-off inside the farm) needs facts from the owner, so it is not in this change.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/xueshan-desc">Diff</a><a href="/routes/xueshan/">雪山主東峰・武陵四秀</a></div>
 </div>
 
 <script>
