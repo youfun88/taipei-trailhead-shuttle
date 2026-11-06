@@ -83,6 +83,7 @@ window.ROUTES = [
   {
     key: 'qilai', name: '奇萊南華', sub: '高山草原與開闊山稜',
     seoTitle: '奇萊南華接駁・雲天宮登山口（原屯原）｜台北、台中出發｜山行接駁',
+    seoDesc: '奇萊南華交通與接駁：2026 年起登山口從屯原改到雲天宮（南投仁愛）。台北、台中出發包車，送到雲天宮登山口。',
     days: 'two', dayTags: ['兩天'], alt: '3,358 m', drive: '約 4.5 小時',
     trailhead: '屯原（南投仁愛）', dest: '奇萊南華',
     img: { src: 'images/qilai.webp', alt: '奇萊南峰的草原稜線', w: 880, h: 587 },
