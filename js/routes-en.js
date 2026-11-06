@@ -48,6 +48,7 @@ window.ROUTES_EN = {
   },
   jiaming: {
     seoTitle: 'Jiaming Lake National Trail shuttle, Taipei/Taichung | Go Hike',
+    seoDesc: 'Jiaming Lake National Trail hiking shuttle from Taipei or Taichung: drop-off at Xiangyang National Forest Recreation Area (Highway 20, 154.5K), where the trail to Xiangyang Cabin starts.',
     name: 'Jiaming Lake (嘉明湖)', sub: 'A blue lake high in the mountains',
     trailhead: 'Xiangyang (向陽), Haiduan, Taitung', drive: 'About 7–8 hours', dayTags: ['3 days'],
     imgAlt: 'Blue water and grassland at Jiaming Lake', dest: 'Jiaming Lake (Xiangyang trailhead 向陽)',
