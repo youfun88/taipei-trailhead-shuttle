@@ -630,7 +630,8 @@ const routeHtml = Object.fromEntries(routePages.map((x) => [x.rt.key, routePage(
 let cardHtml = read('card.html');
 // 婚紗包車頁（wedding/index.html）是手寫頁，這裡只內嵌字型和樣式、列進 sitemap
 let weddingHtml = read('wedding/index.html');
-const headingText = [html, cardHtml, weddingHtml, ...Object.values(routeHtml)]
+let weddingEnHtml = read('en/wedding/index.html');
+const headingText = [html, cardHtml, weddingHtml, weddingEnHtml, ...Object.values(routeHtml)]
   // 標題，以及路線頁用標題字型的副標
   .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>|<p class="route-page__sub">([\s\S]*?)<\/p>/g)].map((m) => (m[1] ?? m[2]).replace(/<[^>]+>/g, '')))
   .join('');
@@ -664,6 +665,8 @@ write('index.html', html);
 write('card.html', cardHtml);
 weddingHtml = versioned(region(region(weddingHtml, 'font', fontTags), 'css', inlineCss));
 write('wedding/index.html', weddingHtml);
+weddingEnHtml = versioned(region(region(weddingEnHtml, 'font', fontTags), 'css', inlineCss));
+write('en/wedding/index.html', weddingEnHtml);
 // 路線頁整個資料夾重新產生，prices.js 拿掉的路線不會留下舊頁面
 rmSync(join(root, 'routes'), { recursive: true, force: true });
 for (const [key, page] of Object.entries(routeHtml)) {
@@ -1196,6 +1199,7 @@ const sitemapPages = [
   [URL, html],
   [EN_URL, enHtml],
   [URL + 'wedding/', weddingHtml],
+  [EN_URL + 'wedding/', weddingEnHtml],
   ...routePages.map((x) => [routeUrl(x.rt.key), routeHtml[x.rt.key]]),
   ...ROUTES.map((rt) => [enRouteUrl(rt.key), enRouteHtml[rt.key]]),
 ];
@@ -1206,7 +1210,7 @@ for (const [loc, page] of sitemapPages) {
 }
 write(LASTMOD_FILE, JSON.stringify(lastmod, null, 2) + '\n');
 // 中英文互為翻譯的頁面，在 sitemap 也標出 hreflang（和頁面 <head> 一致）
-const pairs = { [URL]: EN_URL, ...Object.fromEntries(ROUTES.map((rt) => [routeUrl(rt.key), enRouteUrl(rt.key)])) };
+const pairs = { [URL]: EN_URL, [URL + 'wedding/']: EN_URL + 'wedding/', ...Object.fromEntries(ROUTES.map((rt) => [routeUrl(rt.key), enRouteUrl(rt.key)])) };
 const zhOf = Object.fromEntries(Object.entries(pairs).map(([zh, en]) => [en, zh]));
 const alternates = (loc) => {
   const zh = pairs[loc] ? loc : zhOf[loc];
