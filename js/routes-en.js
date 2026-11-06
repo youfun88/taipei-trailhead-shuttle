@@ -8,6 +8,7 @@
 window.ROUTES_EN = {
   yushan: {
     seoTitle: 'Taipei to Yushan hiking shuttle, or from Taichung | Go Hike',
+    seoDesc: 'Yushan (Jade Mountain) hiking shuttle from Taipei or Taichung: drop-off at Tataka Visitor Center or Shangdongpu parking, by the Paiyun Hiking Service Center.',
     name: 'Yushan / Jade Mountain (玉山)', sub: "Taiwan's highest peak, 3,952 m",
     trailhead: 'Tataka (塔塔加), Xinyi, Nantou', drive: 'About 4.5–5 hours', dayTags: ['2 days'],
     imgAlt: 'Yushan main peak', dest: 'Yushan (Tataka trailhead 塔塔加)',
