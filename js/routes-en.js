@@ -29,6 +29,7 @@ window.ROUTES_EN = {
     card: { scenery: 'Open alpine grassland, ridges and a sea of clouds', audience: 'First-timers on a Taiwan high mountain; groups of friends', transport: 'Meet at Wuling Pass, Kunyang, Xiaofengkou or other points' },
   },
   dabajian: {
+    seoDesc: 'Dabajian (大霸尖山) hiking shuttle from Taipei or Taichung to Guanwu, where the 19 km Dalu Forest Road East walk to the Madala River trailhead starts.',
     name: 'Dabajian (大霸尖山)', sub: "Taiwan's most recognizable barrel-shaped peak",
     trailhead: 'Guanwu / Dalulin Road (觀霧・大鹿林道), Hsinchu', drive: 'About 3.5 hours', dayTags: ['3 days'],
     imgAlt: 'The barrel-shaped summit of Dabajian', dest: 'Dabajian (Guanwu 觀霧)',
