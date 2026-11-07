@@ -98,7 +98,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </script>
 <h1>Developer review · SEO / AEO / GEO</h1>
 <p>Search and AI-visibility changes for Yufan to approve: titles, descriptions, schema, internal links, llms.txt, sitemap, keywords. Content changes go to the owner at <a href="/pending/">/pending</a>. Not linked from the site and not indexed. The GX10 job applies approved changes at its next run (every 8 hours).</p>
-<p class="updated">Updated 2026-11-07.</p>
+<p class="updated">Updated 2026-11-08.</p>
 
 <!-- Item markup (copy for each draft; data-item must equal the board title exactly):
 <div class="item" data-item="TITLE">
@@ -108,15 +108,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] English Dabajian meta description: Guanwu drop-off and the forest road walk">
-<h3>1. [Yufan] English Dabajian meta description: Guanwu drop-off and the forest road walk</h3>
-<p><b>Finding:</b> <code>gsc</code> 2026-10-07 to 11-03: "dabajian" 3 impressions, position 11.3, 0 clicks. /en/routes/dabajian/ still uses the generic description ("Guanwu / Dalulin Road"), which doesn't say that cars stop at Guanwu and hikers walk the forest road.</p>
-<p><b>Change</b> (branch <code>seo/en-dabajian-desc</code>; <code>seoDesc</code> in js/routes-en.js; meta and og description only, page text unchanged; the facts are already in the page's trailhead guide):</p>
+<div class="item" data-item="[Yufan] English Qilai title and description: add 奇萊南華 and Yuntian Temple">
+<h3>1. [Yufan] English Qilai title and description: add 奇萊南華 and Yuntian Temple</h3>
+<p><b>Finding:</b> <code>gsc</code> 2026-10-08 to 11-04: "奇萊南華 英文" 5 impressions, position 8.4, 0 clicks. People look up the English name, but the English page's title has no 奇萊南華, and its description doesn't mention that the trailhead moved from Tunyuan to Yuntian Temple.</p>
+<p><b>Change</b> (branch <code>seo/en-qilai-title</code>; <code>seoTitle</code> and <code>seoDesc</code> in js/routes-en.js; title, meta and og tags only, page text unchanged; the trailhead change is already on the page, sourced from the Forestry Agency):</p>
 <ul>
-<li><strong>/en/routes/dabajian/ description:</strong><span class="ba was"><b>Before</b>Private hiking shuttle to Dabajian from Taipei or Taichung, drop-off at Guanwu / Dalulin Road. Per vehicle, from NT$6,000. Book on WhatsApp or LINE.</span><span class="ba now"><b>After</b>Dabajian (大霸尖山) hiking shuttle from Taipei or Taichung to Guanwu, where the 19 km Dalu Forest Road East walk to the Madala River trailhead starts. Per vehicle, from NT$6,000. Book on WhatsApp or LINE.</span></li>
+<li><strong>/en/routes/qilai/ title:</strong><span class="ba was"><b>Before</b>Qilai South Peak &amp; Nanhua hiking shuttle | Go Hike</span><span class="ba now"><b>After</b>Qilai South Peak &amp; Nanhua (奇萊南華) shuttle, Taipei/Taichung | Go Hike</span></li>
+<li><strong>/en/routes/qilai/ description:</strong><span class="ba was"><b>Before</b>Private hiking shuttle to Qilai South Peak &amp; Nanhua from Taipei or Taichung, drop-off at Yuntian Temple trailhead, Ren-ai. Per vehicle, from NT$5,000. Book on WhatsApp or LINE.</span><span class="ba now"><b>After</b>Qilai South Peak &amp; Nanhua (奇萊南華) hiking shuttle from Taipei or Taichung to the Yuntian Temple trailhead (雲天宮), which replaced Tunyuan (屯原) in 2026. Per vehicle, from NT$5,000. Book on WhatsApp or LINE.</span></li>
 </ul>
-<p><b>Trade-off:</b> longer (about 200 characters), so Google may cut the price tail. Google sometimes writes its own snippet.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-dabajian-desc">Diff</a><a href="/en/routes/dabajian/">Dabajian</a></div>
+<p><b>Trade-off:</b> the title drops the word "hiking" to make room for the Chinese name. Google sometimes writes its own snippet.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-qilai-title">Diff</a><a href="/en/routes/qilai/">Qilai (English)</a></div>
 </div>
 
 <script>
