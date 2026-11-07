@@ -108,15 +108,15 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Junda meta description: 郡大林道, round trip or same-day, road limits">
-<h3>1. [Yufan] Junda meta description: 郡大林道, round trip or same-day, road limits</h3>
-<p><b>Finding:</b> <code>gsc</code> 2026-10-07 to 11-03: 郡大林道 4 impressions, position 6.75, 0 clicks; 郡大山接駁車電話 position 3; 郡大山申請 position 10. /routes/junda/ still uses the generic description (scenery line first), which never says 郡大林道 or what the shuttle can and cannot reach.</p>
-<p><b>Change</b> (branch <code>seo/junda-desc</code>; <code>seoDesc</code> in js/routes.js; meta and og description only, page text unchanged; every fact is already on the page and in js/prices.js):</p>
+<div class="item" data-item="[Yufan] English Dabajian meta description: Guanwu drop-off and the forest road walk">
+<h3>1. [Yufan] English Dabajian meta description: Guanwu drop-off and the forest road walk</h3>
+<p><b>Finding:</b> <code>gsc</code> 2026-10-07 to 11-03: "dabajian" 3 impressions, position 11.3, 0 clicks. /en/routes/dabajian/ still uses the generic description ("Guanwu / Dalulin Road"), which doesn't say that cars stop at Guanwu and hikers walk the forest road.</p>
+<p><b>Change</b> (branch <code>seo/en-dabajian-desc</code>; <code>seoDesc</code> in js/routes-en.js; meta and og description only, page text unchanged; the facts are already in the page's trailhead guide):</p>
 <ul>
-<li><strong>/routes/junda/ description:</strong><span class="ba was"><b>Before</b>郡大山登山接駁包車：欣賞中央山脈高山稜線。台北、台中出發，接送地點：郡大林道（南投信義）。台北出發九人座一天來回 $16,000起，…</span><span class="ba now"><b>After</b>郡大山・郡大林道登山接駁包車，台北、台中出發九人座，可訂來回或一天來回。郡大林道有路況、交通管制和車型限制，車子能到的位置報價時說清楚。台北出發九人座一天來回 $16,000起，…</span></li>
+<li><strong>/en/routes/dabajian/ description:</strong><span class="ba was"><b>Before</b>Private hiking shuttle to Dabajian from Taipei or Taichung, drop-off at Guanwu / Dalulin Road. Per vehicle, from NT$6,000. Book on WhatsApp or LINE.</span><span class="ba now"><b>After</b>Dabajian (大霸尖山) hiking shuttle from Taipei or Taichung to Guanwu, where the 19 km Dalu Forest Road East walk to the Madala River trailhead starts. Per vehicle, from NT$6,000. Book on WhatsApp or LINE.</span></li>
 </ul>
-<p><b>Trade-off:</b> drops 欣賞中央山脈高山稜線 from the snippet (still on the page). Google sometimes writes its own snippet.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/junda-desc">Diff</a><a href="/routes/junda/">郡大山</a></div>
+<p><b>Trade-off:</b> longer (about 200 characters), so Google may cut the price tail. Google sometimes writes its own snippet.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-dabajian-desc">Diff</a><a href="/en/routes/dabajian/">Dabajian</a></div>
 </div>
 
 <script>

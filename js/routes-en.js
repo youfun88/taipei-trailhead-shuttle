@@ -108,6 +108,13 @@ window.ROUTES_EN = {
     trailhead: 'Last Farmhouse (最後農家) trailhead, Nantou', dayTags: ['2+ days'], dest: 'Baigu Mountain (白姑大山)',
     card: { scenery: 'A long forest trail with distance markers', audience: 'Groups with multi-day hiking experience and a set plan', transport: '9-seat van from Taipei, to about 200 m before the Last Farmhouse trailhead' },
   },
+  beidawu: {
+    name: 'Beidawu Mountain (北大武山)', sub: 'The southernmost 3,000 m peak of the Central Range',
+    seoTitle: 'Beidawu Mountain (北大武山) hiking shuttle from Taipei | Go Hike',
+    seoDesc: 'Private hiking shuttle to Beidawu Mountain from Taipei in a 9-seat van, drop-off at the new trailhead in Taiwu, Pingtung.',
+    trailhead: 'Beidawu new trailhead (新登山口), Taiwu, Pingtung', dayTags: ['2+ days'], dest: 'Beidawu Mountain (北大武山)',
+    card: { scenery: 'One of the Five Great Peaks of Taiwan, with seas of cloud in autumn and winter', audience: 'Groups with multi-day high-mountain experience and permits and hut booked', transport: '9-seat van from Taipei to the Beidawu new trailhead' },
+  },
 };
 
 // 英文路線頁 en/routes/<key>/ 的完整說明（對應 routes.js 的 scenery、audience、transport、labels、faq）
@@ -231,6 +238,13 @@ const ROUTE_PAGES_EN = {
     labels: ['Multi-day hike', 'From Taipei', '9-seat van'],
     faq: [{ q: 'Where does the Baigu Mountain shuttle drop you off?', a: 'About 200 m before the Last Farmhouse (最後農家) trailhead; you walk the rest. Mountain road conditions change, so we confirm how far the car can reach before you go.' }],
   },
+  beidawu: {
+    scenery: 'Beidawu Mountain is the last peak over 3,000 m at the southern end of the Central Mountain Range and one of the Five Great Peaks of Taiwan; the Paiwan people hold it sacred. The Forestry Agency\'s Taiwan Forest Recreation site says its best-known sight is the sea of cloud in autumn and winter.',
+    audience: 'Groups with multi-day high-mountain experience who have planned their route and already have their mountain permit and hut booking.',
+    transport: 'We drive your group from Taipei in a 9-seat van to the Beidawu new trailhead (新登山口). The trip there and the trip back can be booked separately; on the way back we pick you up on the agreed date and time. We only list Taipei 9-seat prices for now; for Taichung or other vehicles, ask us. Mountain road conditions change, so we confirm how far the car can reach before you go.',
+    labels: ['Five Great Peaks', 'Multi-day hike', 'From Taipei', '9-seat van'],
+    faq: [{ q: 'Where does the Beidawu Mountain shuttle drop you off?', a: 'At the Beidawu new trailhead (新登山口) in Taiwu, Pingtung. Cars can no longer reach the old trailhead, so you walk from the new one. Mountain road conditions change, so we confirm how far the car can reach before you go.' }],
+  },
 };
 for (const key of Object.keys(ROUTE_PAGES_EN)) Object.assign(window.ROUTES_EN[key], ROUTE_PAGES_EN[key]);
 
@@ -248,6 +262,7 @@ window.LINKS_EN = {
   'https://hsinchu.forest.gov.tw/ForestRoad/10003290': 'Forestry Agency, Hsinchu: Dalu Forest Road East (Chinese)',
   'https://99online.forest.gov.tw/': 'Jiujiu Cabin (九九山莊) booking',
   'https://taichung.forest.gov.tw/news/0068637': 'Forestry Agency, Taichung: Baigu Mountain trail markers, 2021 (Chinese)',
+  'https://recreation.forest.gov.tw/Trail/RT?tr_id=119': 'Taiwan Forest Recreation: Beidawu Mountain trail (open status, access, permits)',
   'https://hike.taiwan.gov.tw/open.aspx': 'Taiwan hiking permits portal: route open status',
   'https://www.forest.gov.tw/news/0077654': 'Forestry Agency: Nenggao Trail now starts at Yuntian Temple (Chinese)',
   'https://tconline.forest.gov.tw/room/': 'Tianchi Lodge (天池山莊) booking',
@@ -497,6 +512,17 @@ const ROUTE_GUIDE_EN = {
     ],
     faq: [
       { q: 'How do I tell rescuers where I am on Baigu Mountain?', a: 'The trail has a distance marker every 100 m from the trailhead, numbered 00 to 86. The Forestry Agency Taichung branch suggests giving the number on the nearest marker, for example "45/86".' },
+    ],
+  },
+  beidawu: {
+    guide: [
+      { k: 'Trailhead', v: 'Cars can no longer reach the old trailhead (0K, where the Beidawu and Ritangzhen trails meet) since Typhoon Morakot caused a major landslide. Hikers now start at the new trailhead; it is about 2.8 km from there to the old trailhead (Taiwan Forest Recreation).' },
+      { k: 'Trail', v: 'About 9 km from the old trailhead via Guigu Lodge (檜谷山莊) and the Dawu Shrine (大武祠) to the summit, at about 1,500 to 3,092 m. The official suggested plan is three days: day 1 to Guigu Hut (4.2K), day 2 to the summit and back to the hut, day 3 down. Typhoons and heavy rain have caused landslides and detours on several sections in recent years.' },
+      { k: 'Permits', v: 'The trail is in a mountain control zone. Taiwan Forest Recreation suggests applying on the Taiwan hiking permits portal 5 days before you go, or getting the permit at Taiwu police station (泰武派出所) before you enter. Guigu Hut is booked separately on the Forestry Agency hut site.' },
+      { k: 'Open status', v: 'The Beidawu trail and Guigu Hut often close ahead of typhoons and heavy rain. Check the current status on the Beidawu Mountain trail page of Taiwan Forest Recreation before you go.' },
+    ],
+    faq: [
+      { q: 'Do I need a permit for Beidawu Mountain?', a: 'Yes. The trail is in a mountain control zone. Taiwan Forest Recreation suggests applying on the Taiwan hiking permits portal 5 days ahead, or getting the permit at Taiwu police station before you enter. Guigu Hut is booked separately. Rules change, so check again before you go.' },
     ],
   },
 };

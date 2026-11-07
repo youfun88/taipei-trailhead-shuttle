@@ -20,5 +20,6 @@ window.PRICES = [
   { key: 'xiakaluo-ab', name: '霞喀羅古道（A 進 B 出）', taipei: { five: null, nine: [null, 14000, 10000] },        taichung: { five: null, nine: [null, 14000, 10000] } },
   { key: 'xiakaluo-yanglao', name: '霞喀羅古道（養老進出）', taipei: { five: null, nine: [null, null, 8000] },      taichung: { five: null, nine: [null, null, 8000] } },
   { key: 'baigu',    name: '白姑大山',       taipei: { five: null, nine: [9000, 18000, null] },                 taichung: { five: null, nine: null } },
+  { key: 'beidawu',  name: '北大武山',       taipei: { five: null, nine: [11000, 21000, null] },                taichung: { five: null, nine: null } },
   { key: 'jiali',    name: '加里山',         taipei: { five: null, nine: null },                                 taichung: { five: null, nine: null } },
 ];
