@@ -42,6 +42,8 @@ window.ROUTES_EN = {
     card: { scenery: 'The Nanhu cirque, glacial landforms and big mountains', audience: 'Fit, experienced hikers planning three days or more', transport: 'Drop-off at Shengguang trailhead; timed to your multi-day plan' },
   },
   qilai: {
+    seoTitle: 'Qilai South Peak & Nanhua (奇萊南華) shuttle, Taipei/Taichung | Go Hike',
+    seoDesc: 'Qilai South Peak & Nanhua (奇萊南華) hiking shuttle from Taipei or Taichung to the Yuntian Temple trailhead (雲天宮), which replaced Tunyuan (屯原) in 2026.',
     name: 'Qilai South Peak & Nanhua (奇萊南華)', sub: 'Open grassy ridges, 3,358 m',
     trailhead: 'Tunyuan (屯原), Ren-ai, Nantou', drive: 'About 4.5 hours', dayTags: ['2 days'],
     imgAlt: 'Grassy ridge of Qilai South Peak', dest: 'Qilai South Peak & Nanhua (奇萊南華)',
