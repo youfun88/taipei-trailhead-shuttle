@@ -36,6 +36,8 @@ window.ROUTES_EN = {
     card: { scenery: 'The barrel-shaped peak and the Holy Ridge (聖稜線)', audience: 'Hikers with multi-day and long-distance experience', transport: 'Drop-off at Guanwu / Dalulin Road; includes a long forest road walk' },
   },
   nanhu: {
+    seoTitle: 'Nanhu Mountain (南湖大山) trail shuttle, Taipei/Taichung | Go Hike',
+    seoDesc: 'Nanhu Mountain (南湖大山) hiking shuttle from Taipei or Taichung to the Shengguang trailhead on Highway 7A, where most hikers now start instead of Siyuan Pass.',
     name: 'Nanhu Mountain (南湖大山)', sub: 'Remote cirques in the Central Range, 3,742 m',
     trailhead: 'Shengguang (勝光), Heping, Taichung', drive: 'About 3 hours', dayTags: ['3+ days'],
     imgAlt: 'Nanhu Mountain', dest: 'Nanhu Mountain (Shengguang trailhead 勝光)',
