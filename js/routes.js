@@ -98,6 +98,8 @@ window.ROUTES = [
   },
   {
     key: 'jiaming', name: '嘉明湖', sub: '走進高山中的藍色湖泊',
+    seoTitle: '嘉明湖國家步道接駁・向陽登山口｜台北、台中出發｜山行接駁',
+    seoDesc: '嘉明湖接駁包車：台北、台中出發，送到向陽國家森林遊樂區（台20線南橫 154.5K），嘉明湖國家步道從這裡上山，可訂單程或來回。',
     days: 'multi', dayTags: ['三天'], alt: '3,310 m', drive: '約 7–8 小時',
     trailhead: '向陽（台東海端）', dest: '嘉明湖（向陽登山口）',
     img: { src: 'images/jiaming.webp', alt: '嘉明湖的藍色湖面與草原', w: 880, h: 586 },
