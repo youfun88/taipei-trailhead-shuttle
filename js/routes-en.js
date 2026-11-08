@@ -77,6 +77,8 @@ window.ROUTES_EN = {
     card: { scenery: 'Forest and ridges of Luoyewei and Mawuzuoyejun mountains', audience: 'Hikers with mid-elevation traverse experience', transport: 'Drop-off and pick-up at different ends; your direction affects the price' },
   },
   gaodao: {
+    seoTitle: 'Gaodao traverse (高島縱走) trail shuttle, Taipei/Taichung | Go Hike',
+    seoDesc: 'Gaodao traverse (高島縱走) hiking shuttle from Taipei or Taichung to the Gaotai Mountain trailheads near Nalo village (那羅部落), Jianshi, Hsinchu, on County Road 60.',
     name: 'Gaodao traverse (高島縱走)', sub: 'Cedar forest and mid-elevation ridges',
     trailhead: 'Gaotai Mountain trailheads (高台山)', dayTags: ['Day trip'], dest: 'Gaodao traverse (高島縱走)',
     card: { scenery: 'Cedar forest and ridges from Gaotai to Daotian mountain', audience: 'Hikers ready for a longer forest traverse', transport: 'We confirm the exact entry and exit, and agree your finish time in advance' },
