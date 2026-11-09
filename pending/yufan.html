@@ -108,7 +108,24 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<p>Nothing yet.</p>
+<div class="item" data-item="[Yufan] Qilai title: add 交通">
+<h3>1. [Yufan] Qilai title: add 交通</h3>
+<p><b>Finding:</b> <code>gsc</code> 2026-10-09 to 11-05: "奇萊南華交通" 2 impressions, average position 13.5, 1 click. /routes/qilai/ has 59 impressions at position 9.8; 交通 is in its description but not its title.</p>
+<p><b>Change</b> (branch <code>seo/qilai-transport-title</code>; <code>seoTitle</code> in js/routes.js; title and og:title only, page text unchanged):</p>
+<ul>
+<li><strong>/routes/qilai/ title:</strong><span class="ba was"><b>Before</b>奇萊南華接駁・雲天宮登山口（原屯原）｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>奇萊南華交通接駁・雲天宮登山口（原屯原）｜台北、台中出發｜山行接駁</span></li>
+</ul>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/qilai-transport-title" target="_blank" rel="noopener">Diff</a><a href="/routes/qilai/" target="_blank" rel="noopener">奇萊南華</a></div>
+</div>
+<div class="item" data-item="[Yufan] English Hehuan title: add trail">
+<h3>2. [Yufan] English Hehuan title: add trail</h3>
+<p><b>Finding:</b> <code>gsc</code> 2026-10-09 to 11-05: "hehuanshan east peak trail" 2 impressions, position 11; "hehuanshan main peak trail" 1 impression, position 10; both 0 clicks. /en/routes/hehuan/ has no "trail" in its title.</p>
+<p><b>Change</b> (branch <code>seo/en-hehuan-trail-title</code>; <code>seoTitle</code> in js/routes-en.js; title and og:title only, page text unchanged):</p>
+<ul>
+<li><strong>/en/routes/hehuan/ title:</strong><span class="ba was"><b>Before</b>Hehuanshan Main/East Peak shuttle, Taipei/Taichung | Go Hike</span><span class="ba now"><b>After</b>Hehuanshan Main/East Peak trail shuttle, Taipei/Taichung | Go Hike</span></li>
+</ul>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-hehuan-trail-title" target="_blank" rel="noopener">Diff</a><a href="/en/routes/hehuan/" target="_blank" rel="noopener">Hehuanshan (English)</a></div>
+</div>
 
 <script>
 (function(){
