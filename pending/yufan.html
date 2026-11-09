@@ -108,16 +108,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Xiakaluo A-B title and description: add 一日遊 for day hikes from Taipei">
-<h3>1. [Yufan] Xiakaluo A-B title and description: add 一日遊 for day hikes from Taipei</h3>
-<p><b>Finding:</b> <code>gsc</code> 2026-10-09 to 11-05: "霞喀羅古道一日遊台北出發" 4 impressions, average position 9.75, 0 clicks; <code>signals.positionChanges</code> (11-08 vs 11-07) lists it new in the top 10. /routes/xiakaluo-ab/ has 82 impressions at position 7.8 but a 4.9% click rate, and its title did not say it is a one-day trip.</p>
-<p><b>Change</b> (branch <code>seo/xiakaluo-ab-dayhike</code>; <code>seoTitle</code> and <code>seoDesc</code> in js/routes.js; title, meta and og tags only, page text unchanged; the page already offers 一天來回 and says the official advice is to walk it in one day):</p>
+<div class="item" data-item="[Yufan] 白姑大山 title and description: add 接駁費用">
+<h3>1. [Yufan] 白姑大山 title and description: add 接駁費用</h3>
+<p><b>Finding:</b> <code>gsc</code> 2026-10-09 to 11-05: "白姑大山接駁費用" 2 impressions, average position 7, 0 clicks. /routes/baigu/ has a 白姑大山 title without 費用, while the Xiakaluo and Jiaming pages that lead with 接駁費用 rank in the top 3–10 for their 費用 searches.</p>
+<p><b>Change</b> (branch <code>seo/baigu-fee-title</code>; <code>seoTitle</code> and <code>seoDesc</code> in js/routes.js; title, meta and og tags only, page text unchanged; the price sentence in the description still comes from prices.js):</p>
 <ul>
-<li><strong>/routes/xiakaluo-ab/ title:</strong><span class="ba was"><b>Before</b>霞喀羅古道接駁費用・A 進 B 出包車｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>霞喀羅古道接駁費用・A 進 B 出一日遊包車｜台北、台中出發｜山行接駁</span></li>
-<li><strong>/routes/xiakaluo-ab/ description (start):</strong><span class="ba was"><b>Before</b>霞喀羅古道 A 進 B 出接駁包車：</span><span class="ba now"><b>After</b>霞喀羅古道 A 進 B 出一日遊接駁包車：</span> (the rest is unchanged)</li>
+<li><strong>/routes/baigu/ title:</strong><span class="ba was"><b>Before</b>白姑大山登山接駁・最後農家登山口｜台北出發｜山行接駁</span><span class="ba now"><b>After</b>白姑大山接駁費用・最後農家登山口｜台北出發｜山行接駁</span></li>
+<li><strong>/routes/baigu/ description (start):</strong><span class="ba was"><b>Before</b>白姑大山登山接駁包車：台北出發九人座，</span><span class="ba now"><b>After</b>白姑大山登山接駁費用：台北出發九人座包車，</span> (the rest is unchanged)</li>
 </ul>
-<p><b>Trade-off:</b> the title gets 3 characters longer; Google may shorten it.</p>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/xiakaluo-ab-dayhike">Diff</a><a href="/routes/xiakaluo-ab/">霞喀羅古道 A 進 B 出</a></div>
+<p><b>Trade-off:</b> "登山接駁" leaves the title; "登山接駁費用" is still in the description.</p>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/baigu-fee-title">Diff</a><a href="/routes/baigu/">白姑大山</a></div>
 </div>
 
 <script>
