@@ -26,7 +26,7 @@ This file is generated from the same data as the website. Short version: https:/
 | --- | --- | --- | --- | --- |
 | 玉山（塔塔加） | $6,500 / $12,000 / — | $8,000 / $15,000 / — | $6,000 / $11,000 / — | $7,500 / $14,000 / — |
 | 雪山・武陵四秀 | $5,500 / $11,000 / $9,000 | $7,000 / $14,000 / $12,000 | $6,500 / $13,000 / $12,000 | $7,500 / $15,000 / $13,000 |
-| 合歡山群峰 | $6,000 / $12,000 / — | $7,000 / $14,000 / — | $5,000 / $10,000 / — | $6,000 / $12,000 / — |
+| 合歡山群峰 | $6,000 / $12,000 / — | $7,000 / $14,000 / $12,000 | $5,000 / $10,000 / — | $6,000 / $12,000 / — |
 | 大霸尖山 | $6,000 / $12,000 / — | $7,000 / $14,000 / — | $6,000 / $12,000 / — | $7,000 / $14,000 / — |
 | 南湖大山 | $5,500 / $11,000 / — | $7,000 / $14,000 / — | $6,500 / $13,000 / — | $7,500 / $15,000 / — |
 | 奇萊南華 | $6,000 / $12,000 / — | $7,000 / $14,000 / — | $5,000 / $10,000 / — | $6,000 / $12,000 / — |
@@ -226,7 +226,7 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
 價格（整車，新台幣）：
 - 台北出發・五人座：單程 $6,000、來回 $12,000
-- 台北出發・九人座：單程 $7,000、來回 $14,000
+- 台北出發・九人座：單程 $7,000、來回 $14,000、一天來回 $12,000
 - 台中出發・五人座：單程 $5,000、來回 $10,000
 - 台中出發・九人座：單程 $6,000、來回 $12,000
 
@@ -240,7 +240,7 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 清境到合歡山的公車接駁是南投客運 6658A，從清境農場國民賓館（公車接駁處，統一商場停車場入口處）開到武嶺、松雪樓，終點是小風口。這是南投客運的公車，不是山行接駁的服務。 依南投客運目前的時刻表，一天三班：國民賓館 08:20、11:10、14:30 發車，回程小風口 09:40、12:30、15:50 發車。全票到武嶺 78 元、松雪樓 83 元、小風口 95 元，半票 39、41、48 元（2019 年 7 月實施的票價表）。上車付給司機，不找零，也可以刷悠遊卡或一卡通。 預約只能上網，不接受電話。出發日前 7 天開放，出發前一天中午 12:00 截止；遇到例假日會提早到前一個工作日中午，例如週六到週一的班次，週五中午截止。每人一次最多訂 4 位，訂了沒到會被停權。沒訂到可以到現場排隊候補，客滿就等下一班。 想去賞雪要特別注意：南投客運公告，遇到大霧、大雨、下雪或路面結冰，6658A 可能停駛。出發前請看南投客運和公路局的最新公告。 山行接駁沒有提供清境到合歡山這一段的接駁。如果想從台北、台中直接到登山的停車點，時間和下車地點依行程安排，可以改用山行接駁包車，整車計價。
 
 **台北、台中到合歡山包車多少錢？**
-整車計價，不是按人頭。台北出發：五人座單程 $6,000、來回 $12,000；九人座單程 $7,000、來回 $14,000。台中出發：五人座單程 $5,000、來回 $10,000；九人座單程 $6,000、來回 $12,000。 五人座最多 4 位乘客，九人座最多 8 位乘客。收費表上沒有列的走法（例如當天上下山）請直接詢價。
+整車計價，不是按人頭。台北出發：五人座單程 $6,000、來回 $12,000；九人座單程 $7,000、來回 $14,000、一天來回 $12,000。台中出發：五人座單程 $5,000、來回 $10,000；九人座單程 $6,000、來回 $12,000。 五人座最多 4 位乘客，九人座最多 8 位乘客。收費表上沒有列的走法（例如當天上下山）請直接詢價。
 
 **凌晨出發或下山比較晚，要另外加錢嗎？**
 網站上的價格是指定出發地、車型和走法的整車參考費用，沒有另外列出固定的清晨加價或等候費金額。實際報價會依上車地點、接送時間、停靠需求和行程天數確認。 等候時間、可能產生的額外費用和緊急聯絡方式，都會在預約時先確認；所有額外費用會在預約成立前列明。
@@ -249,7 +249,7 @@ A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 台14甲降雪結冰時，部分路段只開放加掛雪鏈的小客車，結冰的夜裡可能 17:00 到隔天 07:00 預防性封路。2026 年 10 月 24 日起，連續 3 天以上的假日 00:00–08:00，翠峰到大禹嶺的小客車要 3 人以上。 出發前我們會確認路況，遇到管制時會和你討論改到其他集合點或改期；遇封山或官方管制，可於出發前一日取消。
 
 **合歡山遇到濃霧或道路管制怎麼辦？**
-合歡山高海拔路段容易起濃霧、低溫，冬季也可能有道路管制。出發前我們會確認路況；遇到管制時，會和你討論改到其他集合點或改期。
+合歡山高海拔路段容易起濃霧、低溫，冬季也可能有道路管制。出發前我們會確認路況；遇到管制時，會和你討論改到其他集合點或改期。限加掛雪鏈才能通行的日子，需另付雪鏈作業費 $2,000。
 
 **去合歡主峰，車子會停在哪裡？**
 合歡主峰登山口在台14甲約 29.5K，登山口旁沒有停車位，一般在武嶺下車（走約 10 分鐘）或昆陽。北峰從小風口走約 600 公尺到登山口；東峰、石門山從松雪樓、合歡山莊一帶上山。
@@ -834,7 +834,7 @@ Getting there: We can meet you at Wuling Pass (武嶺), Kunyang (昆陽), Xiaofe
 
 Prices (per vehicle, NT$):
 - From Taipei, 5-seat: one way NT$6,000, round trip NT$12,000
-- From Taipei, 9-seat: one way NT$7,000, round trip NT$14,000
+- From Taipei, 9-seat: one way NT$7,000, round trip NT$14,000, same-day return NT$12,000
 - From Taichung, 5-seat: one way NT$5,000, round trip NT$10,000
 - From Taichung, 9-seat: one way NT$6,000, round trip NT$12,000
 
@@ -851,7 +851,7 @@ The bus from Cingjing to Hehuanshan is Nantou Bus 6658A. It runs from the Cingji
 Hehuanshan is on Highway 14A in Ren-ai, Nantou. Where you get off depends on the peak: Wuling Pass or Kunyang for the Main Peak, Xiaofengkou for North Peak, and Songxue Lodge or Hehuan Villa for East Peak and Shimen Mountain. By private shuttle, Go Hike (山行接駁) picks you up at Taichung HSR Station or your address and drives you to that point. By bus, take Nantou Bus from Taichung via Puli to Cingjing Farm, then 6658A, as described above.
 
 **How much is a private shuttle from Taipei or Taichung to Hehuanshan?**
-Prices are per vehicle, not per person. From Taipei: 5-seat one way NT$6,000, round trip NT$12,000; 9-seat one way NT$7,000, round trip NT$14,000. From Taichung: 5-seat one way NT$5,000, round trip NT$10,000; 9-seat one way NT$6,000, round trip NT$12,000. The 5-seat car takes up to 4 passengers and the 9-seat van up to 8. For trip types not in the price table, such as up and down on the same day, ask us for a quote.
+Prices are per vehicle, not per person. From Taipei: 5-seat one way NT$6,000, round trip NT$12,000; 9-seat one way NT$7,000, round trip NT$14,000, same-day return NT$12,000. From Taichung: 5-seat one way NT$5,000, round trip NT$10,000; 9-seat one way NT$6,000, round trip NT$12,000. The 5-seat car takes up to 4 passengers and the 9-seat van up to 8. For trip types not in the price table, such as up and down on the same day, ask us for a quote.
 
 **Is there an extra charge for an early start or for waiting?**
 The prices on this site are per-vehicle reference prices for each departure city, vehicle and trip type. The site does not list a fixed early-morning surcharge or waiting fee. Your final quote depends on the pick-up place, times, stops and number of days. Waiting time, any possible extra cost and the emergency contact are agreed when you book, and any extra cost is listed before the booking is confirmed.
@@ -860,7 +860,7 @@ The prices on this site are per-vehicle reference prices for each departure city
 When there is snow or ice on Highway 14A, some stretches are open only to cars with snow chains, and on icy nights the road may close from 17:00 to 07:00. From October 24, 2026, on every holiday of 3 or more days, cars between Cuifeng and Dayuling need at least 3 people from 00:00 to 08:00. We check road conditions before the trip. If the road is controlled, we discuss another meeting point or a new date with you. If the mountain or road is closed by the authorities, you can cancel up to one day before.
 
 **What happens if there is thick fog or a road closure at Hehuanshan?**
-The high road at Hehuanshan often gets thick fog and cold, and may close in winter. We check road conditions before the trip. If the road is closed, we talk with you about another meeting point or a new date.
+The high road at Hehuanshan often gets thick fog and cold, and may close in winter. We check road conditions before the trip. If the road is closed, we talk with you about another meeting point or a new date. On days when only cars with snow chains may pass, there is a NT$2,000 snow chain fee.
 
 **Where does the car stop for Hehuan Main Peak?**
 The Hehuan Main Peak trailhead is at about 29.5K on Highway 14A, with no parking next to it. Cars usually stop at Wuling Pass (about 10 minutes on foot) or Kunyang. For North Peak, walk about 600 m from Xiaofengkou. East Peak and Shimen Mountain start near Songxue Lodge and Hehuan Villa.

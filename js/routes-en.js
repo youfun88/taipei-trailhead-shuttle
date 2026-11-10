@@ -146,7 +146,7 @@ const ROUTE_PAGES_EN = {
     audience: 'Overseas visitors on their first Taiwan high-mountain hike, groups of friends, and hikers who want a route that fits their level.',
     transport: 'We can meet you at Wuling Pass (武嶺), Kunyang (昆陽), Xiaofengkou (小風口) or other points, to fit your plan. The high road is often affected by thick fog, cold and road closures.',
     labels: ['Easy high-mountain start', 'Day trip or multi-day', 'Popular with overseas visitors'],
-    faq: [{ q: 'What happens if there is thick fog or a road closure at Hehuanshan?', a: 'The high road at Hehuanshan often gets thick fog and cold, and may close in winter. We check road conditions before the trip. If the road is closed, we talk with you about another meeting point or a new date.' }],
+    faq: [{ q: 'What happens if there is thick fog or a road closure at Hehuanshan?', a: 'The high road at Hehuanshan often gets thick fog and cold, and may close in winter. We check road conditions before the trip. If the road is closed, we talk with you about another meeting point or a new date. On days when only cars with snow chains may pass, there is a NT$2,000 snow chain fee.' }],
   },
   dabajian: {
     scenery: "Dabajian's barrel-shaped summit and the Holy Ridge (聖稜線) are among Taiwan's best-known mountain views.",

@@ -6,7 +6,7 @@
 window.PRICES = [
   { key: 'yushan',   name: '玉山（塔塔加）', taipei: { five: [6500, 12000, null], nine: [8000, 15000, null] },   taichung: { five: [6000, 11000, null], nine: [7500, 14000, null] } },
   { key: 'xueshan',  name: '雪山・武陵四秀', taipei: { five: [5500, 11000, 9000], nine: [7000, 14000, 12000] }, taichung: { five: [6500, 13000, 12000], nine: [7500, 15000, 13000] } },
-  { key: 'hehuan',   name: '合歡山群峰',     taipei: { five: [6000, 12000, null], nine: [7000, 14000, null] },   taichung: { five: [5000, 10000, null], nine: [6000, 12000, null] } },
+  { key: 'hehuan',   name: '合歡山群峰',     taipei: { five: [6000, 12000, null], nine: [7000, 14000, 12000] },   taichung: { five: [5000, 10000, null], nine: [6000, 12000, null] } },
   { key: 'dabajian', name: '大霸尖山',       taipei: { five: [6000, 12000, null], nine: [7000, 14000, null] },   taichung: { five: [6000, 12000, null], nine: [7000, 14000, null] } },
   { key: 'nanhu',    name: '南湖大山',       taipei: { five: [5500, 11000, null], nine: [7000, 14000, null] },   taichung: { five: [6500, 13000, null], nine: [7500, 15000, null] } },
   { key: 'qilai',    name: '奇萊南華',       taipei: { five: [6000, 12000, null], nine: [7000, 14000, null] },   taichung: { five: [5000, 10000, null], nine: [6000, 12000, null] } },
