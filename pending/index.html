@@ -100,7 +100,7 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 <h1>待審閱草稿 · Drafts for review</h1>
 <p>山行接駁 Go Hike 網站更新的草稿，給網站負責人審閱。網站上沒有連結，搜尋引擎也不會收錄。確認後才會上線。每份草稿下方可以按「同意上線」或「需要修改」並留下意見。</p>
 <p>Website updates for the owner to review. Not linked from the site and not indexed. Nothing goes live until approved.</p>
-<p class="updated">Updated 2026-11-09.</p>
+<p class="updated">Updated 2026-11-10.</p>
 
 <!-- review-ui (/pending/review-ui.js + .css, shared by /pending and /pending/yufan):
   - Language: an EN / 中文 switch shows one language. Write every explanation, note, label and question twice, each in
@@ -133,19 +133,12 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 <summary>想修改網站嗎？ · Suggest a change</summary>
 <p>隨時都可以在這裡告訴我們想改什麼，例如文字、價格或新的內容。系統每 8 小時會處理一次：簡單的修改會直接更新，較大的內容會先放到這頁讓您確認。Tell us anything you'd like changed. It's handled every 8 hours: simple edits go live, and bigger content comes back here for your OK first.</p>
 </details>
-<div class="item" data-item="Questions" data-type="question">
-<h3>想請您確認 · Questions</h3>
-<p>寫新文章時有幾件事網站上沒寫，想請您確認（回答後我們再補進文章；沒回答的部分文章不會提）：</p>
-<ol class="q">
-<li>合歡山下雪時，公路局常常「限加掛雪鏈的小客車」通行。我們的車有雪鏈嗎？這種日子還能送上山嗎？ <span lang="en">When Highway 14A is chains-only, do your vehicles carry snow chains and still go up?</span></li>
-<li>合歡山賞雪「當天來回」（早上送上去、下午接下來）怎麼收費？網站目前合歡山只有單程和來回（兩天）的價格。 <span lang="en">What is the same-day return price for a Hehuanshan snow trip?</span></li>
-<li>婚紗包車的 4 小時是從什麼時候開始算？（到第一個上車地點、還是出發就開始？車程算在 4 小時裡嗎？） <span lang="en">When do the 4 hours of wedding car hire start, and do they include driving time?</span></li>
-</ol>
-</div>
 <div class="item" data-item="新文章：合歡山賞雪接駁車怎麼搭？（6658A 公車與包車）" data-type="new" data-status="review">
 <h3>1. 新文章：合歡山賞雪接駁車怎麼搭？（6658A 公車與包車）</h3>
 <p><b>為什麼要寫：</b>Yufan 在後台按了「產生文章」（request 104）。每月約 140 次搜尋「合歡山賞雪接駁車」（難度 0），另外約 110 次搜尋「合歡山 賞 雪 接 駁 車」（同一個主題，所以合在這一篇）。網站目前的合歡山頁是寫登山，沒有專門回答賞雪怎麼去。</p>
-<p><b>內容（中英文，整篇都是新的）：</b>第一段直接回答：搭南投客運 6658A 或包車；6658A 的班次、票價、預約規則與「下雪結冰可能停駛」（南投客運官網今天再查過）；下雪時台14甲的雪鏈、夜間預防性封路、週末高乘載管制；台北、台中包車價格（網站現有價格）；下車點和停車費；4 題常見問題。事實都來自網站現有的合歡山頁和其官方出處，文末列出來源。沒有寫我們的車有沒有雪鏈（見上方問題 1）。</p>
+<p><b>內容（中英文，整篇都是新的）：</b>第一段直接回答：搭南投客運 6658A 或包車；6658A 的班次、票價、預約規則與「下雪結冰可能停駛」（南投客運官網今天再查過）；下雪時台14甲的雪鏈、夜間預防性封路、週末高乘載管制；台北、台中包車價格（網站現有價格）；下車點和停車費；4 題常見問題。事實都來自網站現有的合歡山頁和其官方出處，文末列出來源。</p>
+<p lang="zh-Hant"><b>11/10 依您的回答補上（文中黃色標示）：</b>限加掛雪鏈通行時另付雪鏈作業費 $2,000；台北出發九人座當天來回 $12,000（五人座、台中出發的當天來回寫「請直接詢價」）；常見問題多一題「合歡山賞雪當天來回包車多少錢？」。</p>
+<p lang="en"><b>Added 11/10 from your answers (yellow in the draft):</b> NT$2,000 snow chain fee on chains-only days; same-day return from Taipei, 9-seat van, NT$12,000 (5-seat and Taichung same-day: ask for a quote); a new FAQ on the same-day price.</p>
 <p><b>上線後：</b>網址 /articles/hehuan-snow-shuttle/ 和 /en/articles/hehuan-snow-shuttle/，從合歡山路線頁連過去。照片 YangChen(TW)，CC BY 2.0。</p>
 <div class="links"><a href="/pending/articles/hehuan-snow-shuttle/" target="_blank" rel="noopener">預覽（中文）</a><a href="/pending/articles/hehuan-snow-shuttle/en/" target="_blank" rel="noopener">Preview (English)</a><a href="/routes/hehuan/" target="_blank" rel="noopener">現在的合歡山頁</a></div>
 </div>
@@ -161,10 +154,36 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 <h3>3. 新文章：婚紗包車怎麼算？（費用試算與預約準備）</h3>
 <p><b>為什麼要寫：</b>「產生文章」request 104 的自訂主題「婚紗包車」。網站已經有婚紗包車頁 /wedding/，所以這篇不重複價目表的介紹，而是回答「怎麼算」：用網站公布的費率試算超時、整理預約要準備的資料，並連回婚紗包車頁。</p>
 <p><b>請特別看：</b><span style="background:#fff3b0">黃色標示</span>的是用您公布的費率算出來的三個例子（例如台北地區拍 5 小時 $2,500 ＋ $500 ＝ $3,000），請確認算法對不對。如果您覺得和婚紗包車頁太像、不需要這篇，按「需要修改」寫「不要」即可。</p>
+<p lang="zh-Hant"><b>11/10 依您的回答補上（文中黃色標示）：</b>4 小時從預約的出發時間開始算，另有 30 分鐘等候時間不計費（用您的例子：預約 10 點出發）；常見問題多一題「婚紗包車的 4 小時從什麼時候開始算？」。</p>
+<p lang="en"><b>Added 11/10 from your answers (yellow in the draft):</b> the 4 hours start at the booked departure time, with 30 minutes of waiting free (your 10:00 example); a new FAQ on when the hours start.</p>
 <p><b>上線後：</b>網址 /articles/wedding-car-hire-guide/ 和英文版，從婚紗包車頁連過去。照片是我們自己的九人座。</p>
 <div class="links"><a href="/pending/articles/wedding-car-hire-guide/" target="_blank" rel="noopener">預覽（中文）</a><a href="/pending/articles/wedding-car-hire-guide/en/" target="_blank" rel="noopener">Preview (English)</a><a href="/wedding/" target="_blank" rel="noopener">現在的婚紗包車頁</a></div>
 </div>
 
+<div class="item" data-item="更新合歡山頁：台北九人座一天來回 $12,000 與雪鏈作業費" data-type="update" data-page="Hehuanshan" data-page-zh="合歡山群峰" data-status="review">
+<h3>4. 更新合歡山頁：台北九人座一天來回 $12,000 與雪鏈作業費</h3>
+<p lang="zh-Hant"><b>為什麼：</b>您在 11/10 回答問題時說：限加掛雪鏈通行時需另付雪鏈作業費 $2,000；台北到合歡山九人座當天來回 $12,000。這兩件事目前只寫進上面的賞雪文章草稿，合歡山路線頁（Search Console 近 28 天 90 次曝光，是曝光最多的路線頁之一）和收費表上還沒有。這一項是把它們放上合歡山頁和首頁收費表，中英文都改。</p>
+<p lang="en"><b>Why:</b> In your 11/10 answers you gave a NT$2,000 snow chain fee on chains-only days and NT$12,000 for a same-day return from Taipei in the 9-seat van. So far they are only in the snow-trip article draft above, not on the Hehuanshan route page (90 Google impressions in the last 28 days) or the price table. This item adds them there, in Chinese and English.</p>
+<ul>
+<li><strong lang="zh-Hant">收費表（合歡山頁和首頁）台北出發・九人座「一天來回」：</strong><strong lang="en">Price table (Hehuanshan page and home page), From Taipei · 9-seat, same-day return:</strong><span class="ba was"><b>Before</b>—</span><span class="ba now"><b>After</b>$12,000</span></li>
+<li><strong lang="zh-Hant">價格說明：</strong><strong lang="en">Price line:</strong><span class="ba was"><b>Before</b>九人座單程 $7,000、來回 $14,000。</span><span class="ba now"><b>After</b>九人座單程 $7,000、來回 $14,000、一天來回 $12,000。</span></li>
+<li><strong lang="zh-Hant">常見問題「合歡山遇到濃霧或道路管制怎麼辦？」：</strong><strong lang="en">FAQ "fog or road closure":</strong><span class="ba was"><b>Before</b>出發前我們會確認路況；遇到管制時，會和你討論改到其他集合點或改期。</span><span class="ba now"><b>After</b>出發前我們會確認路況；遇到管制時，會和你討論改到其他集合點或改期。限加掛雪鏈才能通行的日子，需另付雪鏈作業費 $2,000。</span></li>
+<li><strong lang="zh-Hant">英文版同一題：</strong><strong lang="en">Same FAQ in English:</strong><span class="ba was"><b>Before</b>If the road is closed, we talk with you about another meeting point or a new date.</span><span class="ba now"><b>After</b>If the road is closed, we talk with you about another meeting point or a new date. On days when only cars with snow chains may pass, there is a NT$2,000 snow chain fee.</span></li>
+</ul>
+<p lang="zh-Hant"><b>請確認：</b>五人座和台中出發的「一天來回」維持「—」（請直接詢價）。雪鏈作業費是每台車一次 $2,000 嗎？如果不是，請按「需要修改」告訴我們。</p>
+<p lang="en"><b>Please check:</b> same-day return for the 5-seat car and from Taichung stays "—" (ask for a quote). Is the snow chain fee NT$2,000 per vehicle per trip? If not, tell us with "Request changes".</p>
+<div class="links"><a href="/pending/routes/hehuan/" target="_blank" rel="noopener">預覽（中文）</a><a href="/pending/routes/hehuan/en/" target="_blank" rel="noopener">Preview (English)</a><a href="/routes/hehuan/" target="_blank" rel="noopener">現在的合歡山頁</a></div>
+</div>
+<div class="item" data-item="更新婚紗包車頁：4 小時從出發時間起算、30 分鐘等候不計費" data-type="update" data-page="Wedding photo shoot charter" data-page-zh="婚紗包車" data-status="review">
+<h3>5. 更新婚紗包車頁：4 小時從出發時間起算、30 分鐘等候不計費</h3>
+<p lang="zh-Hant"><b>為什麼：</b>您在 11/10 回答：婚紗包車從預約的出發時間開始算，有 30 分鐘等候時間不計費。這件事目前只寫進上面的婚紗文章草稿；婚紗包車頁本身（中英文）的「超時和其他費用怎麼算？」還沒有，客人最常問的就是時間怎麼算。</p>
+<p lang="en"><b>Why:</b> In your 11/10 answers: wedding hire time starts at the booked departure time, with 30 minutes of waiting free. So far this is only in the wedding article draft above, not on the wedding page itself (Chinese and English), under "How are extra time and other costs charged?".</p>
+<ul>
+<li><strong lang="zh-Hant">婚紗包車頁「超時和其他費用怎麼算？」新增一點：</strong><strong lang="en">New bullet on /wedding/:</strong><span class="ba now"><b>After</b>4 小時從預約的出發時間開始算，另有 30 分鐘等候時間不計費。例如預約 10 點從指定地點出發，就從 10 點起算，等候的 30 分鐘不另外收費。</span></li>
+<li><strong lang="zh-Hant">英文頁同一處：</strong><strong lang="en">Same place on /en/wedding/:</strong><span class="ba now"><b>After</b>The 4 hours start at the booked departure time, and up to 30 minutes of waiting is free. For example, for a 10:00 departure from your chosen address, the clock starts at 10:00 and the 30 minutes of waiting are not charged.</span></li>
+</ul>
+<div class="links"><a href="/pending/wedding/" target="_blank" rel="noopener">預覽（中文）</a><a href="/pending/wedding/en/" target="_blank" rel="noopener">Preview (English)</a><a href="/wedding/" target="_blank" rel="noopener">現在的婚紗包車頁</a></div>
+</div>
 <script>
 (function(){
   var API='https://admin.shiptolive.com/api/contact';

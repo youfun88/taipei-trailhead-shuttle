@@ -126,27 +126,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] Hehuan title: add 交通" data-type="setting" data-status="approved" data-approved="2026-11-10">
-<h3>1. [Yufan] Hehuan title: add 交通</h3>
-<p lang="zh-Hant"><b>依據：</b>Search Console 2026-10-10 至 11-06：「台北到合歡山交通」1 次曝光、平均排名 14、1 次點擊。/routes/hehuan/ 有 90 次曝光、排名 9.4，標題沒有「交通」。</p>
-<p lang="en"><b>Finding:</b> <code>gsc</code> 2026-10-10 to 11-06: "台北到合歡山交通" 1 impression, position 14, 1 click. /routes/hehuan/ has 90 impressions at position 9.4; its title has no 交通.</p>
-<p lang="zh-Hant"><b>改了什麼：</b>分支 <code>seo/hehuan-transport-title</code>，js/routes.js 的 <code>seoTitle</code>；只改 title 和 og:title，頁面文字不變，「合歡山接駁車」保持連在一起。</p>
-<p lang="en"><b>Change</b> (branch <code>seo/hehuan-transport-title</code>; <code>seoTitle</code> in js/routes.js; title and og:title only, page text unchanged; keeps 合歡山接駁車 together):</p>
+<div class="item" data-item="[Yufan] English wedding title: 4 Hours (was 5)" data-type="setting" data-status="approved" data-approved="2026-11-10">
+<h3>1. [Yufan] English wedding title: 4 Hours (was 5)</h3>
+<p lang="zh-Hant"><b>依據：</b>本次檢查發現：英文婚紗包車頁的 title、og:title 和 WebPage 結構化資料還寫「5 Hours from NT$2,500」，但頁面內文、中文頁和價目表都是 4 小時（業主在 commit 759e6e8 把基本費改成 4 小時，當時漏改英文標題）。搜尋結果和 AI 助理可能會引用錯的時數。</p>
+<p lang="en"><b>Finding:</b> found this run: the /en/wedding/ title, og:title and WebPage schema name still say "5 Hours from NT$2,500", while the page text, the Chinese page and the price table say 4 hours (the base fee became 4 hours in 759e6e8; the English title was missed). Search results and AI answers could quote the wrong hours.</p>
+<p lang="zh-Hant"><b>改了什麼：</b>分支 <code>seo/en-wedding-title-4h</code>，只改 en/wedding/index.html 的這三處，頁面文字不變。</p>
+<p lang="en"><b>Change</b> (branch <code>seo/en-wedding-title-4h</code>; those three places in en/wedding/index.html only, page text unchanged):</p>
 <ul>
-<li><strong>/routes/hehuan/ title:</strong><span class="ba was"><b>Before</b>合歡山接駁車・登山包車｜台北、台中出發｜山行接駁</span><span class="ba now"><b>After</b>合歡山接駁車・登山交通包車｜台北、台中出發｜山行接駁</span></li>
+<li><strong>/en/wedding/ title, og:title, schema name:</strong><span class="ba was"><b>Before</b>Wedding Photo Shoot Van Hire in Taiwan | 5 Hours from NT$2,500 | Go Hike</span><span class="ba now"><b>After</b>Wedding Photo Shoot Van Hire in Taiwan | 4 Hours from NT$2,500 | Go Hike</span></li>
 </ul>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/hehuan-transport-title" target="_blank" rel="noopener">Diff</a><a href="/routes/hehuan/" target="_blank" rel="noopener">合歡山</a></div>
-</div>
-<div class="item" data-item="[Yufan] English Dabajian title: add 大霸尖山, trail, Guanwu" data-type="setting" data-status="approved" data-approved="2026-11-10">
-<h3>2. [Yufan] English Dabajian title: add 大霸尖山, trail, Guanwu</h3>
-<p lang="zh-Hant"><b>依據：</b>Search Console 2026-10-10 至 11-06：「dabajian」3 次曝光、平均排名 11.3、0 次點擊。英文大霸尖山頁的標題沒有中文山名、trail 或下車點觀霧（描述和頁面內文都有）。</p>
-<p lang="en"><b>Finding:</b> <code>gsc</code> 2026-10-10 to 11-06: "dabajian" 3 impressions, position 11.3, 0 clicks. The /en/routes/dabajian/ title had no Chinese name, no "trail" and no Guanwu drop-off (all already in its description and page text).</p>
-<p lang="zh-Hant"><b>改了什麼：</b>分支 <code>seo/en-dabajian-trail-title</code>，js/routes-en.js 新增 <code>seoTitle</code>；只改 title 和 og:title，頁面文字不變。</p>
-<p lang="en"><b>Change</b> (branch <code>seo/en-dabajian-trail-title</code>; new <code>seoTitle</code> in js/routes-en.js; title and og:title only, page text unchanged):</p>
-<ul>
-<li><strong>/en/routes/dabajian/ title:</strong><span class="ba was"><b>Before</b>Dabajian hiking shuttle from Taipei &amp; Taichung | Go Hike</span><span class="ba now"><b>After</b>Dabajian (大霸尖山) trail shuttle to Guanwu, Taipei/Taichung | Go Hike</span></li>
-</ul>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-dabajian-trail-title" target="_blank" rel="noopener">Diff</a><a href="/en/routes/dabajian/" target="_blank" rel="noopener">Dabajian (English)</a></div>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-wedding-title-4h" target="_blank" rel="noopener">Diff</a><a href="/en/wedding/" target="_blank" rel="noopener">Wedding (English)</a></div>
 </div>
 
 <script>
