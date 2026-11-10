@@ -130,16 +130,16 @@ document.querySelector('.tab-close').addEventListener('click',function(){
 </div>
 -->
 <h2>Waiting for approval</h2>
-<div class="item" data-item="[Yufan] English wedding title: 4 Hours (was 5)" data-type="setting" data-status="approved" data-approved="2026-11-10">
-<h3>1. [Yufan] English wedding title: 4 Hours (was 5)</h3>
-<p lang="zh-Hant"><b>依據：</b>本次檢查發現：英文婚紗包車頁的 title、og:title 和 WebPage 結構化資料還寫「5 Hours from NT$2,500」，但頁面內文、中文頁和價目表都是 4 小時（業主在 commit 759e6e8 把基本費改成 4 小時，當時漏改英文標題）。搜尋結果和 AI 助理可能會引用錯的時數。</p>
-<p lang="en"><b>Finding:</b> found this run: the /en/wedding/ title, og:title and WebPage schema name still say "5 Hours from NT$2,500", while the page text, the Chinese page and the price table say 4 hours (the base fee became 4 hours in 759e6e8; the English title was missed). Search results and AI answers could quote the wrong hours.</p>
-<p lang="zh-Hant"><b>改了什麼：</b>分支 <code>seo/en-wedding-title-4h</code>，只改 en/wedding/index.html 的這三處，頁面文字不變。</p>
-<p lang="en"><b>Change</b> (branch <code>seo/en-wedding-title-4h</code>; those three places in en/wedding/index.html only, page text unchanged):</p>
+<div class="item" data-item="[Yufan] English Yushan title: add Jade Mountain" data-type="setting" data-status="approved" data-approved="2026-11-10">
+<h3>1. [Yufan] English Yushan title: add Jade Mountain</h3>
+<p lang="zh-Hant"><b>依據：</b>Search Console（2026-10-10 至 11-06）：英文玉山頁 /en/routes/yushan/ 有 106 次曝光、平均排名 11.1，點閱率只有 1.9%，是曝光最多的頁面裡點閱率最低的。相關搜尋「how to get to yushan from taipei」3 次、排名 6.7，「taipei to yushan」3 次、排名 8，都沒有點擊。標題沒有外國旅客常用的 Jade Mountain（說明裡有）。</p>
+<p lang="en"><b>Finding:</b> Search Console (2026-10-10 to 11-06): /en/routes/yushan/ has 106 impressions, position 11.1, CTR 1.9%, the lowest CTR of the most-shown pages. Queries "how to get to yushan from taipei" 3 impressions, position 6.7, and "taipei to yushan" 3, position 8, no clicks. The title lacks "Jade Mountain", the name many visitors use (the description has it).</p>
+<p lang="zh-Hant"><b>改了什麼：</b>分支 <code>seo/en-yushan-jade-title</code>，只改 js/routes-en.js 的 seoTitle，頁面文字不變。</p>
+<p lang="en"><b>Change</b> (branch <code>seo/en-yushan-jade-title</code>; seoTitle in js/routes-en.js only, page text unchanged):</p>
 <ul>
-<li><strong>/en/wedding/ title, og:title, schema name:</strong><span class="ba was"><b>Before</b>Wedding Photo Shoot Van Hire in Taiwan | 5 Hours from NT$2,500 | Go Hike</span><span class="ba now"><b>After</b>Wedding Photo Shoot Van Hire in Taiwan | 4 Hours from NT$2,500 | Go Hike</span></li>
+<li><strong>/en/routes/yushan/ title:</strong><span class="ba was"><b>Before</b>Taipei to Yushan hiking shuttle, or from Taichung | Go Hike</span><span class="ba now"><b>After</b>Taipei to Yushan (Jade Mountain) shuttle, or from Taichung | Go Hike</span></li>
 </ul>
-<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-wedding-title-4h" target="_blank" rel="noopener">Diff</a><a href="/en/wedding/" target="_blank" rel="noopener">Wedding (English)</a></div>
+<div class="links"><a href="https://github.com/youfun88/taipei-trailhead-shuttle/compare/main...seo/en-yushan-jade-title" target="_blank" rel="noopener">Diff</a><a href="/en/routes/yushan/" target="_blank" rel="noopener">Yushan (English)</a></div>
 </div>
 
 <script>
