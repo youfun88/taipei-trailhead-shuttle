@@ -642,3 +642,7 @@ h3 { font-size: 1.2rem; font-weight: 700; line-height: 1.4; }
 .route-page__qa .eyebrow + .route-page__q { margin-top: 10px; }
 .route-page__qa p { margin-top: 10px; }
 .route-page__qa .route-page__note { margin-top: 8px; }
+
+/* 2026-11-11：暫停接受詢價。隱藏詢價表單、所有連到表單的按鈕與連結，以及手機底部按鈕列。恢復時刪掉這一段。 */
+#book, #quoteForm, .dock, a[href*="#book"] { display: none !important; }
+body, body.page { padding-bottom: 0 !important; }
