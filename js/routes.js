@@ -165,6 +165,7 @@ window.ROUTES = [
   },
   {
     key: 'taman', name: '塔曼山', sub: '北台灣的高山森林漫步',
+    seoTitle: '塔曼山交通・登山接駁包車｜台北、台中出發｜山行接駁',
     days: 'day', dayTags: ['當日來回'], alt: '2,130 m',
     trailhead: '拉拉山地區登山口（桃園復興）', dest: '塔曼山',
     card: { scenery: '原始森林、苔蘚與樹根交錯的山徑', audience: '喜歡森林攝影、自然觀察的健行旅客', transport: '拉拉山地區進出；先確認車輛可到位置' },
