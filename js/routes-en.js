@@ -53,7 +53,7 @@ window.ROUTES_EN = {
     card: { scenery: 'Wide alpine grass slopes, ridges and a sea of clouds', audience: 'Hikers moving up from longer hikes to the Baiyue (百岳)', transport: 'Drop-off at Tunyuan; check that the Nenggao road (能高越嶺) is open' },
   },
   jiaming: {
-    seoTitle: 'Jiaming Lake National Trail shuttle, Taipei/Taichung | Go Hike',
+    seoTitle: 'Jiaming Lake (嘉明湖) National Trail shuttle, Taipei/Taichung | Go Hike',
     seoDesc: 'Jiaming Lake National Trail hiking shuttle from Taipei or Taichung: drop-off at Xiangyang National Forest Recreation Area (Highway 20, 154.5K), where the trail to Xiangyang Cabin starts.',
     name: 'Jiaming Lake (嘉明湖)', sub: 'A blue lake high in the mountains',
     trailhead: 'Xiangyang (向陽), Haiduan, Taitung', drive: 'About 7–8 hours', dayTags: ['3 days'],
