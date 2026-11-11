@@ -65,7 +65,7 @@ English route pages (trailhead, drive time, prices, FAQ):
 
 ## 頁面
 
-- [首頁：路線、價格、詢價表單、常見問題](https://gohike.tw/)
+- [首頁：路線、價格、常見問題](https://gohike.tw/)
 - [English: hiking shuttle routes, prices and booking](https://gohike.tw/en/)
 - [完整版給 AI 的資料：每條路線的介紹、價格與常見問題（中英文）](https://gohike.tw/llms-full.txt)
 - [玉山主峰登山接駁：挑戰台灣第一高峰，接送地點、價格與常見問題](https://gohike.tw/routes/yushan/)

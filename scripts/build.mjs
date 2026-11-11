@@ -48,7 +48,7 @@ const routeNames = [...new Set(priced.map((r) => r.name.replace(/（.*?）/, '')
 
 const description =
   `${SITE.brand}提供台北、台中出發的登山接駁包車，專車直達${priced.slice(0, 5).map((r) => r.name.replace(/（.*?）/, '')).join('、')}等高山登山口，下山再接你回家。` +
-  `五人座、九人座整車計價，單程 NT$${lowestText} 起，各路線價格公開，歡迎用 LINE 或線上表單詢價。`;
+  `五人座、九人座整車計價，單程 NT$${lowestText} 起，各路線價格公開。`;
 
 // ---- 產生各區塊 ----
 function cardPrice(route) {
@@ -375,8 +375,7 @@ function routePage({ rt, route, credit }) {
     (rt.seoDesc || `${name}登山接駁包車：${rt.sub}。台北、台中出發，接送地點：${rt.trailhead}。`) +
     (isPriced(route)
       ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('，') + '，整車計價。'
-      : '整車計價，歡迎詢價。') +
-    '歡迎用 LINE 或線上表單詢價。';
+      : '整車計價。');
   const answers = answerList(rt.answers, route, 'zh');
   const faq = [...rt.faq, ...(isPriced(route) ? [{ q: `${route.name}登山接駁多少錢？`, a: priceAnswer(route) }] : []), ...sharedFaq];
   const faqLd = [...answerFaq(answers), ...faq];
@@ -561,7 +560,7 @@ ${rows.join('\n')}
           </table>
         </div>
         <p class="route-page__note route-page__pay"><b>付款與取消</b>訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。出發三日前通知可全額退費取消或改期，遇封山或官方管制可於出發前一日取消。<a href="/#payment">付款與取消說明</a></p>
-        <p class="route-page__note">${isPriced(route) ? '「—」表示沒有這種走法，可以直接詢價。' : '這條路線依行程報價，歡迎詢價。'}預約時請告訴我們日期、人數和上車地點，也可以用<a href="${esc(ask)}">線上詢價表單</a>。</p>
+        <p class="route-page__note">${isPriced(route) ? '「—」表示沒有這種走法，可以直接詢價。' : '這條路線依行程報價，歡迎詢價。'}</p>
       </div>
     </section>
 
@@ -896,8 +895,7 @@ function enRoutePage(rt) {
     `Private hiking shuttle to ${short} from Taipei or Taichung. ${en.sub}. Drop-off at ${en.trailhead}. ` +
     (isPriced(route)
       ? 'Per vehicle: ' + Object.keys(ORIGINS).map((o) => (enFromPrice(route, o) ? `${EN_ORIGINS[o].replace(/^From/, 'from')}, ${enFromPrice(route, o)}` : '')).filter(Boolean).join('; ') + '.'
-      : 'Priced per vehicle; ask us for a quote.') +
-    ' Ask on WhatsApp, LINE or with the online form.';
+      : 'Priced per vehicle.');
   const answers = answerList(en.answers, route, 'en');
   const faq = [...en.faq, ...(isPriced(route) ? [{ q: `How much is a hiking shuttle to ${short}?`, a: enPriceAnswer(route) }] : []), ...enSharedFaq];
   const faqLd = [...answerFaq(answers), ...faq];
@@ -1087,7 +1085,7 @@ ${rows.join('\n')}
           </table>
         </div>
         <p class="route-page__note route-page__pay"><b>Payment and cancellation</b>Pay the deposit by bank transfer or LINE Pay; overseas visitors can use PayPal. The balance is paid in New Taiwan dollars, in cash or by bank transfer. Tell us at least three days before departure for a full refund or a new date. If the mountain or road is closed by the authorities, you can cancel up to one day before. <a href="/en/#payment">Payment and cancellation details</a></p>
-        <p class="route-page__note">${isPriced(route) ? '"—" means we don\'t offer that trip type here; ask us for a quote. ' : 'This route is quoted per trip; ask us for a price. '}When you book, tell us your dates, number of hikers and pick-up place, or use the <a href="${esc(ask)}">online inquiry form</a>.</p>
+        <p class="route-page__note">${isPriced(route) ? '"—" means we don\'t offer that trip type here; ask us for a quote. ' : 'This route is quoted per trip; ask us for a price. '}</p>
       </div>
     </section>
 
@@ -1276,7 +1274,7 @@ ${ROUTES.map((rt) => `- [${ROUTES_EN[rt.key].name} hiking shuttle: ${ROUTES_EN[r
 
 ## 頁面
 
-- [首頁：路線、價格、詢價表單、常見問題](${URL})
+- [首頁：路線、價格、常見問題](${URL})
 - [English: hiking shuttle routes, prices and booking](${EN_URL})
 - [完整版給 AI 的資料：每條路線的介紹、價格與常見問題（中英文）](${URL}llms-full.txt)
 ${routePages.map((x) => `- [${x.rt.name}登山接駁：${x.rt.sub}，接送地點、價格與常見問題](${routeUrl(x.rt.key)})`).join('\n')}
