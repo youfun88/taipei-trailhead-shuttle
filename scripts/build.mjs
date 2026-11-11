@@ -126,7 +126,7 @@ function routeCard(rt) {
 const about =
   `${SITE.brand}是台北、台中出發的登山接駁包車服務，接送${routeNames}等登山口，` +
   `提供五人座（最多 4 位乘客）與九人座（最多 8 位乘客）兩種車型，整車計價。` +
-  `詢價請用 LINE（ID ${SITE.lineId}）、WhatsApp、Email（${SITE.email}）或網站上的詢價表單。`;
+  (SITE.lineId ? `詢價請用 LINE（ID ${SITE.lineId}）、WhatsApp、Email（${SITE.email}）或網站上的詢價表單。` : '');
 
 // 首頁常見問題（<!-- faq:start --> 到 <!-- faq:end --> 之間）
 const pageFaq = (html) =>
@@ -149,7 +149,7 @@ const businessFacts = {
   url: URL,
   logo: LOGO,
   image: BUSINESS_IMAGES,
-  email: SITE.email,
+  email: SITE.email || undefined,
   priceRange: PRICE_RANGE,
   currenciesAccepted: 'TWD',
   paymentAccepted: 'Cash, Bank transfer, LINE Pay, PayPal',
@@ -204,7 +204,7 @@ function jsonLd(html) {
       ...businessFacts,
       description,
       areaServed: ['台北市', '新北市', '台中市'].map((name) => ({ '@type': 'City', name })),
-      contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: URL + '#book', contactType: 'reservations', availableLanguage: ['zh-Hant-TW', 'en'] },
+      contactPoint: SITE.email ? { '@type': 'ContactPoint', email: SITE.email, url: URL + '#book', contactType: 'reservations', availableLanguage: ['zh-Hant-TW', 'en'] } : undefined,
       hasOfferCatalog: { '@type': 'OfferCatalog', name: '登山接駁路線與價格', itemListElement: offers },
     },
     {
@@ -231,13 +231,18 @@ function staticContacts(page) {
     if (has(attrs, 'data-social') && (SITE.instagramUrl || SITE.facebookUrl)) return `<${name}${attrs.replace(/\shidden\b/, '')}>`;
     if (/\sid="contactBox"/.test(attrs) && (SITE.lineUrl || SITE.whatsapp || SITE.email)) return `<${name}${attrs.replace(/\shidden\b/, '')}>`;
     const key = Object.keys(CONTACT_LINKS).find((k) => has(attrs, k));
-    if (!key || !CONTACT_LINKS[key]) return tag;
+    if (!key) return tag;
+    if (!CONTACT_LINKS[key]) return `<${name}${attrs.replace(/\s(href|target|rel)="[^"]*"/g, '').replace(/\shidden\b/, '')} hidden>`;
     let a = attrs.replace(/\shidden\b/, '');
     if (name !== 'a') return `<${name}${a}>`;
     const url = CONTACT_LINKS[key];
     a = a.replace(/\s(href|target|rel)="[^"]*"/g, '');
     return `<a${a} href="${esc(url)}"${url.startsWith('mailto:') ? '' : ' target="_blank" rel="noopener"'}>`;
   });
+  if (!(SITE.lineUrl || SITE.whatsapp || SITE.email)) page = page.replace(/<(\w+)([^>]*\sid="contactBox"[^>]*)>/, (t, n, a) => (/\shidden\b/.test(a) ? t : `<${n}${a} hidden>`));
+  if (!(SITE.instagramUrl || SITE.facebookUrl)) page = page.replace(/<(\w+)([^>]*\sdata-social\b[^>]*)>/g, (t, n, a) => (/\shidden\b/.test(a) ? t : `<${n}${a} hidden>`));
+  page = page.replace(/(<(b|span) data-line-id>)[^<]*(<\/\2>)/g, (_, a, t, c) => a + esc(SITE.lineId || '') + c);
+  page = page.replace(/(<(b|span) data-email>)[^<]*(<\/\2>)/g, (_, a, t, c) => a + esc(SITE.email || '') + c);
   if (SITE.lineId) page = page.replace(/(<(b|span) data-line-id>)[^<]*(<\/\2>)/g, (_, a, t, c) => a + esc(SITE.lineId) + c);
   if (SITE.email) page = page.replace(/(<(b|span) data-email>)[^<]*(<\/\2>)/g, (_, a, t, c) => a + esc(SITE.email) + c);
   return page;
@@ -325,7 +330,7 @@ function fillAnswer(text, route, lang) {
   return text
     .replace(/\{\{price:(taipei|taichung)\}\}/g, (_, o) => originPrice(route, o, lang))
     .replace(/\{\{brand\}\}/g, lang === 'en' ? `${SITE.brandEn} (${SITE.brand})` : SITE.brand)
-    .replace(/\{\{line\}\}/g, SITE.lineId);
+    .replace(/\{\{line\}\}/g, SITE.lineId || '');
 }
 const answerList = (answers, route, lang) =>
   (answers || []).map((x) => ({ q: x.q, paras: x.a.map((t) => fillAnswer(t, route, lang)), links: x.links || [] }));
@@ -357,7 +362,7 @@ function zhLeadAnswer(rt, route) {
     ? Object.keys(ORIGINS).map((o) => (fromPrice(route, o) ? `${ORIGINS[o]}${fromPrice(route, o)}起` : '')).filter(Boolean).join('、') + '，整車計價（五人座最多 4 位乘客、九人座最多 8 位乘客）。'
     : '整車計價，依行程報價。';
   return `${SITE.brand}從台北車站、台中高鐵站或指定地址出發，專車送到${rt.name}的接送點：${rt.trailhead}，下山時在約好的時間接回。` +
-    (rt.drive ? `台北出發車程${rt.drive}。` : '') + price + `用 LINE（ID ${SITE.lineId}）、WhatsApp 或線上表單詢價。`;
+    (rt.drive ? `台北出發車程${rt.drive}。` : '') + price + (SITE.lineId ? `用 LINE（ID ${SITE.lineId}）、WhatsApp 或線上表單詢價。` : '');
 }
 
 function routePage({ rt, route, credit }) {
@@ -487,7 +492,7 @@ function routePage({ rt, route, credit }) {
         <a href="/#faq">常見問題</a>
         <a href="/en/routes/${rt.key}/" hreflang="en" lang="en">English</a>
       </nav>
-      <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>
+      ${SITE.lineUrl ? `<a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>` : ''}
     </div>
   </header>
 
@@ -506,7 +511,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
             </dl>
             <div class="route-page__cta">
               <a class="btn btn--accent" href="${esc(ask)}">我要詢問這條路線</a>
-              <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>
+              ${SITE.lineUrl ? `<a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE 詢價</a>` : ''}
             </div>
           </div>${
             rt.img
@@ -598,7 +603,7 @@ ${others}
   </main>
 
   <div class="dock is-visible">${SITE.whatsapp ? `\n    <a class="btn btn--outline" href="https://wa.me/${SITE.whatsapp.replace(/\D/g, '')}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
-    <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>
+    ${SITE.lineUrl ? `<a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>` : ''}
     <a class="btn btn--accent" href="${esc(ask)}">免費詢價</a>
   </div>
 
@@ -629,14 +634,14 @@ const routeHtml = Object.fromEntries(routePages.map((x) => [x.rt.key, routePage(
 // ---- 標題字型：只向 Google Fonts 要頁面上實際用到的字，檔案才會小 ----
 let cardHtml = read('card.html');
 // 婚紗包車頁（wedding/index.html）是手寫頁，這裡只內嵌字型和樣式、列進 sitemap
-let weddingHtml = read('wedding/index.html');
-let weddingEnHtml = read('en/wedding/index.html');
+let weddingHtml = staticContacts(read('wedding/index.html'));
+let weddingEnHtml = staticContacts(read('en/wedding/index.html'));
 const headingText = [html, cardHtml, weddingHtml, weddingEnHtml, ...Object.values(routeHtml)]
   // 標題，以及路線頁用標題字型的副標
   .flatMap((page) => [...page.matchAll(/<h[1-3][^>]*>([\s\S]*?)<\/h[1-3]>|<p class="route-page__sub">([\s\S]*?)<\/p>/g)].map((m) => (m[1] ?? m[2]).replace(/<[^>]+>/g, '')))
   .join('');
 const ascii = Array.from({ length: 95 }, (_, i) => String.fromCharCode(32 + i)).join('');
-const glyphs = [...new Set(headingText + SITE.brand + SITE.owner + SITE.tagline + '詢價掃描加好友—・，。：、？（）' + ascii)].filter((ch) => ch === ' ' || ch.trim()).sort().join('');
+const glyphs = [...new Set(headingText + SITE.brand + (SITE.owner || '') + SITE.tagline + '詢價掃描加好友—・，。：、？（）' + ascii)].filter((ch) => ch === ' ' || ch.trim()).sort().join('');
 const fontUrl = 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@900&display=swap&text=' + encodeURIComponent(glyphs);
 const fontTags = [
   '  <link rel="preconnect" href="https://fonts.googleapis.com">',
@@ -688,7 +693,7 @@ const DAY_EN = { 兩天: '2 days', 三天: '3 days', 當日來回: 'Day trip', �
 const enDescription =
   `${SITE.brandEn} (${SITE.brand}) is a private hiking shuttle in Taiwan from Taipei and Taichung to trailheads such as ` +
   `${priced.slice(0, 5).map((r) => enName(r).replace(/ \(.*\)$/, '')).join(', ')}, and back after your hike. ` +
-  `Priced per vehicle (5-seat or 9-seat), one way from ${nt(lowest)}, with every route's price public. Ask on WhatsApp, LINE or with the online form.`;
+  `Priced per vehicle (5-seat or 9-seat), one way from ${nt(lowest)}, with every route's price public.`;
 // meta description 要短（約 160 字元內），完整版留給結構化資料
 const enMetaDescription =
   `Private hiking shuttle from Taipei and Taichung to Yushan, Xueshan, Hehuanshan and other Taiwan trailheads. ` +
@@ -696,7 +701,7 @@ const enMetaDescription =
 const enAbout =
   `${SITE.brandEn} (${SITE.brand}) is a hiking shuttle from Taipei and Taichung to trailheads including ${priced.slice(0, 8).map((r) => enName(r).replace(/ \(.*\)$/, '')).join(', ')}. ` +
   `We have a 5-seat car (up to 4 passengers) and a 9-seat van (up to 8 passengers), priced per vehicle. ` +
-  `Ask on WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}), email (${SITE.email}) or with the form on this page.`;
+  (SITE.lineId ? `Ask on WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}), email (${SITE.email}) or with the form on this page.` : '');
 
 function enCardPrice(route) {
   const i = [0, 1, 2].find((t) => Object.keys(ORIGINS).some((o) => Object.keys(CARS).some((c) => route[o][c]?.[t]))) ?? 0;
@@ -791,7 +796,7 @@ function enJsonLd(page) {
       ...businessFacts,
       description: enDescription,
       areaServed: ['Taipei', 'New Taipei', 'Taichung'].map((name) => ({ '@type': 'City', name })),
-      contactPoint: { '@type': 'ContactPoint', email: SITE.email, url: EN_URL + '#book', contactType: 'reservations', availableLanguage: ['zh-Hant-TW', 'en'] },
+      contactPoint: SITE.email ? { '@type': 'ContactPoint', email: SITE.email, url: EN_URL + '#book', contactType: 'reservations', availableLanguage: ['zh-Hant-TW', 'en'] } : undefined,
       hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Hiking shuttle routes and prices', itemListElement: offers },
     },
     { '@type': 'FAQPage', '@id': EN_URL + '#faq', mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })) },
@@ -859,7 +864,7 @@ function enLeadAnswer(rt, en, route, short) {
   return `${SITE.brandEn} (${SITE.brand}) drives you from Taipei Main Station, Taichung HSR Station or your address to ${short}: drop-off at ${en.trailhead}, and picks you up at the agreed time after your hike. ` +
     (rt.drive && en.drive ? `${en.drive} from Taipei. ` : '') +
     (prices.length ? `Starting prices: ${prices.join('; ')}, per vehicle (5-seat up to 4 passengers, 9-seat up to 8). ` : 'Priced per vehicle; ask us for a quote. ') +
-    `Book on WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or the online form.`;
+    (SITE.lineId ? `Book on WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or the online form.` : '');
 }
 
 function enRoutePage(rt) {
@@ -1012,7 +1017,7 @@ function enRoutePage(rt) {
         <a href="/en/#faq">FAQ</a>
         <a href="${routeUrl(rt.key).replace(URL, '/')}" hreflang="zh-Hant-TW" lang="zh-Hant-TW">中文</a>
       </nav>
-      <a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">Ask on LINE</a>
+      ${SITE.lineUrl ? `<a class="btn btn--line btn--sm" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">Ask on LINE</a>` : ''}
     </div>
   </header>
 
@@ -1032,7 +1037,7 @@ ${facts.map(([k, v]) => `              <div><dt>${k}</dt><dd>${esc(v)}</dd></div
             <div class="route-page__cta">
               <a class="btn btn--accent" href="${esc(ask)}">Ask about this route</a>
               ${waUrl ? `<a class="btn btn--outline" href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
-              <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">Ask on LINE</a>
+              ${SITE.lineUrl ? `<a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">Ask on LINE</a>` : ''}
             </div>
           </div>${
             rt.img
@@ -1124,7 +1129,7 @@ ${others}
   </main>
 
   <div class="dock is-visible">${waUrl ? `\n    <a class="btn btn--outline" href="${waUrl}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
-    <a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>
+    ${SITE.lineUrl ? `<a class="btn btn--line" href="${esc(SITE.lineUrl)}" target="_blank" rel="noopener">LINE</a>` : ''}
     <a class="btn btn--accent" href="${esc(ask)}">Free quote</a>
   </div>
 
@@ -1247,8 +1252,7 @@ write(
 - 入園入山申請、山屋、保險與裝備由乘客自行準備；詢價時可提供入山證、山屋的申請資訊。
 - 付款：訂金可用匯款、LINE Pay，海外旅客可用 PayPal；尾款以新台幣現金或匯款支付。
 - 取消：出發三日前可全額退費取消或改期；遇封山或官方管制，可於出發前一日取消。
-- 詢價請用 LINE、WhatsApp（${SITE.whatsapp}）、Email 或網站表單（司機行車中不便接聽電話）。
-
+${SITE.whatsapp ? `- 詢價請用 LINE、WhatsApp（${SITE.whatsapp}）、Email 或網站表單（司機行車中不便接聽電話）。\n` : ''}
 ## 價格（新台幣，整車，單程 / 來回 / 一天來回，— 表示沒有這種走法或請詢價）
 
 | 路線 | 台北出發 五人座 | 台北出發 九人座 | 台中出發 五人座 | 台中出發 九人座 |
@@ -1257,15 +1261,15 @@ ${priceRows}
 
 A 進 B 出的縱走、表上沒有的登山口或走法請直接詢價。
 
-## 預約與聯絡
+${SITE.lineId ? `## 預約與聯絡
 
 - LINE ID：${SITE.lineId}（${SITE.lineUrl}）
 - 信箱：${SITE.email}
 - WhatsApp：${SITE.whatsapp}${SITE.instagramUrl ? `\n- Instagram：${SITE.instagramUrl}` : ''}${SITE.facebookUrl ? `\n- Facebook 粉絲專頁：${SITE.facebookUrl}` : ''}
-
+` : ''}
 ## In English
 
-${SITE.brandEn} (${SITE.brand}, gohike.tw) is a private hiking shuttle (trailhead transfer) in Taiwan, from Taipei and Taichung to mountain trailheads including ${priced.slice(0, 8).map(enName).join(', ')}. Priced per vehicle, not per person: 5-seat car (up to 4 passengers) or 9-seat van (up to 8 passengers), one way from ${nt(lowest)}. Overseas hikers can pay the deposit by PayPal. Book by WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or email (${SITE.email}). English page: ${EN_URL}
+${SITE.brandEn} (${SITE.brand}, gohike.tw) is a private hiking shuttle (trailhead transfer) in Taiwan, from Taipei and Taichung to mountain trailheads including ${priced.slice(0, 8).map(enName).join(', ')}. Priced per vehicle, not per person: 5-seat car (up to 4 passengers) or 9-seat van (up to 8 passengers), one way from ${nt(lowest)}. Overseas hikers can pay the deposit by PayPal.${SITE.lineId ? ` Book by WhatsApp (${SITE.whatsapp}), LINE (ID ${SITE.lineId}) or email (${SITE.email}).` : ''} English page: ${EN_URL}
 
 English route pages (trailhead, drive time, prices, FAQ):
 ${ROUTES.map((rt) => `- [${ROUTES_EN[rt.key].name} hiking shuttle: ${ROUTES_EN[rt.key].sub}](${enRouteUrl(rt.key)})`).join('\n')}
